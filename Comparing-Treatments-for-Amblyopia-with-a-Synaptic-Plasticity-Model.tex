@@ -249,7 +249,7 @@ to explore their limitations. Ideally we would like to use these models
 to inform future protocol parameters and perhaps suggest novel
 treatments for amblyopia.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, enhanced, breakable, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, frame hidden, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, sharp corners, interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -302,6 +302,12 @@ this project,
 \end{itemize}
 
 \part{Introduction}
+
+In this part we will explore the clinical basis for amblyopia and its
+treatments. In the -Chapter~\ref{sec-models-of-development} and
+Chapter~\ref{sec-models-of-treatments} we will explore the models that
+are used to describe the deficits from amblyopia and their treatment,
+respectively.
 
 \hypertarget{what-is-amblyopia}{%
 \chapter{What is Amblyopia?}\label{what-is-amblyopia}}
@@ -989,7 +995,7 @@ Amblyopia}\label{sec-models-of-treatments}}
 \ImportTok{import}\NormalTok{ plasticnet }\ImportTok{as}\NormalTok{ pn}
 \ImportTok{import}\NormalTok{ process\_images\_hdf5 }\ImportTok{as}\NormalTok{ pi5}
 \ImportTok{from}\NormalTok{ deficit\_defs }\ImportTok{import}\NormalTok{ patch\_treatment}
-
+\ImportTok{from}\NormalTok{ input\_environment\_defs }\ImportTok{import}\NormalTok{ get\_input\_patch\_examples}
 \ImportTok{from}\NormalTok{ matplotlib.pyplot }\ImportTok{import}\NormalTok{ figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis}
 \end{Highlighting}
 \end{Shaded}
@@ -1006,13 +1012,39 @@ inter-eye jitter is not corrected with the refractive correction.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ inputs\_to\_images1(X,}\BuiltInTok{buffer}\OperatorTok{=}\DecValTok{5}\NormalTok{):}
+\NormalTok{    ims}\OperatorTok{=}\NormalTok{[]}
+    
+\NormalTok{    rf\_size}\OperatorTok{=}\BuiltInTok{int}\NormalTok{(np.sqrt(X.shape[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\DecValTok{2}\NormalTok{))}
+\NormalTok{    vmax}\OperatorTok{=}\NormalTok{np.concatenate([xx[:rf\_size}\OperatorTok{*}\NormalTok{rf\_size] }\ControlFlowTok{for}\NormalTok{ xx }\KeywordTok{in}\NormalTok{ X]).}\BuiltInTok{max}\NormalTok{()}
+    
+    \ControlFlowTok{for}\NormalTok{ xx }\KeywordTok{in}\NormalTok{ X:}
+\NormalTok{        xx1}\OperatorTok{=}\NormalTok{xx[:rf\_size}\OperatorTok{*}\NormalTok{rf\_size].reshape(rf\_size,rf\_size)}
+\NormalTok{        im}\OperatorTok{=}\NormalTok{xx1}
+\NormalTok{        ims.append(im)}
+        
+    \ControlFlowTok{return}\NormalTok{ ims}
+
+\KeywordTok{def}\NormalTok{ inputs\_to\_images2(X,}\BuiltInTok{buffer}\OperatorTok{=}\DecValTok{5}\NormalTok{):}
+\NormalTok{    ims}\OperatorTok{=}\NormalTok{[]}
+    
+\NormalTok{    rf\_size}\OperatorTok{=}\BuiltInTok{int}\NormalTok{(np.sqrt(X.shape[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\DecValTok{2}\NormalTok{))}
+\NormalTok{    vmax}\OperatorTok{=}\NormalTok{np.concatenate([xx[rf\_size}\OperatorTok{*}\NormalTok{rf\_size:] }\ControlFlowTok{for}\NormalTok{ xx }\KeywordTok{in}\NormalTok{ X]).}\BuiltInTok{max}\NormalTok{()}
+    
+    \ControlFlowTok{for}\NormalTok{ xx }\KeywordTok{in}\NormalTok{ X:}
+\NormalTok{        xx2}\OperatorTok{=}\NormalTok{xx[rf\_size}\OperatorTok{*}\NormalTok{rf\_size:].reshape(rf\_size,rf\_size)}
+\NormalTok{        im}\OperatorTok{=}\NormalTok{xx2}
+\NormalTok{        ims.append(im)}
+        
+    \ControlFlowTok{return}\NormalTok{ ims}
+
 \KeywordTok{def}\NormalTok{ inputs\_to\_images(X,}\BuiltInTok{buffer}\OperatorTok{=}\DecValTok{5}\NormalTok{):}
 \NormalTok{    ims}\OperatorTok{=}\NormalTok{[]}
 \NormalTok{    vmin}\OperatorTok{=}\NormalTok{X.}\BuiltInTok{min}\NormalTok{()}
 \NormalTok{    vmax}\OperatorTok{=}\NormalTok{X.}\BuiltInTok{max}\NormalTok{()}
     
 \NormalTok{    rf\_size}\OperatorTok{=}\BuiltInTok{int}\NormalTok{(np.sqrt(X.shape[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\DecValTok{2}\NormalTok{))}
-    
+        
     \ControlFlowTok{for}\NormalTok{ xx }\KeywordTok{in}\NormalTok{ X:}
 \NormalTok{        xx1}\OperatorTok{=}\NormalTok{xx[:rf\_size}\OperatorTok{*}\NormalTok{rf\_size].reshape(rf\_size,rf\_size)}
 \NormalTok{        xx2}\OperatorTok{=}\NormalTok{xx[rf\_size}\OperatorTok{*}\NormalTok{rf\_size:].reshape(rf\_size,rf\_size)}
@@ -1029,93 +1061,14 @@ inter-eye jitter is not corrected with the refractive correction.
 \NormalTok{               eta}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{,}
 \NormalTok{               save\_interval}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
 \NormalTok{    sim}\OperatorTok{=}\NormalTok{seq.sims[}\DecValTok{0}\NormalTok{]}
-\NormalTok{    pre}\OperatorTok{=}\NormalTok{seq.neurons[}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{]}
+\NormalTok{    pre}\OperatorTok{=}\NormalTok{seq[}\DecValTok{0}\NormalTok{][}\DecValTok{1}\NormalTok{][}\DecValTok{0}\NormalTok{]}
 \NormalTok{    sim.monitor(pre,[}\StringTok{\textquotesingle{}output\textquotesingle{}}\NormalTok{],}\DecValTok{1}\NormalTok{)}
 
-\NormalTok{    seq.run(display\_hash}\OperatorTok{=}\VariableTok{False}\NormalTok{,print\_time}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
-\NormalTok{    m}\OperatorTok{=}\NormalTok{sim.monitors[}\StringTok{\textquotesingle{}output\textquotesingle{}}\NormalTok{]}
+\NormalTok{    seq.run(display\_hash}\OperatorTok{=}\VariableTok{False}\NormalTok{,print\_time}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\NormalTok{    m}\OperatorTok{=}\NormalTok{sim.monitors[}\StringTok{\textquotesingle{}output\_1\textquotesingle{}}\NormalTok{]}
 \NormalTok{    t,X}\OperatorTok{=}\NormalTok{m.arrays()    }
     
-    \ControlFlowTok{return}\NormalTok{ sim,X}
-
-\NormalTok{sim,X}\OperatorTok{=}\NormalTok{get\_input\_patch\_examples\_treatment()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{    seq}\OperatorTok{=}\NormalTok{pn.Sequence()    }
-\NormalTok{    seq}\OperatorTok{+=}\NormalTok{patch\_treatment(patch\_noise}\OperatorTok{=}\FloatTok{0.5}\NormalTok{,}
-\NormalTok{               total\_time}\OperatorTok{=}\DecValTok{100}\NormalTok{,number\_of\_neurons}\OperatorTok{=}\DecValTok{1}\NormalTok{,}
-\NormalTok{               eta}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{,}
-\NormalTok{               save\_interval}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
-\NormalTok{    sim}\OperatorTok{=}\NormalTok{seq.sims[}\DecValTok{0}\NormalTok{]}
-\NormalTok{    pre}\OperatorTok{=}\NormalTok{seq.neurons[}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-Using cache_images_de75a60123a7c262a30ea675be766aff.asdf from cache.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{seq.neurons[}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-<plasticnet.neurons.pattern_neuron.natural_images at 0x7fa070153e50>
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{X}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-array([-0.        , -0.        , -0.        , ..., -0.        ,
-       -0.        ,  0.04363927])
-\end{verbatim}
-
-\begin{figure}
-
-{\centering 
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{sim,X}\OperatorTok{=}\NormalTok{get\_input\_patch\_examples\_treatment()}
-\NormalTok{ims}\OperatorTok{=}\NormalTok{inputs\_to\_images(X,}\BuiltInTok{buffer}\OperatorTok{=}\DecValTok{2}\NormalTok{)}
-\NormalTok{figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{20}\NormalTok{,}\DecValTok{6}\NormalTok{))}
-\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{24}\NormalTok{):}
-\NormalTok{    im}\OperatorTok{=}\NormalTok{ims[i]}
-\NormalTok{    subplot(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,i}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
-\NormalTok{    imshow(im,cmap}\OperatorTok{=}\NormalTok{plt.cm.gray)}
-\NormalTok{    axis(}\StringTok{\textquotesingle{}off\textquotesingle{}}\NormalTok{)}
-    
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-Using cache_images_de75a60123a7c262a30ea675be766aff.asdf from cache.[Grating time elapsed 0.56 s
-.] Sequence Time Elapsed...1.87 s
-\end{verbatim}
-
-\begin{verbatim}
-IndexError: tuple index out of range
-\end{verbatim}
-
-}
-
-\caption{\label{fig-patch-inputs}\textbf{?(caption)}}
-
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m}\OperatorTok{=}\NormalTok{sim.monitors[}\StringTok{\textquotesingle{}output\textquotesingle{}}\NormalTok{]}
-\NormalTok{t,X}\OperatorTok{=}\NormalTok{m.arrays()}
+    \ControlFlowTok{return}\NormalTok{ seq,X}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1129,6 +1082,21 @@ Competition between the left- and right-channels drives the recovery,
 and is produced from the difference between \emph{structured} input into
 the weak-eye and the \emph{unstructured} (i.e.~noise) input into the
 strong eye. It is not driven by a reduction in input activity.
+Figure~\ref{fig-patch-inputs} shows sample simulation input patterns
+from the patched eye. Compare this to Figure~\ref{fig-normal-inputs} to
+see that the simulated patch has far less structure than the normal
+inputs.
+
+\begin{figure}
+
+{\centering \includegraphics{./Treatment Models_files/figure-pdf/fig-patch-inputs-output-1.png}
+
+}
+
+\caption{\label{fig-patch-inputs}A sample of 24 input patches from a
+patched visual environment.}
+
+\end{figure}
 
 \hypertarget{contrast-modification}{%
 \section{Contrast modification}\label{contrast-modification}}
@@ -1141,6 +1109,32 @@ unblurred channel with a simple scalar multiplier applied to each pixel
 (Figure \protect\hyperlink{fig:input}{4} D). The contrast difference
 sets up competition between the two channels with the advantage given to
 the weak-eye channel.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sim,X}\OperatorTok{=}\NormalTok{get\_input\_patch\_examples(blur}\OperatorTok{={-}}\DecValTok{1}\NormalTok{,contrast}\OperatorTok{=}\FloatTok{0.3}\NormalTok{)}
+\NormalTok{ims}\OperatorTok{=}\NormalTok{inputs\_to\_images(X,}\BuiltInTok{buffer}\OperatorTok{=}\DecValTok{2}\NormalTok{)}
+\NormalTok{figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{20}\NormalTok{,}\DecValTok{6}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{24}\NormalTok{):}
+\NormalTok{    im}\OperatorTok{=}\NormalTok{ims[i]}
+\NormalTok{    subplot(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,i}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{    imshow(im,cmap}\OperatorTok{=}\NormalTok{plt.cm.gray)}
+\NormalTok{    axis(}\StringTok{\textquotesingle{}off\textquotesingle{}}\NormalTok{)}
+    
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{./Treatment Models_files/figure-pdf/fig-contrast-modified-inputs-output-1.png}
+
+}
+
+\caption{\label{fig-contrast-modified-inputs}A sample of 24 input
+patches from a normal visual environment with the right-channel
+down-scaled relative to the left.}
+
+\end{figure}
 
 \hypertarget{dichoptic-mask}{%
 \section{Dichoptic Mask}\label{dichoptic-mask}}
@@ -1207,7 +1201,7 @@ yields a maximum neuronal response with little or no contribution from
 the right-eye. A value of \(\text{ODI} \approx 0\) represents a purely
 binocular cell, responding equally to stimulus in either eye.
 
-\begin{tcolorbox}[enhanced jigsaw, rightrule=.15mm, left=2mm, colbacktitle=quarto-callout-important-color!10!white, toprule=.15mm, breakable, leftrule=.75mm, toptitle=1mm, colframe=quarto-callout-important-color-frame, bottomtitle=1mm, coltitle=black, opacityback=0, titlerule=0mm, opacitybacktitle=0.6, arc=.35mm, bottomrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, colback=white]
+\begin{tcolorbox}[enhanced jigsaw, rightrule=.15mm, colbacktitle=quarto-callout-important-color!10!white, bottomrule=.15mm, coltitle=black, breakable, titlerule=0mm, left=2mm, colframe=quarto-callout-important-color-frame, toptitle=1mm, arc=.35mm, colback=white, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, bottomtitle=1mm, leftrule=.75mm, opacityback=0, toprule=.15mm, opacitybacktitle=0.6]
 
 \begin{itemize}
 \tightlist
@@ -1222,10 +1216,8 @@ binocular cell, responding equally to stimulus in either eye.
 \part{Results}
 
 \hypertarget{deficit-and-measuring-the-effectiveness-of-a-treatment}{%
-\section*{Deficit and Measuring the Effectiveness of a
+\chapter{Deficit and Measuring the Effectiveness of a
 Treatment}\label{deficit-and-measuring-the-effectiveness-of-a-treatment}}
-\addcontentsline{toc}{section}{Deficit and Measuring the Effectiveness
-of a Treatment}
 
 Figure (\textbf{fig:y\_vs\_t\_fix\_n0?}) shows the maximum response to
 oriented stimuli for \(n=20\) neurons versus time. The first 8 days of
@@ -1257,8 +1249,7 @@ the treatment is the \emph{rate} of the recovery of the ODI:
 \]
 
 \hypertarget{recovery-using-glasses}{%
-\section*{Recovery using glasses}\label{recovery-using-glasses}}
-\addcontentsline{toc}{section}{Recovery using glasses}
+\chapter{Recovery using glasses}\label{recovery-using-glasses}}
 
 The ``fix'' treatment described in Section
 (\textbf{sec:models-of-development-and-treatment-of-amblyopia?}) and
@@ -1275,8 +1266,7 @@ restore vision in 27\% of amblyopia cases(D. Wallace et al. 2006), the
 other simulations use an open-eye noise value of \(\sigma_n=0.1\).
 
 \hypertarget{patch-treatment-1}{%
-\section*{Patch Treatment}\label{patch-treatment-1}}
-\addcontentsline{toc}{section}{Patch Treatment}
+\section{Patch Treatment}\label{patch-treatment-1}}
 
 As shown in (\textbf{sec:results?}), increased \emph{unstructured} input
 into the previously dominant eye increases the rate of recovery. This is
@@ -1299,8 +1289,7 @@ favoring the weak eye, as most treatments have.
 \#todo - {[} {]} example of reverse amblyopia
 
 \hypertarget{atropine-treatment-1}{%
-\section*{Atropine Treatment}\label{atropine-treatment-1}}
-\addcontentsline{toc}{section}{Atropine Treatment}
+\section{Atropine Treatment}\label{atropine-treatment-1}}
 
 Figure (\textbf{fig:dODI\_atropine\_vs\_blur?}) shows the recovery rates
 under the atropine treatment, where the strong eye is presented with a
@@ -1314,10 +1303,8 @@ blurred inputs are no better than the patch treatment, which has only
 the noise input.
 
 \hypertarget{contrast-modification-and-dichoptic-masks}{%
-\section*{Contrast Modification and Dichoptic
+\section{Contrast Modification and Dichoptic
 Masks}\label{contrast-modification-and-dichoptic-masks}}
-\addcontentsline{toc}{section}{Contrast Modification and Dichoptic
-Masks}
 
 Figure (\textbf{fig:dODI\_constrast?}) shows the recovery rates under a
 binocular treatment which only involves contrast modification, where the
@@ -1348,12 +1335,6 @@ in from the weak eye, there is possibility of causing reverse amblyopia.
 For high contrast value (i.e.~strong- and weak-eye inputs are nearly the
 same), the masks not only make the recovery slower, but can even enhance
 the amblyopia.
-
-\hypertarget{section}{%
-\chapter{}\label{section}}
-
-\hypertarget{section-1}{%
-\chapter{}\label{section-1}}
 
 \part{Conclusions}
 
@@ -1425,8 +1406,8 @@ unstructure input (e.g.~patch) and degraded input (e.g.~atropine).
 In this way we may hope to constrain other parameters of the model by
 comparing to experimental rates of recovery.
 
-\hypertarget{section-2}{%
-\chapter{}\label{section-2}}
+\hypertarget{section}{%
+\chapter{}\label{section}}
 
 \bookmarksetup{startatroot}
 
