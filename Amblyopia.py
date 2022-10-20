@@ -21,14 +21,18 @@
 # 
 # The most common treatment includes 
 # 
-# 1. the optical correction of significant refractive errors and 
+# 1. the optical correction of significant refractive errors 
 # 2. patching the dominant eye which forces the visual input to come from only the amblyopic eye. 
 # 
 # Although patching is the most common method of treatment, other methods are described including pharmacology and technology [@holmes2016randomized; @Kelly_2016; @Holmes_2016; @Li:2015aa;@de2007current; @Gao_2018;  @glaser2002randomized]. These include,
 # 
 # 3. Pharmacological treatment with atropine drops in the fellow eye
+# 
+# Each of these treatments only directly applies to the fellow eye and the amblyopic eye is left untouched. 
 
 # ### Binocular Treatments
+# 
+# There are some treatments which are administered to both eyes, making them binocular treatments.  The one that we will be addressing here use virtual reality headsets[@xiao2020improved; @xiao2022randomized],
 # 
 # 4. Virtual reality input to both eyes, with contrast modification and/or  dichoptic masks
 

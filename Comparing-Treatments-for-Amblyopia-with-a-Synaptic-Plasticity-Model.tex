@@ -249,7 +249,7 @@ to explore their limitations. Ideally we would like to use these models
 to inform future protocol parameters and perhaps suggest novel
 treatments for amblyopia.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, frame hidden, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, enhanced, breakable, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, frame hidden, sharp corners]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -266,11 +266,9 @@ treatments for amblyopia.
 These notes are produced with Quarto.
 (\url{https://quarto.org/docs/books})
 
-\bookmarksetup{startatroot}
-
 \hypertarget{software-installation}{%
-\chapter*{Software Installation}\label{software-installation}}
-\addcontentsline{toc}{chapter}{Software Installation}
+\section*{Software Installation}\label{software-installation}}
+\addcontentsline{toc}{section}{Software Installation}
 
 The software is Python-based with parts written in Cython.
 
@@ -284,6 +282,23 @@ The software is Python-based with parts written in Cython.
   https://github.com/bblais/Plasticnet/archive/refs/heads/master.zip
 \item
   Run the script \texttt{install.py}
+\end{itemize}
+
+\hypertarget{printable-versions}{%
+\section*{Printable Versions}\label{printable-versions}}
+\addcontentsline{toc}{section}{Printable Versions}
+
+Printable versions of this report can be found on the GitHub site for
+this project,
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://github.com/bblais/Amblyopia-Simulation/raw/main/docs/Comparing-Treatments-for-Amblyopia-with-a-Synaptic-Plasticity-Model.docx}{Microsoft
+  Word version}
+\item
+  \href{https://github.com/bblais/Amblyopia-Simulation/raw/main/docs/Comparing-Treatments-for-Amblyopia-with-a-Synaptic-Plasticity-Model.pdf}{PDF
+  version}
 \end{itemize}
 
 \part{Introduction}
@@ -330,7 +345,7 @@ The most common treatment includes
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  the optical correction of significant refractive errors and
+  the optical correction of significant refractive errors
 \item
   patching the dominant eye which forces the visual input to come from
   only the amblyopic eye.
@@ -350,8 +365,15 @@ These include,
   Pharmacological treatment with atropine drops in the fellow eye
 \end{enumerate}
 
+Each of these treatments only directly applies to the fellow eye and the
+amblyopic eye is left untouched.
+
 \hypertarget{binocular-treatments}{%
 \subsection{Binocular Treatments}\label{binocular-treatments}}
+
+There are some treatments which are administered to both eyes, making
+them binocular treatments. The one that we will be addressing here use
+virtual reality headsets(Xiao et al. 2020, 2022),
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1185,7 +1207,7 @@ yields a maximum neuronal response with little or no contribution from
 the right-eye. A value of \(\text{ODI} \approx 0\) represents a purely
 binocular cell, responding equally to stimulus in either eye.
 
-\begin{tcolorbox}[enhanced jigsaw, colback=white, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, coltitle=black, opacitybacktitle=0.6, bottomrule=.15mm, colframe=quarto-callout-important-color-frame, left=2mm, toptitle=1mm, arc=.35mm, opacityback=0, bottomtitle=1mm, leftrule=.75mm, breakable, rightrule=.15mm, titlerule=0mm, toprule=.15mm, colbacktitle=quarto-callout-important-color!10!white]
+\begin{tcolorbox}[enhanced jigsaw, rightrule=.15mm, left=2mm, colbacktitle=quarto-callout-important-color!10!white, toprule=.15mm, breakable, leftrule=.75mm, toptitle=1mm, colframe=quarto-callout-important-color-frame, bottomtitle=1mm, coltitle=black, opacityback=0, titlerule=0mm, opacitybacktitle=0.6, arc=.35mm, bottomrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Important}, colback=white]
 
 \begin{itemize}
 \tightlist
@@ -1517,6 +1539,12 @@ Wallace, DK, SA Cotter, AR Edwards, RW Beck, Pediatric Eye Disease
 Investigator Group, et al. 2006. {``Treatment of Amblyopia with
 Refractive Correction Alone.''} \emph{Investigative Ophthalmology \&
 Visual Science} 47 (13): 4310--10.
+
+\leavevmode\vadjust pre{\hypertarget{ref-xiao2022randomized}{}}%
+Xiao, Scott, Endri Angjeli, Hank C Wu, Eric D Gaier, Stephanie Gomez,
+Dean A Travers, Gil Binenbaum, et al. 2022. {``Randomized Controlled
+Trial of a Dichoptic Digital Therapeutic for Amblyopia.''}
+\emph{Ophthalmology} 129 (1): 77--85.
 
 \leavevmode\vadjust pre{\hypertarget{ref-xiao2020improved}{}}%
 Xiao, Scott, Eric D Gaier, Malcolm L Mazow, Ann U Stout, Dean A Travers,
