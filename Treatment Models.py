@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 
 #| output: false
@@ -12,7 +12,7 @@ import numpy as np
 import plasticnet as pn
 import process_images_hdf5 as pi5
 from deficit_defs import patch_treatment
-
+from input_environment_defs import get_input_patch_examples
 from matplotlib.pyplot import figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis
 
 
@@ -21,10 +21,36 @@ from matplotlib.pyplot import figure,xlabel,ylabel,legend,gca,plot,subplot,imsho
 # To model the fix to the refractive imbalance we follow the deficit simulation with an input environment that is rebalanced, both eyes receiving nearly identical input patches (@fig-normal-inputs).   This process is a model of the application of refractive correction.  Although both eyes receive nearly identical input patches, we add independent Gaussian noise to each input channel to represent the natural variation in the activity in each eye.  In addition, in those cases where use employ strabismic amblyopia, the inter-eye jitter is not corrected with the refractive correction.  
 # 
 
-# In[31]:
+# In[2]:
 
 
 #| output: false
+
+def inputs_to_images1(X,buffer=5):
+    ims=[]
+    
+    rf_size=int(np.sqrt(X.shape[1]/2))
+    vmax=np.concatenate([xx[:rf_size*rf_size] for xx in X]).max()
+    
+    for xx in X:
+        xx1=xx[:rf_size*rf_size].reshape(rf_size,rf_size)
+        im=xx1
+        ims.append(im)
+        
+    return ims
+
+def inputs_to_images2(X,buffer=5):
+    ims=[]
+    
+    rf_size=int(np.sqrt(X.shape[1]/2))
+    vmax=np.concatenate([xx[rf_size*rf_size:] for xx in X]).max()
+    
+    for xx in X:
+        xx2=xx[rf_size*rf_size:].reshape(rf_size,rf_size)
+        im=xx2
+        ims.append(im)
+        
+    return ims
 
 def inputs_to_images(X,buffer=5):
     ims=[]
@@ -32,7 +58,7 @@ def inputs_to_images(X,buffer=5):
     vmax=X.max()
     
     rf_size=int(np.sqrt(X.shape[1]/2))
-    
+        
     for xx in X:
         xx1=xx[:rf_size*rf_size].reshape(rf_size,rf_size)
         xx2=xx[rf_size*rf_size:].reshape(rf_size,rf_size)
@@ -49,49 +75,56 @@ def get_input_patch_examples_treatment():
                eta=1e-6,
                save_interval=1)
     sim=seq.sims[0]
-    pre=seq.neurons[0][0][0]
+    pre=seq[0][1][0]
     sim.monitor(pre,['output'],1)
 
-    seq.run(display_hash=False,print_time=True)
-    m=sim.monitors['output']
+    seq.run(display_hash=False,print_time=False)
+    m=sim.monitors['output_1']
     t,X=m.arrays()    
     
-    return sim,X
-
-sim,X=get_input_patch_examples_treatment()
+    return seq,X
 
 
-# In[21]:
+# 
+# 
+# ## Patch treatment
+# 
+# The typical patch treatment is done by depriving the strong-eye of input with an eye-patch.  In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input.  Competition between the left- and right-channels drives the recovery, and is produced from the difference between *structured* input into the weak-eye and the *unstructured* (i.e. noise) input into the strong eye.  It is not driven by a reduction in input activity.  @fig-patch-inputs shows sample simulation input patterns from the patched eye.  Compare this to @fig-normal-inputs to see that the simulated patch has far less structure than the normal inputs.
+# 
+
+# In[3]:
 
 
-seq=pn.Sequence()    
-seq+=patch_treatment(patch_noise=0.5,
-           total_time=100,number_of_neurons=1,
-           eta=1e-6,
-           save_interval=1)
-sim=seq.sims[0]
-pre=seq.neurons[0][0][0]
-
-
-# In[25]:
-
-
-seq.neurons[0][0][0]
-
-
-# In[34]:
-
-
-X
-
-
-# In[18]:
-
-
+#| echo: false
 #| label: fig-patch-inputs
 #| fig-cap: A sample of 24 input patches from a patched visual environment. 
 #| 
 sim,X=get_input_patch_examples_treatment()
+ims=inputs_to_images2(X)
+figure(figsize=(10,6))
+for i in range(24):
+    im=ims[i]
+    subplot(4,6,i+1)
+    imshow(im,cmap=plt.cm.gray)
+    axis('off')
+    
+
+
+# 
+# 
+# 
+# ## Contrast modification
+# 
+# A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel (Figure [4](#fig:input) D). The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.
+# 
+
+# In[6]:
+
+
+#| label: fig-contrast-modified-inputs
+#| fig-cap: A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left.
+#| 
+sim,X=get_input_patch_examples(blur=-1,contrast=0.3)
 ims=inputs_to_images(X,buffer=2)
 figure(figsize=(20,6))
 for i in range(24):
@@ -101,31 +134,6 @@ for i in range(24):
     axis('off')
     
 
-
-# In[16]:
-
-
-m=sim.monitors['output']
-t,X=m.arrays()
-
-
-# 
-# 
-# ## Patch treatment
-# 
-# The typical patch treatment is done by depriving the strong-eye of input with an eye-patch.  In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input.  Competition between the left- and right-channels drives the recovery, and is produced from the difference between *structured* input into the weak-eye and the *unstructured* (i.e. noise) input into the strong eye.  It is not driven by a reduction in input activity.  
-# 
-# 
-# 
-# 
-
-# 
-# 
-# 
-# ## Contrast modification
-# 
-# A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel (Figure [4](#fig:input) D). The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.
-# 
 
 # ## Dichoptic Mask
 # 

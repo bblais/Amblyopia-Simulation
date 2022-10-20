@@ -102,7 +102,7 @@ def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
     
 
 
-def get_input_patch_examples(blur=2.5,noise=0.1):
+def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1):
     
     rf_size=19
     eta=2e-6
@@ -129,12 +129,13 @@ def get_input_patch_examples(blur=2.5,noise=0.1):
                                 other_channel=pre1,
                                 verbose=False)
 
+    
     sigma=noise
     pre1+=pn.neurons.process.add_noise_normal(0,sigma)
 
     sigma=noise
+    pre2+=pn.neurons.process.scale_shift(contrast,0)
     pre2+=pn.neurons.process.add_noise_normal(0,sigma)
-
     pre=pre1+pre2
 
     sim=pn.simulation(99)

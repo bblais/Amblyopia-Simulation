@@ -336,7 +336,7 @@ div.csl-indent {
 
 </header>
 
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="1">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
@@ -345,121 +345,112 @@ div.csl-indent {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plasticnet <span class="im">as</span> pn</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> process_images_hdf5 <span class="im">as</span> pi5</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> deficit_defs <span class="im">import</span> patch_treatment</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> input_environment_defs <span class="im">import</span> get_input_patch_examples</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.pyplot <span class="im">import</span> figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>To model the fix to the refractive imbalance we follow the deficit simulation with an input environment that is rebalanced, both eyes receiving nearly identical input patches (<a href="Natural Image Environment.html#fig-normal-inputs">Figure&nbsp;<span>2.4</span></a>). This process is a model of the application of refractive correction. Although both eyes receive nearly identical input patches, we add independent Gaussian noise to each input channel to represent the natural variation in the activity in each eye. In addition, in those cases where use employ strabismic amblyopia, the inter-eye jitter is not corrected with the refractive correction.</p>
-<div class="cell" data-execution_count="31">
+<div class="cell" data-execution_count="2">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inputs_to_images(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">5</span>):</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inputs_to_images1(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ims<span class="op">=</span>[]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span>X.<span class="bu">min</span>()</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span>X.<span class="bu">max</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    rf_size<span class="op">=</span><span class="bu">int</span>(np.sqrt(X.shape[<span class="dv">1</span>]<span class="op">/</span><span class="dv">2</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xx <span class="kw">in</span> X:</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        xx1<span class="op">=</span>xx[:rf_size<span class="op">*</span>rf_size].reshape(rf_size,rf_size)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        xx2<span class="op">=</span>xx[rf_size<span class="op">*</span>rf_size:].reshape(rf_size,rf_size)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        im<span class="op">=</span>np.concatenate((xx1,np.ones((rf_size,<span class="bu">buffer</span>))<span class="op">*</span>vmax,xx2),axis<span class="op">=</span><span class="dv">1</span>)   </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        ims.append(im)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ims</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_input_patch_examples_treatment():</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">=</span>pn.Sequence()    </span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">+=</span>patch_treatment(patch_noise<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>               total_time<span class="op">=</span><span class="dv">1000</span>,number_of_neurons<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>               eta<span class="op">=</span><span class="fl">1e-6</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>               save_interval<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    sim<span class="op">=</span>seq.sims[<span class="dv">0</span>]</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    pre<span class="op">=</span>seq.neurons[<span class="dv">0</span>][<span class="dv">0</span>][<span class="dv">0</span>]</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    sim.monitor(pre,[<span class="st">'output'</span>],<span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    rf_size<span class="op">=</span><span class="bu">int</span>(np.sqrt(X.shape[<span class="dv">1</span>]<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span>np.concatenate([xx[:rf_size<span class="op">*</span>rf_size] <span class="cf">for</span> xx <span class="kw">in</span> X]).<span class="bu">max</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xx <span class="kw">in</span> X:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        xx1<span class="op">=</span>xx[:rf_size<span class="op">*</span>rf_size].reshape(rf_size,rf_size)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        im<span class="op">=</span>xx1</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        ims.append(im)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ims</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inputs_to_images2(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    ims<span class="op">=</span>[]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    rf_size<span class="op">=</span><span class="bu">int</span>(np.sqrt(X.shape[<span class="dv">1</span>]<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span>np.concatenate([xx[rf_size<span class="op">*</span>rf_size:] <span class="cf">for</span> xx <span class="kw">in</span> X]).<span class="bu">max</span>()</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xx <span class="kw">in</span> X:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        xx2<span class="op">=</span>xx[rf_size<span class="op">*</span>rf_size:].reshape(rf_size,rf_size)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        im<span class="op">=</span>xx2</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        ims.append(im)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ims</span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    seq.run(display_hash<span class="op">=</span><span class="va">False</span>,print_time<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    m<span class="op">=</span>sim.monitors[<span class="st">'output'</span>]</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    t,X<span class="op">=</span>m.arrays()    </span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sim,X</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>sim,X<span class="op">=</span>get_input_patch_examples_treatment()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell" data-execution_count="21">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">=</span>pn.Sequence()    </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">+=</span>patch_treatment(patch_noise<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>               total_time<span class="op">=</span><span class="dv">100</span>,number_of_neurons<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               eta<span class="op">=</span><span class="fl">1e-6</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               save_interval<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    sim<span class="op">=</span>seq.sims[<span class="dv">0</span>]</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    pre<span class="op">=</span>seq.neurons[<span class="dv">0</span>][<span class="dv">0</span>][<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Using cache_images_de75a60123a7c262a30ea675be766aff.asdf from cache.</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="25">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>seq.neurons[<span class="dv">0</span>][<span class="dv">0</span>][<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="25">
-<pre><code>&lt;plasticnet.neurons.pattern_neuron.natural_images at 0x7fa070153e50&gt;</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="34">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="34">
-<pre><code>array([-0.        , -0.        , -0.        , ..., -0.        ,
-       -0.        ,  0.04363927])</code></pre>
-</div>
-</div>
-<div id="fig-patch-inputs" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sim,X<span class="op">=</span>get_input_patch_examples_treatment()</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ims<span class="op">=</span>inputs_to_images(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>figure(figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">6</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">24</span>):</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    im<span class="op">=</span>ims[i]</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    subplot(<span class="dv">4</span>,<span class="dv">6</span>,i<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    imshow(im,cmap<span class="op">=</span>plt.cm.gray)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    axis(<span class="st">'off'</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Using cache_images_de75a60123a7c262a30ea675be766aff.asdf from cache.[Grating time elapsed 0.56 s
-.] Sequence Time Elapsed...1.87 s</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>IndexError: tuple index out of range</code></pre>
-</div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;5.1: <strong>?(caption)</strong></figcaption><p></p>
-</figure>
-</div>
-<div class="cell" data-execution_count="16">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m<span class="op">=</span>sim.monitors[<span class="st">'output'</span>]</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>t,X<span class="op">=</span>m.arrays()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inputs_to_images(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ims<span class="op">=</span>[]</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span>X.<span class="bu">min</span>()</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    vmax<span class="op">=</span>X.<span class="bu">max</span>()</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    rf_size<span class="op">=</span><span class="bu">int</span>(np.sqrt(X.shape[<span class="dv">1</span>]<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xx <span class="kw">in</span> X:</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        xx1<span class="op">=</span>xx[:rf_size<span class="op">*</span>rf_size].reshape(rf_size,rf_size)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        xx2<span class="op">=</span>xx[rf_size<span class="op">*</span>rf_size:].reshape(rf_size,rf_size)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        im<span class="op">=</span>np.concatenate((xx1,np.ones((rf_size,<span class="bu">buffer</span>))<span class="op">*</span>vmax,xx2),axis<span class="op">=</span><span class="dv">1</span>)   </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        ims.append(im)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ims</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_input_patch_examples_treatment():</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">=</span>pn.Sequence()    </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    seq<span class="op">+=</span>patch_treatment(patch_noise<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>               total_time<span class="op">=</span><span class="dv">1000</span>,number_of_neurons<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>               eta<span class="op">=</span><span class="fl">1e-6</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>               save_interval<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    sim<span class="op">=</span>seq.sims[<span class="dv">0</span>]</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    pre<span class="op">=</span>seq[<span class="dv">0</span>][<span class="dv">1</span>][<span class="dv">0</span>]</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    sim.monitor(pre,[<span class="st">'output'</span>],<span class="dv">1</span>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    seq.run(display_hash<span class="op">=</span><span class="va">False</span>,print_time<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    m<span class="op">=</span>sim.monitors[<span class="st">'output_1'</span>]</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    t,X<span class="op">=</span>m.arrays()    </span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> seq,X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="patch-treatment" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="patch-treatment"><span class="header-section-number">5.1</span> Patch treatment</h2>
-<p>The typical patch treatment is done by depriving the strong-eye of input with an eye-patch. In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input. Competition between the left- and right-channels drives the recovery, and is produced from the difference between <em>structured</em> input into the weak-eye and the <em>unstructured</em> (i.e.&nbsp;noise) input into the strong eye. It is not driven by a reduction in input activity.</p>
+<p>The typical patch treatment is done by depriving the strong-eye of input with an eye-patch. In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input. Competition between the left- and right-channels drives the recovery, and is produced from the difference between <em>structured</em> input into the weak-eye and the <em>unstructured</em> (i.e.&nbsp;noise) input into the strong eye. It is not driven by a reduction in input activity. <a href="#fig-patch-inputs">Figure&nbsp;<span>5.1</span></a> shows sample simulation input patterns from the patched eye. Compare this to <a href="Natural Image Environment.html#fig-normal-inputs">Figure&nbsp;<span>2.4</span></a> to see that the simulated patch has far less structure than the normal inputs.</p>
+<div class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-patch-inputs" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Treatment%20Models_files/figure-html/fig-patch-inputs-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.1: A sample of 24 input patches from a patched visual environment.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="contrast-modification" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="contrast-modification"><span class="header-section-number">5.2</span> Contrast modification</h2>
 <p>A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets<span class="citation" data-cites="xiao2020improved">(<a href="References.html#ref-xiao2020improved" role="doc-biblioref">Xiao et al. 2020</a>)</span>. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel (Figure <a href="#fig:input">4</a> D). The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.</p>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sim,X<span class="op">=</span>get_input_patch_examples(blur<span class="op">=-</span><span class="dv">1</span>,contrast<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ims<span class="op">=</span>inputs_to_images(X,<span class="bu">buffer</span><span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>figure(figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">6</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">24</span>):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    im<span class="op">=</span>ims[i]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    subplot(<span class="dv">4</span>,<span class="dv">6</span>,i<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    imshow(im,cmap<span class="op">=</span>plt.cm.gray)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    axis(<span class="st">'off'</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-contrast-modified-inputs" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Treatment%20Models_files/figure-html/fig-contrast-modified-inputs-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.2: A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="dichoptic-mask" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="dichoptic-mask"><span class="header-section-number">5.3</span> Dichoptic Mask</h2>

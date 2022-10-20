@@ -420,7 +420,7 @@ def deficit(blur=2.5,noise=0.1,rf_size=19,eta=2e-6,
     sim.monitor(post,['output'],save_interval)
     sim.monitor(c,['weights','theta'],save_interval)
 
-    sim+=pn.grating_response()
+    sim+=pn.grating_response(print_time=False)
 
     return sim,[pre,post],[c]
 
@@ -468,7 +468,7 @@ def fix(noise=0.1,rf_size=19,
     sim.monitor(post,['output'],save_interval)
     sim.monitor(c,['weights','theta'],save_interval)
 
-    sim+=pn.grating_response()
+    sim+=pn.grating_response(print_time=False)
 
     return sim,[pre,post],[c]
 
@@ -594,6 +594,7 @@ def patch_treatment(noise=0.1,patch_noise=0.1,rf_size=19,
         save_interval=1*second
 
     norm_fname=pi5.filtered_images(base_image_file,
+                                verbose=False
                                   )
     
         
@@ -628,7 +629,7 @@ def patch_treatment(noise=0.1,patch_noise=0.1,rf_size=19,
     sim.monitor(post,['output'],save_interval)
     sim.monitor(c,['weights','theta'],save_interval)
 
-    sim+=pn.grating_response()
+    sim+=pn.grating_response(print_time=False)
 
     return sim,[pre,post],[c]
 
