@@ -25,7 +25,6 @@ book:
     - References.ipynb
   output-dir: docs    
 
-
   title: Comparing Treatments for Amblyopia with a Synaptic Plasticity Model
   subtitle: .
   author: Brian S. Blais
@@ -50,6 +49,9 @@ format:
   pdf:
     keep-tex: true    
     documentclass: book
+    include-in-header: stdpreamble.tex
 
-  docx: default
+
+  docx:
+    echo: false
   epub: default
