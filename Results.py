@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Results
+# # Results {#sec-results}
 # 
 # ## Deficit and Measuring the Effectiveness of a Treatment
 # 
