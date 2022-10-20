@@ -1,0 +1,58 @@
+project:
+  type: book
+  output-dir: docs
+  
+book:
+  chapters:
+    - index.ipynb
+    - part: Introduction.ipynb
+      chapters:
+      - Amblyopia.ipynb
+    - part: Methods.ipynb
+      chapters:
+       - Natural Image Environment.ipynb
+       - Synaptic Modification.ipynb
+       - Deficit Models.ipynb
+       - Treatment Models.ipynb
+       - Quantifying Responses.ipynb
+    - part: Results.ipynb   
+      chapters:
+        - Deficit Results.ipynb
+        - Treatment Results.ipynb
+    - part: Conclusions.ipynb   
+      chapters:
+        - Summary and Future Directions.ipynb
+    - References.ipynb
+  output-dir: docs    
+
+
+  title: Comparing Treatments for Amblyopia with a Synaptic Plasticity Model
+  subtitle: .
+  author: Brian S. Blais
+  tags: [bcm, amblyopia,synaptic plasticity]
+  toc: true
+  abstract: |
+    These notes are an exploration of the problem of modeling Amblyopia and its various treatments from an approach using synaptic plasticity models.  The process will involve constructing a simplified mechanism for the development of amblyopic deficits and subsequentially modeling both monocular and binocular treatment protocols.  The goal is to understand the dynamics of the recovery from amblyopic deficits for the different treatment protocols, to compare the effectiveness of each protocol, and to explore their limitations.  Ideally we would like to use these models to inform future protocol parameters and perhaps suggest novel treatments for amblyopia.
+
+  classoption: onecolumn
+  sharing: [twitter, facebook, linkedin]
+  
+
+pandoc:
+  top-level-division: chapter
+
+bibliography: Amblyopia.bib
+
+date: "now"
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true
+
+  pdf:
+    keep-tex: true    
+  docx: default
+  epub: default
+  elsevier-pdf:
+    keep-tex: true    
