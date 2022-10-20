@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-10-20">
+
+<title>Comparing Treatments for Amblyopia with a Synaptic Plasticity Model - 1&nbsp; What is Amblyopia?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Methods.html" rel="next">
+<link href="./Introduction.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is Amblyopia?</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Comparing Treatments for Amblyopia with a Synaptic Plasticity Model</a> 
+        <div class="sidebar-tools-main">
+    <a href="" title="Share" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-share"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+            <i class="bi bi-bi-twitter pe-1"></i>
+          Twitter
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+            <i class="bi bi-bi-facebook pe-1"></i>
+          Facebook
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+            <i class="bi bi-bi-linkedin pe-1"></i>
+          LinkedIn
+          </a>
+        </li>
+    </ul>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Introduction.html" class="sidebar-item-text sidebar-link">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Amblyopia.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is Amblyopia?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Methods.html" class="sidebar-item-text sidebar-link">Methods</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Natural Image Environment.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Natural Image Input Environment</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Synaptic Modification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Synaptic Modification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Deficit Models.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Models of Development of Amblyopia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Treatment Models.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Models of Treatments for Amblyopia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Quantifying Responses.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ocular Dominance Index</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Results.html" class="sidebar-item-text sidebar-link">Results</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Deficit Results.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Deficit and Measuring the Effectiveness of a Treatment</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Treatment Results.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Recovery using glasses</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Conclusions.html" class="sidebar-item-text sidebar-link">Conclusions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Summary and Future Directions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary and Future Directions.html</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./References.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-is-it-treated" id="toc-how-is-it-treated" class="nav-link active" data-scroll-target="#how-is-it-treated"><span class="toc-section-number">1.1</span>  How is it Treated?</a>
+  <ul class="collapse">
+  <li><a href="#monocular-treatments" id="toc-monocular-treatments" class="nav-link" data-scroll-target="#monocular-treatments"><span class="toc-section-number">1.1.1</span>  Monocular Treatments</a></li>
+  <li><a href="#binocular-treatments" id="toc-binocular-treatments" class="nav-link" data-scroll-target="#binocular-treatments"><span class="toc-section-number">1.1.2</span>  Binocular Treatments</a></li>
+  </ul></li>
+  <li><a href="#mechanisms-for-amblyopia" id="toc-mechanisms-for-amblyopia" class="nav-link" data-scroll-target="#mechanisms-for-amblyopia"><span class="toc-section-number">1.2</span>  Mechanisms for Amblyopia</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is Amblyopia?</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 20, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<p>Amblyopia is the most common cause of vision loss in children, caused by refractive errors or misalignment of the eyes <span class="citation" data-cites="de2007current">(<a href="References.html#ref-de2007current" role="doc-biblioref">Zárate and Tejedor 2007</a>)</span>.</p>
+<ul>
+<li>Visual acuity</li>
+<li>Contrast sensitivity</li>
+<li>Color</li>
+<li>Depth (Stereopsis)</li>
+<li>Motion</li>
+<li>Visual fields</li>
+</ul>
+<section id="how-is-it-treated" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="how-is-it-treated"><span class="header-section-number">1.1</span> How is it Treated?</h2>
+<p>The current primary treatment is described in the <em>Amblyopia Preferred Practice Method</em> <span class="citation" data-cites="wallace2018amblyopia">(<a href="References.html#ref-wallace2018amblyopia" role="doc-biblioref">Wallace et al. 2018</a>)</span>. Treatments are divided into two broad categories, monocular and binocular treatments. Monocular treatments produce a competition between the two eyes by treating only the fellow eye to that the amblyopic eye recovers. Binocular treatments seek to stimulate both eyes in such a way that binocular mechanisms can produce a recovery in the amblyopic eye.</p>
+<section id="monocular-treatments" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="monocular-treatments"><span class="header-section-number">1.1.1</span> Monocular Treatments</h3>
+<p>The most common treatment includes</p>
+<ol type="1">
+<li>the optical correction of significant refractive errors</li>
+<li>patching the dominant eye which forces the visual input to come from only the amblyopic eye.</li>
+</ol>
+<p>Although patching is the most common method of treatment, other methods are described including pharmacology and technology <span class="citation" data-cites="holmes2016randomized Kelly_2016 Holmes_2016 Li:2015aa de2007current Gao_2018 glaser2002randomized">(<a href="References.html#ref-holmes2016randomized" role="doc-biblioref">Jonathan M. Holmes et al. 2016b</a>; <a href="References.html#ref-Kelly_2016" role="doc-biblioref">Kelly et al. 2016</a>; <a href="References.html#ref-Holmes_2016" role="doc-biblioref">Jonathan M. Holmes et al. 2016a</a>; <a href="References.html#ref-Li:2015aa" role="doc-biblioref">Li et al. 2015</a>; <a href="References.html#ref-de2007current" role="doc-biblioref">Zárate and Tejedor 2007</a>; <a href="References.html#ref-Gao_2018" role="doc-biblioref">Gao et al. 2018</a>; <a href="References.html#ref-glaser2002randomized" role="doc-biblioref">Glaser et al. 2002</a>)</span>. These include,</p>
+<ol start="3" type="1">
+<li>Pharmacological treatment with atropine drops in the fellow eye</li>
+</ol>
+<p>Each of these treatments only directly applies to the fellow eye and the amblyopic eye is left untouched.</p>
+</section>
+<section id="binocular-treatments" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="binocular-treatments"><span class="header-section-number">1.1.2</span> Binocular Treatments</h3>
+<p>There are some treatments which are administered to both eyes, making them binocular treatments. The one that we will be addressing here use virtual reality headsets<span class="citation" data-cites="xiao2020improved xiao2022randomized">(<a href="References.html#ref-xiao2020improved" role="doc-biblioref">Xiao et al. 2020</a>, <a href="References.html#ref-xiao2022randomized" role="doc-biblioref">2022</a>)</span>,</p>
+<ol start="4" type="1">
+<li>Virtual reality input to both eyes, with contrast modification and/or dichoptic masks</li>
+</ol>
+</section>
+</section>
+<section id="mechanisms-for-amblyopia" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="mechanisms-for-amblyopia"><span class="header-section-number">1.2</span> Mechanisms for Amblyopia</h2>
+<p>Since the unequal visual input to the brain can cause alterations in the synaptic pathways leading to a disparity in ocular dominance <span class="citation" data-cites="birch2013amblyopia">(<a href="References.html#ref-birch2013amblyopia" role="doc-biblioref">Birch 2013</a>)</span>, it is important to understand the possible synaptic effects amblyopia can produce and how potential treatments will either help or hinder the recovery.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-birch2013amblyopia" class="csl-entry" role="doc-biblioentry">
+Birch, Eileen E. 2013. <span>“Amblyopia and Binocular Vision.”</span> <em>Progress in Retinal and Eye Research</em> 33: 67–84.
+</div>
+<div id="ref-Gao_2018" class="csl-entry" role="doc-biblioentry">
+Gao, Tina Y., Cindy X. Guo, Raiju J. Babu, Joanna M. Black, William R. Bobier, Arijit Chakraborty, Shuan Dai, et al. 2018. <span>“Effectiveness of a Binocular Video Game Vs Placebo Video Game for Improving Visual Functions in Older Children, Teenagers, and Adults with Amblyopia.”</span> <em>JAMA Ophthalmology</em> 136 (2): 172. <a href="https://doi.org/10.1001/jamaophthalmol.2017.6090">https://doi.org/10.1001/jamaophthalmol.2017.6090</a>.
+</div>
+<div id="ref-glaser2002randomized" class="csl-entry" role="doc-biblioentry">
+Glaser, Stephen R, Andrea M Matazinski, David M Sclar, Nicholas A Sala, Chrissy M Vroman, Cindy E Tanner, David R Stager, et al. 2002. <span>“A Randomized Trial of Atropine Vs Patching for Treatment of Moderate Amblyopia in Children.”</span> <em>Archives of Ophthalmology</em> 120 (3): 268–78.
+</div>
+<div id="ref-Holmes_2016" class="csl-entry" role="doc-biblioentry">
+Holmes, Jonathan M., Vivian M. Manh, Elizabeth L. Lazar, Roy W. Beck, Eileen E. Birch, Raymond T. Kraker, Eric R. Crouch, et al. 2016a. <span>“Effect of a Binocular iPad Game Vs Part-Time Patching in Children Aged 5 to 12 Years with Amblyopia.”</span> <em>JAMA Ophthalmology</em> 134 (12): 1391. <a href="https://doi.org/10.1001/jamaophthalmol.2016.4262">https://doi.org/10.1001/jamaophthalmol.2016.4262</a>.
+</div>
+<div id="ref-holmes2016randomized" class="csl-entry" role="doc-biblioentry">
+Holmes, Jonathan M, Vivian M Manh, Elizabeth L Lazar, Roy W Beck, Eileen E Birch, Raymond T Kraker, Eric R Crouch, et al. 2016b. <span>“A Randomized Trial of a Binocular iPad Game Versus Part-Time Patching in Children 5 to 12 Years of Age with Amblyopia.”</span> <em>JAMA Ophthalmology</em> 134 (12): 1391.
+</div>
+<div id="ref-Kelly_2016" class="csl-entry" role="doc-biblioentry">
+Kelly, Krista R., Reed M. Jost, Lori Dao, Cynthia L. Beauchamp, Joel N. Leffler, and Eileen E. Birch. 2016. <span>“Binocular iPad Game Vs Patching for Treatment of Amblyopia in Children.”</span> <em>JAMA Ophthalmology</em> 134 (12): 1402. <a href="https://doi.org/10.1001/jamaophthalmol.2016.4224">https://doi.org/10.1001/jamaophthalmol.2016.4224</a>.
+</div>
+<div id="ref-Li:2015aa" class="csl-entry" role="doc-biblioentry">
+Li, Simone L, Alexandre Reynaud, Robert F Hess, Yi-Zhong Wang, Reed M Jost, Sarah E Morale, Angie De La Cruz, Lori Dao, David Stager Jr, and Eileen E Birch. 2015. <span>“Dichoptic Movie Viewing Treats Childhood Amblyopia.”</span> <em>J AAPOS</em> 19 (5): 401–5. <a href="https://doi.org/10.1016/j.jaapos.2015.08.003">https://doi.org/10.1016/j.jaapos.2015.08.003</a>.
+</div>
+<div id="ref-wallace2018amblyopia" class="csl-entry" role="doc-biblioentry">
+Wallace, David K, Michael X Repka, Katherine A Lee, Michele Melia, Stephen P Christiansen, Christie L Morse, and Derek T Sprunger. 2018. <span>“Amblyopia Preferred Practice Pattern<span></span>.”</span> <em>Ophthalmology</em> 125 (1): P105–42.
+</div>
+<div id="ref-xiao2022randomized" class="csl-entry" role="doc-biblioentry">
+Xiao, Scott, Endri Angjeli, Hank C Wu, Eric D Gaier, Stephanie Gomez, Dean A Travers, Gil Binenbaum, et al. 2022. <span>“Randomized Controlled Trial of a Dichoptic Digital Therapeutic for Amblyopia.”</span> <em>Ophthalmology</em> 129 (1): 77–85.
+</div>
+<div id="ref-xiao2020improved" class="csl-entry" role="doc-biblioentry">
+Xiao, Scott, Eric D Gaier, Malcolm L Mazow, Ann U Stout, Dean A Travers, Endri Angjeli, Hank C Wu, Gil Binenbaum, and David G Hunter. 2020. <span>“Improved Adherence and Treatment Outcomes with an Engaging, Personalized Digital Therapeutic in Amblyopia.”</span> <em>Scientific Reports</em> 10 (1): 1–8.
+</div>
+<div id="ref-de2007current" class="csl-entry" role="doc-biblioentry">
+Zárate, Blanca Ruiz de, and Jaime Tejedor. 2007. <span>“Current Concepts in the Management of Amblyopia.”</span> <em>Clinical Ophthalmology (Auckland, NZ)</em> 1 (4): 403.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Introduction.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Methods.html" class="pagination-link">
+        <span class="nav-page-text">Methods</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
