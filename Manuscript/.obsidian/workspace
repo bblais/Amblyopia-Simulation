@@ -1,0 +1,122 @@
+{
+  "main": {
+    "id": "02c9ce6868e4948f",
+    "type": "split",
+    "children": [
+      {
+        "id": "f40cee10ab379cd7",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "5 Figures.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "30c9cfc48b9abc53",
+    "type": "split",
+    "children": [
+      {
+        "id": "993e620ac9bf5daf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "218df4b18f96d711",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "7f1cebf0106d90d5",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "@cite",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 231
+  },
+  "right": {
+    "id": "03658e0cdfaa502c",
+    "type": "split",
+    "children": [
+      {
+        "id": "83ac8edd46eca22b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "da0e38b25761369c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "5 Figures.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "3a7868b3af431fce",
+            "type": "leaf",
+            "state": {
+              "type": "todo",
+              "state": {}
+            }
+          },
+          {
+            "id": "9acd673bb782d23e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 296
+  },
+  "active": "f40cee10ab379cd7",
+  "lastOpenFiles": [
+    "5 Figures.md",
+    "2. Methods.md",
+    "main.md",
+    "to_do.md",
+    "unlinked files output.md",
+    "3. Results.md",
+    "resources/input_examples.png",
+    "1. Introduction.md",
+    "ARVO 2021 Abstract.md",
+    "4. Conclusions, Future Directions and To Do.md"
+  ]
+}

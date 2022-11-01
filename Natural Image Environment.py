@@ -25,7 +25,7 @@ from input_environment_defs import *
 make_original_image_files()
 
 
-# In[3]:
+# In[5]:
 
 
 #| label: fig-orig
@@ -40,9 +40,12 @@ for i in range(6):
     plt.subplot(2,3,i+1)
     plt.imshow(im[i],cmap=plt.cm.gray)
     plt.axis('off')
+    
+plt.savefig('Manuscript/resources/fig-orig.png')
+plt.savefig('Manuscript/resources/fig-orig.svg')
 
 
-# In[4]:
+# In[6]:
 
 
 #| output: false
@@ -75,6 +78,9 @@ for i in range(6):
     plt.subplot(2,3,i+1)
     plt.imshow(im[i],cmap=plt.cm.gray)
     plt.axis('off')
+    
+plt.savefig('Manuscript/resources/fig-logdog.png')
+plt.savefig('Manuscript/resources/fig-logdog.svg')    
 
 
 # ## Two-eye architecture

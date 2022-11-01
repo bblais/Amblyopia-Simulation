@@ -1,0 +1,15 @@
+{
+  "showCLICommands": false,
+  "addExtensionsToInternalLinks": "html",
+  "injectAppCSS": "light",
+  "injectThemeCSS": false,
+  "customCSSFile": null,
+  "displayYAMLFrontmatter": false,
+  "linkStrippingBehaviour": "text",
+  "highDPIDiagrams": true,
+  "pandoc": "/Users/bblais/opt/anaconda3/envs/py3/bin/pandoc",
+  "pdflatex": "/Library/TeX/texbin/pdflatex",
+  "outputFolder": null,
+  "extraArguments": "--template=paper_template.tex --resource-path=\"/Users/bblais/Desktop/Projects/Writing/Luminopia/Manuscript/resources\" --filter /Users/bblais/opt/anaconda3/envs/py3/bin/pandoc-fignos --filter /Users/bblais/opt/anaconda3/envs/py3/bin/pandoc-eqnos  --citeproc  ",
+  "exportFrom": "md"
+}

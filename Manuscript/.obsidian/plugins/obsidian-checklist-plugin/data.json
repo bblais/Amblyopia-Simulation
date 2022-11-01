@@ -1,0 +1,17 @@
+{
+  "todoPageName": "todo",
+  "showChecked": false,
+  "showAllTodos": true,
+  "autoRefresh": true,
+  "subGroups": false,
+  "groupBy": "page",
+  "sortDirectionItems": "new->old",
+  "sortDirectionGroups": "new->old",
+  "sortDirectionSubGroups": "new->old",
+  "includeFiles": "daily notes/*",
+  "lookAndFeel": "classic",
+  "_collapsedSections": [],
+  "_hiddenTags": [],
+  "sortDirection": "old->new",
+  "ignoreFiles": "templates"
+}
