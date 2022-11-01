@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Brian S. Blais" />
+  <title>Comparing Treatments for Amblyopia with a Synaptic Plasticity Model</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Comparing Treatments for Amblyopia with a Synaptic
+Plasticity Model</h1>
+<p class="author">Brian S. Blais</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#preface" id="toc-preface">Preface</a>
+<ul>
+<li><a href="#software-installation"
+id="toc-software-installation">Software Installation</a></li>
+<li><a href="#printable-versions" id="toc-printable-versions">Printable
+Versions</a></li>
+</ul></li>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">1</span> Introduction</a>
+<ul>
+<li><a href="#what-is-amblyopia" id="toc-what-is-amblyopia"><span
+class="toc-section-number">1.1</span> What is Amblyopia?</a></li>
+<li><a href="#how-is-it-treated" id="toc-how-is-it-treated"><span
+class="toc-section-number">1.2</span> How is it Treated?</a>
+<ul>
+<li><a href="#monocular-treatments" id="toc-monocular-treatments"><span
+class="toc-section-number">1.2.1</span> Monocular Treatments</a></li>
+<li><a href="#binocular-treatments" id="toc-binocular-treatments"><span
+class="toc-section-number">1.2.2</span> Binocular Treatments</a></li>
+</ul></li>
+<li><a href="#mechanisms-for-amblyopia"
+id="toc-mechanisms-for-amblyopia"><span
+class="toc-section-number">1.3</span> Mechanisms for Amblyopia</a></li>
+</ul></li>
+<li><a href="#methods" id="toc-methods"><span
+class="toc-section-number">2</span> Methods</a>
+<ul>
+<li><a href="#natural-image-input-environment"
+id="toc-natural-image-input-environment"><span
+class="toc-section-number">2.1</span> Natural Image Input
+Environment</a></li>
+<li><a href="#two-eye-architecture" id="toc-two-eye-architecture"><span
+class="toc-section-number">2.2</span> Two-eye architecture</a></li>
+<li><a href="#synaptic-modification-the-bcm-learning-rule"
+id="toc-synaptic-modification-the-bcm-learning-rule"><span
+class="toc-section-number">2.3</span> Synaptic Modification: The BCM
+Learning Rule</a></li>
+<li><a href="#simulation" id="toc-simulation"><span
+class="toc-section-number">2.4</span> Simulation</a></li>
+<li><a href="#models-of-development-of-amblyopia"
+id="toc-models-of-development-of-amblyopia"><span
+class="toc-section-number">2.5</span> Models of Development of
+Amblyopia</a>
+<ul>
+<li><a href="#refractive-amblyopia" id="toc-refractive-amblyopia"><span
+class="toc-section-number">2.5.1</span> Refractive amblyopia</a></li>
+<li><a href="#strabismic-amblyopia" id="toc-strabismic-amblyopia"><span
+class="toc-section-number">2.5.2</span> Strabismic amblyopia</a></li>
+</ul></li>
+<li><a href="#models-of-treatments-for-amblyopia"
+id="toc-models-of-treatments-for-amblyopia"><span
+class="toc-section-number">2.6</span> Models of Treatments for
+Amblyopia</a>
+<ul>
+<li><a href="#patch-treatment" id="toc-patch-treatment"><span
+class="toc-section-number">2.6.1</span> Patch treatment</a></li>
+<li><a href="#contrast-modification"
+id="toc-contrast-modification"><span
+class="toc-section-number">2.6.2</span> Contrast modification</a></li>
+<li><a href="#dichoptic-mask" id="toc-dichoptic-mask"><span
+class="toc-section-number">2.6.3</span> Dichoptic Mask</a></li>
+<li><a href="#atropine-treatment" id="toc-atropine-treatment"><span
+class="toc-section-number">2.6.4</span> Atropine treatment</a></li>
+</ul></li>
+<li><a href="#quantifying-responses"
+id="toc-quantifying-responses"><span
+class="toc-section-number">2.7</span> Quantifying responses</a>
+<ul>
+<li><a href="#ocular-dominance-index"
+id="toc-ocular-dominance-index"><span
+class="toc-section-number">2.7.1</span> Ocular Dominance Index</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#results" id="toc-results"><span
+class="toc-section-number">3</span> Results</a>
+<ul>
+<li><a href="#recovery-using-glasses"
+id="toc-recovery-using-glasses"><span
+class="toc-section-number">3.1</span> Recovery using glasses</a></li>
+<li><a href="#patch-treatment-1" id="toc-patch-treatment-1"><span
+class="toc-section-number">3.2</span> Patch Treatment</a></li>
+<li><a href="#atropine-treatment-1" id="toc-atropine-treatment-1"><span
+class="toc-section-number">3.3</span> Atropine Treatment</a></li>
+<li><a href="#contrast-modification-and-dichoptic-masks"
+id="toc-contrast-modification-and-dichoptic-masks"><span
+class="toc-section-number">3.4</span> Contrast Modification and
+Dichoptic Masks</a></li>
+<li><a href="#conclusions-and-discussion"
+id="toc-conclusions-and-discussion"><span
+class="toc-section-number">3.5</span> Conclusions and Discussion</a>
+<ul>
+<li><a href="#future-directions" id="toc-future-directions"><span
+class="toc-section-number">3.5.1</span> Future Directions</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</nav>
+<h1 class="unnumbered" id="preface">Preface</h1>
+<p>These notes are produced with a combination of Obsidian (<a
+href="https://obsidian.md">https://obsidian.md</a>), pandoc (<a
+href="https://pandoc.org">https://pandoc.org</a>), and some self-styled
+python scripts (<a
+href="https://github.com/bblais/Amblyopia-Simulation/tree/main/Manuscript">https://github.com/bblais/Amblyopia-Simulation/tree/main/Manuscript</a>)</p>
+<h2 class="unnumbered" id="software-installation">Software
+Installation</h2>
+<p>The software is Python-based with parts written in Cython.</p>
+<ul>
+<li>Download the Anaconda Distribution of Python:</li>
+</ul>
+<p><a
+href="https://www.anaconda.com/products/individual#downloads">https://www.anaconda.com/products/individual#downloads</a></p>
+<ul>
+<li>Download and extract the <em>PlasticNet</em> package at:</li>
+</ul>
+<p><a
+href="https://github.com/bblais/Plasticnet/archive/refs/heads/master.zip">https://github.com/bblais/Plasticnet/archive/refs/heads/master.zip</a></p>
+<ul>
+<li>Run the script <code>install.py</code></li>
+</ul>
+<h2 class="unnumbered" id="printable-versions">Printable Versions</h2>
+<p>Printable versions of this report can be found on the GitHub site for
+this project,</p>
+<ul>
+<li><a
+href="https://github.com/bblais/Amblyopia-Simulation/raw/main/Manuscript/docs/Comparing-Treatments-for-Amblyopia-with-a-Synaptic-Plasticity-Model.docx">Microsoft
+Word version</a></li>
+<li><a
+href="https://github.com/bblais/Amblyopia-Simulation/raw/main/Manuscript/docs/Comparing-Treatments-for-Amblyopia-with-a-Synaptic-Plasticity-Model.pdf">PDF
+version</a></li>
+</ul>
+<h1 data-number="1" id="introduction"><span
+class="header-section-number">1</span> Introduction</h1>
+<p>These notes are an exploration of the problem of modeling Amblyopia
+and its various treatments from an approach using synaptic plasticity
+models. The process will involve constructing a simplified mechanism for
+the development of amblyopic deficits and subsequently modeling both
+monocular and binocular treatment protocols. The goal is to understand
+the dynamics of the recovery from amblyopic deficits for the different
+treatment protocols, to compare the effectiveness of each protocol, and
+to explore their limitations. Ideally we would like to use these models
+to inform future protocol parameters and perhaps suggest novel
+treatments for amblyopia.</p>
+<p>In this part we will explore the clinical basis for amblyopia and its
+treatments. In the <span class="citation"
+data-cites="sec-models-of-development">(<strong>sec-models-of-development?</strong>)</span>
+and <span class="citation"
+data-cites="sec-models-of-treatments">(<strong>sec-models-of-treatments?</strong>)</span>
+we will explore the models that are used to describe the deficits from
+amblyopia and their treatment, respectively.</p>
+<h2 data-number="1.1" id="what-is-amblyopia"><span
+class="header-section-number">1.1</span> What is Amblyopia?</h2>
+<p>Amblyopia is the most common cause of vision loss in children, caused
+by refractive errors or misalignment of the eyes <span class="citation"
+data-cites="de2007current">(Zárate and Tejedor, 2007)</span>.</p>
+<ul>
+<li>Visual acuity</li>
+<li>Contrast sensitivity</li>
+<li>Color</li>
+<li>Depth (Stereopsis)</li>
+<li>Motion</li>
+<li>Visual fields</li>
+</ul>
+<h2 data-number="1.2" id="how-is-it-treated"><span
+class="header-section-number">1.2</span> How is it Treated?</h2>
+<p>The current primary treatment is described in the <em>Amblyopia
+Preferred Practice Method</em> <span class="citation"
+data-cites="wallace2018amblyopia">(D. K. Wallace et al., 2018)</span>.
+Treatments are divided into two broad categories, monocular and
+binocular treatments. Monocular treatments produce a competition between
+the two eyes by treating only the fellow eye to that the amblyopic eye
+recovers. Binocular treatments seek to stimulate both eyes in such a way
+that binocular mechanisms can produce a recovery in the amblyopic
+eye.</p>
+<h3 data-number="1.2.1" id="monocular-treatments"><span
+class="header-section-number">1.2.1</span> Monocular Treatments</h3>
+<p>The most common treatment includes</p>
+<ol type="1">
+<li>the optical correction of significant refractive errors</li>
+<li>patching the dominant eye which forces the visual input to come from
+only the amblyopic eye.</li>
+</ol>
+<p>Although patching is the most common method of treatment, other
+methods are described including pharmacology and technology <span
+class="citation"
+data-cites="holmes2016randomized Kelly_2016 Holmes_2016 Li:2015aa de2007current Gao_2018 glaser2002randomized">(Gao
+et al., 2018; Glaser et al., 2002; Jonathan M. Holmes et al., 2016b;
+Jonathan M. Holmes et al., 2016a; Kelly et al., 2016; Li et al., 2015;
+Zárate and Tejedor, 2007)</span>. These include,</p>
+<ol start="3" type="1">
+<li>Pharmacological treatment with atropine drops in the fellow eye</li>
+</ol>
+<p>Each of these treatments only directly applies to the fellow eye and
+the amblyopic eye is left untouched.</p>
+<h3 data-number="1.2.2" id="binocular-treatments"><span
+class="header-section-number">1.2.2</span> Binocular Treatments</h3>
+<p>There are some treatments which are administered to both eyes, making
+them binocular treatments. The one that we will be addressing here use
+virtual reality headsets<span class="citation"
+data-cites="xiao2020improved xiao2022randomized">(Xiao et al., 2020,
+2022)</span>,</p>
+<ol start="4" type="1">
+<li>Virtual reality input to both eyes, with contrast modification
+and/or dichoptic masks</li>
+</ol>
+<h2 data-number="1.3" id="mechanisms-for-amblyopia"><span
+class="header-section-number">1.3</span> Mechanisms for Amblyopia</h2>
+<p>Since the unequal visual input to the brain can cause alterations in
+the synaptic pathways leading to a disparity in ocular dominance <span
+class="citation" data-cites="birch2013amblyopia">(Birch, 2013)</span>,
+it is important to understand the possible synaptic effects amblyopia
+can produce and how potential treatments will either help or hinder the
+recovery.</p>
+<h1 data-number="2" id="methods"><span
+class="header-section-number">2</span> Methods</h1>
+<p>In this paper we use a specific model of neural plasticity, the BCM
+model<span class="citation" data-cites="BCM82">(Bienenstock et al.,
+1982)</span>, to describe the dynamics of the recovery from amblyopia
+under a number of treatment protocols. Section <a
+href="#introduction">1</a>.</p>
+<h2 data-number="2.1" id="natural-image-input-environment"><span
+class="header-section-number">2.1</span> Natural Image Input
+Environment</h2>
+<p>In order to approximate the visual system, we start with the
+following basic properties of the retina, LGN and cortex. There are
+approximately 1000 photoreceptors feeding into 1 ganglion cell <span
+class="citation" data-cites="JeonEtAl1998 SterlingEtAl1988">(Jeon et
+al., 1998; Sterling et al., 1988)</span>. The retina/LGN responses show
+a center-surround organization, but with a center diameter less than
+1<span class="math inline">\(^o\)</span> <span class="citation"
+data-cites="hubel1995eye">(Hubel, 1995)</span></p>
+<p>We use natural scene stimuli for the simulated inputs to the visual
+system. We start with images taken with a digital camera, with
+dimensions 1200 pixels by 1600 pixels and 40<span
+class="math inline">\(^o\)</span> by 60<span
+class="math inline">\(^o\)</span> real-world angular dimensions (Figure
+<a href="#fig:orig">1</a>). Photoreceptors have a logarithmic response
+to the stimulus, so we apply the natural logarithm to the pixel values.
+Finally, we model the ganglion responses using a 32x32 pixel
+center-surround difference-of-Gaussians (DOG) filter to process the
+images, each pixel representing one photoreceptor (Figure <a
+href="#fig:orig">1</a>). The center-surround radius ratio used for the
+ganglion cell is 1:3, with balanced excitatory and inhibitory regions
+and normalized Gaussian profiles.</p>
+<div id="fig:orig" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-orig.svg"
+alt="Figure 1: Original natural images." />
+<figcaption aria-hidden="true"><span>Figure 1:</span> Original natural
+images.</figcaption>
+</figure>
+</div>
+<div id="fig:logdog" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-logdog.svg"
+alt="Figure 2: A Small Subset of the Natural Images filtered with a base-2 Log function and a difference of Gaussians (DOG)" />
+<figcaption aria-hidden="true"><span>Figure 2:</span> A Small Subset of
+the Natural Images filtered with a base-2 Log function and a difference
+of Gaussians (DOG)</figcaption>
+</figure>
+</div>
+<h2 data-number="2.2" id="two-eye-architecture"><span
+class="header-section-number">2.2</span> Two-eye architecture</h2>
+<p>Shown in Figure <a href="#fig:arch">3</a> is the visual field,
+approximated here as a two-dimensional projection, to left and right
+retinal cells. These left and right retinal cells project to the left
+and right LGN cells, respectively, and finally to a single cortical
+cell. The LGN is assumed to be a simple relay, and does not modify the
+incoming retinal activity. It is important to understand that the model
+we are pursuing here is a <em>single cortical cell</em> which receives
+input from both eyes. We will encounter some limitations to this model
+which may necessitate exploring multi-neuron systems.</p>
+<p>In the model, normal development is simulated with identical image
+patches presented to both eyes combined with small independent noise in
+each eye. The random noise is generated from a zero-mean normal
+distribution of a particular variance, representing the natural
+variation in responses of LGN neurons. Practically, the independent
+random noise added to each of the two-eye channels avoids the artificial
+situation of having mathematically identical inputs in the channels. The
+development of the deficit and the subsequent treatment protocols are
+modeled with added preprocessing to these image patches, described later
+in <span class="citation"
+data-cites="sec-models-of-development">(<strong>sec-models-of-development?</strong>)</span>
+and <span class="citation"
+data-cites="sec-models-of-treatments">(<strong>sec-models-of-treatments?</strong>)</span>.</p>
+<p>For all of the simulations we use a 19x19 receptive field, which is a
+compromise between speed of simulation and the limits of spatial
+discretization. We perform at least 20 independent simulations for each
+condition to address variation in the results.</p>
+<div id="fig:arch" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/arch.png"
+alt="Figure 3: Two-eye architecture." />
+<figcaption aria-hidden="true"><span>Figure 3:</span> Two-eye
+architecture.</figcaption>
+</figure>
+</div>
+<div id="fig:normal-inputs" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-normal_patches.svg"
+alt="Figure 4: A sample of 24 input patches from a normal visual environment. The left- and right-eye inputs are shown in pairs." />
+<figcaption aria-hidden="true"><span>Figure 4:</span> A sample of 24
+input patches from a normal visual environment. The left- and right-eye
+inputs are shown in pairs.</figcaption>
+</figure>
+</div>
+<h2 data-number="2.3"
+id="synaptic-modification-the-bcm-learning-rule"><span
+class="header-section-number">2.3</span> Synaptic Modification: The BCM
+Learning Rule</h2>
+<p>We use a single neuron and the parabolic form of the BCM<span
+class="citation" data-cites="BCM82 Blais:2008kx">(Bienenstock et al.,
+1982; Brian S. Blais et al., 2008)</span> learning rule for all of the
+simulations, where the synaptic modification depends on the postsynaptic
+activity, <span class="math inline">\(y\)</span>, in the following way
+for a single neuron</p>
+<p><span class="math display">\[
+y=\sigma\left(\sum_i x_i w_i \right)
+\]</span> <span class="math display">\[
+\frac{dw_i}{dt} = \eta y(y-\theta_M) x_i
+\]</span> <span class="math display">\[
+\frac{d\theta_M}{dt} = (y^2-\theta_M)/\tau
+\]</span></p>
+<p>where is <span class="math inline">\(x_i\)</span> is the <span
+class="math inline">\(i\)</span>th presynaptic input, <span
+class="math inline">\(w_i\)</span> is the <span
+class="math inline">\(i\)</span>th synaptic weight, and <span
+class="math inline">\(y\)</span> is the postsynaptic output activity.
+The constant, <span class="math inline">\(\eta\)</span>, refers to the
+learning rate and the constant, <span
+class="math inline">\(\tau\)</span>, is what we call the memory-constant
+and is related to the speed of the sliding threshold. The transfer
+function, <span class="math inline">\(\sigma(\cdot)\)</span>, places
+minimum and maximum responses given a set of inputs and weights.</p>
+<div id="fig:bcm-phi" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-bcm-phi.svg"
+alt="Figure 5: The BCM synaptic modification function. Units are arbitrary." />
+<figcaption aria-hidden="true"><span>Figure 5:</span> The BCM synaptic
+modification function. Units are arbitrary.</figcaption>
+</figure>
+</div>
+<p>The results are extremely robust to values of <span
+class="math inline">\(\eta\)</span> and <span
+class="math inline">\(\tau\)</span> , which are generally chosen for
+practical, rather than theoretical, considerations. Each of these
+constants is related to the time-step for the simulations, but given the
+phenomenological nature of the BCM theory it is beyond the scope of this
+paper to make detailed comparisons between simulation time and
+real-time. Further, the fact that <span
+class="math inline">\(\tau\)</span> can be changed within a factor of
+100 with no noticeable effect, the experiments presented here cannot be
+used address the time-scales of the molecular mechanisms underlying
+synaptic modification. Whenever we refer to real-time units for a
+simulation, we approximate a single simulation iteration as 1 iteration
+= 0.2 seconds<span class="citation" data-cites="phd:Blais98">(Brian S.
+Blais, 1998)</span>.</p>
+<p>In the BCM learning rule, weights decrease if <span
+class="math inline">\(y\)</span> is less than the modification
+threshold,<span class="math inline">\(\theta_M\)</span> , and increase
+if <span class="math inline">\(y\)</span> is greater than the
+modification threshold. To stabilize learning, the modification
+threshold “slides” as a super-linear function of the output. The output,
+<span class="math inline">\(y\)</span> , is related to the product of
+the inputs and the weights via a sigmoidal function, <span
+class="math inline">\(\sigma(\cdot)\)</span>, which places constraints
+on the values of the output, keeping it in the range -1 and 50. The
+interpretation of negative values is consistent with previous work<span
+class="citation" data-cites="BlaisEtAl98">(B. S. Blais et al.,
+1998)</span>, where the activity values are measured relative to
+spontaneous activity. Thus, negative values are interpreted as activity
+below spontaneous. We continue this usage, in order to more easily
+compare with previous simulations. The role of the spontaneous level for
+the simulations in the natural image environment is discussed
+elsewhere<span class="citation" data-cites="BlaisEtAl98">(B. S. Blais et
+al., 1998)</span>.</p>
+<h2 data-number="2.4" id="simulation"><span
+class="header-section-number">2.4</span> Simulation</h2>
+<p>The synaptic weights, and the modification threshold, are set to
+small random initial values at the beginning of a simulation. At each
+iteration, an input patch is generated as described above depending on
+the procedure being simulated and then presented to the neuron. After
+each input patch is presented, the weights are modified using the output
+of the neuron, the input values and the current value of the
+modification threshold. In an input environment composed of patches
+taken from natural images, with equal patches presented to the left- and
+right-eyes as shown in Figure <a href="#fig:normal-inputs">4</a>, this
+process orientation selective and fully binocular cells<span
+class="citation" data-cites="BlaisEtAl98">(B. S. Blais et al.,
+1998)</span>. We then present test stimulus made from sine-gratings with
+24 orientations, 20 spatial frequencies, and optimized over phase.
+Applying any of the blur filters to the sine gratings does not
+quantitatively change the result.</p>
+<div id="fig:rf-theta-tuning-curve" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-rf-theta-tuning-curve.svg"
+alt="Figure 6: (A) Synaptic weights where black denotes weak weights and white denotes strone weights. A clear preference for oriented stimuli can be seen. (B) BCM modification threshold over time. The value converges to nearly the same level for all neurons. (C) Responses to Oriented Stimuli after training. Each neuron develops orientation selectivity to a range of optimum angles." />
+<figcaption aria-hidden="true"><span>Figure 6:</span> (A) Synaptic
+weights where black denotes weak weights and white denotes strone
+weights. A clear preference for oriented stimuli can be seen. (B) BCM
+modification threshold over time. The value converges to nearly the same
+level for all neurons. (C) Responses to Oriented Stimuli after training.
+Each neuron develops orientation selectivity to a range of optimum
+angles.</figcaption>
+</figure>
+</div>
+<h2 data-number="2.5" id="models-of-development-of-amblyopia"><span
+class="header-section-number">2.5</span> Models of Development of
+Amblyopia</h2>
+<p>Amblyopia is a reduction of the best-corrected visual acuity (BCVA)
+with an otherwise normal eye and has many causes<span class="citation"
+data-cites="wallace2018amblyopia">(D. K. Wallace et al., 2018)</span>.
+Two of the most common forms of amblyopia are strabismic and
+anisometropic amblyiopia. Strabismic amblyopia occurs when the inputs
+from each eye do not converge and the fixating eye becomes dominant over
+a non-fixating eye. Refractive amblyopia occurs with untreated
+unilateral refractive errors, one kind being anisometropic amblyopia
+where unequal refractive power in each eye leads the retinal image from
+the amblyopic eye to be blurred relative to the fellow eye. Both of
+these processes lead to synaptic plasticity adjustments and interocular
+competition, enhancing the initial deficit.</p>
+<p>In this work we use a model of the amblyopic deficit caused by two
+mechanisms. The first is a blurring of the amblyopic eye inputs,
+representing refractive amblyopia. The second is eye-jitter,
+representing one source of strabismic amblyopia. We can explore these
+mechanisms independently and in conjunction to see how they respond
+differentially to the various treatments.</p>
+<h3 data-number="2.5.1" id="refractive-amblyopia"><span
+class="header-section-number">2.5.1</span> Refractive amblyopia</h3>
+<p>The amblyopic eye is presented with image patches that have been
+<em>blurred</em> with a normalized Gaussian filter applied to the images
+with a specified width. The larger the width the blurrier the resulting
+filtered image. Some examples are shown in Figure <a
+href="#fig:blurred-inputs">7</a></p>
+<div id="fig:blurred-inputs" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-blurred-inputs.svg"
+alt="Figure 7: A sample of 24 input patches from a refractive amblyopic environment. The amblyopic (blurred) input is the square on the left-hand side of each pair." />
+<figcaption aria-hidden="true"><span>Figure 7:</span> A sample of 24
+input patches from a refractive amblyopic environment. The amblyopic
+(blurred) input is the square on the left-hand side of each
+pair.</figcaption>
+</figure>
+</div>
+<h3 data-number="2.5.2" id="strabismic-amblyopia"><span
+class="header-section-number">2.5.2</span> Strabismic amblyopia</h3>
+<p>Strabismic inputs are modeled by changing the center of the left- and
+right-input patches in a systematic way, with a set mean offset and a
+standard deviation per input patch generated. In this way we can model
+completely overlapping (i.e. normal) inputs, completely non-overlapping
+(i.e. extreme strabismus), and any amount of overlap in between. Some
+examples are shown in Figure <a href="#fig:jitter-inputs">8</a> with the
+offset locations shown in Figure ??.</p>
+<div id="fig:jitter-inputs" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-inputs.svg"
+alt="Figure 8: A sample of 24 input patches from a strabismic visual environment achieved through random jitter of the amblyopic (left) eye." />
+<figcaption aria-hidden="true"><span>Figure 8:</span> A sample of 24
+input patches from a strabismic visual environment achieved through
+random jitter of the amblyopic (left) eye.</figcaption>
+</figure>
+</div>
+<div id="fig:jitter-locations" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-locations.svg"
+alt="Figure 9: Locations of the center of the left- and right-field of view receptive fields, jittered randomly with set mean and standard deviation. The average receptive fields are shown as gray squares." />
+<figcaption aria-hidden="true"><span>Figure 9:</span> Locations of the
+center of the left- and right-field of view receptive fields, jittered
+randomly with set mean and standard deviation. The average receptive
+fields are shown as gray squares.</figcaption>
+</figure>
+</div>
+<h2 data-number="2.6" id="models-of-treatments-for-amblyopia"><span
+class="header-section-number">2.6</span> Models of Treatments for
+Amblyopia</h2>
+<p>To model the fix to the refractive imbalance we follow the deficit
+simulation with an input environment that is rebalanced, both eyes
+receiving nearly identical input patches (<a
+href="#fig:normal-inputs">4</a>). This process is a model of the
+application of refractive correction. Although both eyes receive nearly
+identical input patches, we add independent Gaussian noise to each input
+channel to represent the natural variation in the activity in each eye.
+In addition, in those cases where use employ strabismic amblyopia, the
+inter-eye jitter is not corrected with the refractive correction.</p>
+<h3 data-number="2.6.1" id="patch-treatment"><span
+class="header-section-number">2.6.1</span> Patch treatment</h3>
+<p>The typical patch treatment is done by depriving the strong-eye of
+input with an eye-patch. In the model this is equivalent to presenting
+the strong-eye with random noise instead of the natural image input.
+Competition between the left- and right-channels drives the recovery,
+and is produced from the difference between <em>structured</em> input
+into the weak-eye and the <em>unstructured</em> (i.e. noise) input into
+the strong eye. It is not driven by a reduction in input activity. <span
+class="citation"
+data-cites="fig-patch-inputs">(<strong>fig-patch-inputs?</strong>)</span>
+shows sample simulation input patterns from the patched eye. Compare
+this to <a href="#fig:normal-inputs">4</a> to see that the simulated
+patch has far less structure than the normal inputs.</p>
+<div id="fig:patch-inputs" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-patch-inputs.svg"
+alt="Figure 10: A sample of 24 input patches from a patched visual environment." />
+<figcaption aria-hidden="true"><span>Figure 10:</span> A sample of 24
+input patches from a patched visual environment.</figcaption>
+</figure>
+</div>
+<h3 data-number="2.6.2" id="contrast-modification"><span
+class="header-section-number">2.6.2</span> Contrast modification</h3>
+<p>A binocular approach to treatment can be produced with contrast
+reduction of the non-deprived channel relative to the deprived channel.
+Experimentally this can be accomplished with VR headsets<span
+class="citation" data-cites="xiao2020improved">(Xiao et al.,
+2020)</span>. In the model we implement this by down-scaling the normal,
+unblurred channel with a simple scalar multiplier applied to each pixel.
+The contrast difference sets up competition between the two channels
+with the advantage given to the weak-eye channel.</p>
+<div id="fig:contrast-modified-inputs" class="fignos">
+<figure>
+<img
+src="/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-contrast-modified-inputs.svg"
+alt="Figure 11: A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left." />
+<figcaption aria-hidden="true"><span>Figure 11:</span> A sample of 24
+input patches from a normal visual environment with the right-channel
+down-scaled relative to the left.</figcaption>
+</figure>
+</div>
+<h3 data-number="2.6.3" id="dichoptic-mask"><span
+class="header-section-number">2.6.3</span> Dichoptic Mask</h3>
+<p>On top of the contrast modification, we can include the application
+of the dichoptic mask (Figure ?? E). In this method, each eye receives a
+version of the input images filtered through independent masks in each
+channel, resulting in a mostly-independent pattern in each
+channel.<br />
+It has been observed that contrast modification combined with dichoptic
+masks can be an effective treatment for amblyopia<span class="citation"
+data-cites="Li:2015aa">(<strong>xiao2021randomized?</strong>)</span>.
+The motivation behind the application of the mask filter is that the
+neural system must use both channels to reconstruct the full image and
+thus may lead to enhanced recovery.</p>
+<p>The dichoptic masks are constructed with the following procedure. A
+blank image (i.e. all zeros) is made to which is added 15 randomly sized
+circles with values equal to 1 (Figure ??). These images are then
+smoothed with a Gaussian filter of a given width, <span
+class="math inline">\(f\)</span>. This width is a parameter we can vary
+to change the overlap between the left- and right-eye images. A high
+value of <span class="math inline">\(f\)</span> compared with the size
+of the receptive field, e.g. <span class="math inline">\(f=90\)</span>,
+yields a high overlap between the patterns in the weak- and strong-eye
+inputs (Figure ??). Likewise, a small value of <span
+class="math inline">\(f\)</span>, e.g. <span
+class="math inline">\(f=10\)</span>, the eye inputs are nearly
+independent – the patterned activity falling mostly on one of the eyes
+and not much to both. Finally, the smoothed images are scaled to have
+values from a minimum of 0 to a maximum of 1. This image-mask we will
+call <span class="math inline">\(A\)</span>, and is the left-eye mask
+whereas the right-eye mask, <span class="math inline">\(F\)</span>, is
+the inverse of the left-eye mask, <span class="math inline">\(F\equiv
+1-A\)</span>. The mask is applied to an image by multiplying the left-
+and right-eye images by the left- and right-eye masks, respectively,
+resulting in a pair of images which have no overlap at the peaks of each
+mask, and nearly equal overlap in the areas of the images where the
+masks are near 0.5 (Figure ??).</p>
+<h3 data-number="2.6.4" id="atropine-treatment"><span
+class="header-section-number">2.6.4</span> Atropine treatment</h3>
+<p>In the atropine treatment for amblyopia<span class="citation"
+data-cites="glaser2002randomized">(Glaser et al., 2002)</span>,
+eye-drops of atropine are applied to the strong-eye resulting in blurred
+vision in that eye. Here we use the same blurred filter used to obtain
+the deficit (possibly with a different width) applied to the strong eye
+(Figure ?? F). The difference in sharpness between the strong-eye inputs
+and the weak-eye inputs sets up competition between the two channels
+with the advantage given to the weak-eye.</p>
+<h2 data-number="2.7" id="quantifying-responses"><span
+class="header-section-number">2.7</span> Quantifying responses</h2>
+<h3 data-number="2.7.1" id="ocular-dominance-index"><span
+class="header-section-number">2.7.1</span> Ocular Dominance Index</h3>
+<p>Simulations are ended when selectivity has been achieved and the
+responses are stable. From the maximal responses of each eye, <span
+class="math inline">\(R_{\text{left}}\)</span> and <span
+class="math inline">\(R_{\text{right}}\)</span>, individually, we can
+calculate the ocular dominance index as <span class="math display">\[
+\text{ODI} \equiv
+\frac{R_{\text{right}}-R_{\text{left}}}{R_{\text{right}}+R_{\text{left}}}
+\]</span> The ocular dominance index (ODI) has a value of <span
+class="math inline">\(\text{ODI} \approx 1\)</span> when stimulus to the
+right-eye (typically the strong eye in the simulations, by convention)
+yields a maximum neuronal response with little or no contribution from
+the left-eye. Likewise, an ocular dominance index (ODI) has a value of
+<span class="math inline">\(\text{ODI} \approx -1\)</span> when stimulus
+to the left-eye (typically the weak eye, by convention) yields a maximum
+neuronal response with little or no contribution from the right-eye. A
+value of <span class="math inline">\(\text{ODI} \approx 0\)</span>
+represents a purely binocular cell, responding equally to stimulus in
+either eye.</p>
+<h1 data-number="3" id="results"><span
+class="header-section-number">3</span> Results</h1>
+<h2 data-number="3.1" id="recovery-using-glasses"><span
+class="header-section-number">3.1</span> Recovery using glasses</h2>
+<p>The “fix” treatment described in Section ?? and Section ?? depends on
+the noise level in the open eye. Figure ?? shows the rate of recovery as
+a function of this noise. For low-noise, there is very little
+improvement. For large noise, <span
+class="math inline">\(\sigma_n=1\)</span>, the rate achieves 0.14
+[ODI/day]. This measure lets us compare different treatments, and
+determine which are the most effective under the model assumptions.
+Because the experimental observation is that glasses alone are only able
+to fully restore vision in 27% of amblyopia cases<span class="citation"
+data-cites="wallace2006treatment">(D. Wallace et al., 2006)</span>, the
+other simulations use an open-eye noise value of <span
+class="math inline">\(\sigma_n=0.1\)</span>.</p>
+<h2 data-number="3.2" id="patch-treatment-1"><span
+class="header-section-number">3.2</span> Patch Treatment</h2>
+<p>As shown in <a href="#results">3</a>, increased <em>unstructured</em>
+input into the previously dominant eye increases the rate of recovery.
+This is a general property of the BCM learning rule and has been
+explored elsewhere<span class="citation" data-cites="BlaisEtAl99">(B.
+Blais et al., 1999)</span>.</p>
+<p>Figure ?? shows the effect of the patch treatment as a function of
+the closed-eye noise. For noise levels above <span
+class="math inline">\(\sigma_n \sim 0.4\)</span> the patch treatment is
+more effective than recovery with glasses alone. There is the danger of
+the patch treatment and some other treatments (see below) of causing
+reverse amblyopia, producing a deficit in the previously stronger eye.
+This will be dependent on the magnitude of the initial deficit and the
+amount of time for the treatment. Because the BCM learning rule works by
+the competition between patterns, there is no danger of causing reverse
+amblyopia with the fix with glasses, but there is that danger in any
+treatment that has an asymmetry between the strong and weak eye,
+favoring the weak eye, as most treatments have.</p>
+<p>#todo - [ ] example of reverse amblyopia</p>
+<h2 data-number="3.3" id="atropine-treatment-1"><span
+class="header-section-number">3.3</span> Atropine Treatment</h2>
+<p>Figure ?? shows the recovery rates under the atropine treatment,
+where the strong eye is presented with a blurred, noisy version of the
+natural input. Like the patch treatment, the effect is increased with
+increasing noise level due to the competition between patterns. When the
+blur filter is very small, the strong-eye inputs are nearly the same as
+the weak-eye inputs, yielding a result much like the glasses fix. When
+the blur filter is larger, the atropine treatment becomes comparable to
+the patch treatment. The blurred inputs are no better than the patch
+treatment, which has only the noise input.</p>
+<h2 data-number="3.4"
+id="contrast-modification-and-dichoptic-masks"><span
+class="header-section-number">3.4</span> Contrast Modification and
+Dichoptic Masks</h2>
+<p>Figure ?? shows the recovery rates under a binocular treatment which
+only involves contrast modification, where the contrast for the
+strong-eye is adjusted relative to the weak eye. A contrast level of 1
+is normal equal-eye vision. A contrast level of 0 means that the
+strong-eye input is shut off entirely. We see an increased rate of
+recovery with a smaller contrast value, or a larger difference between
+the strong- and weak-eye inputs. The rate does not compare to the rate
+of the patch treatment, because while there is a larger difference
+between the strong- and weak-eye inputs for lower contrast value, the
+rate of change of the strong-eye weights is decreased. The patch and
+atropine treatments result in more competition between patterns,
+resulting in faster recovery times.</p>
+<p>Figure ?? shows the recovery rates under a binocular treatment which
+includes both contrast modification and dichoptic masks. The effect of
+the mask is diminished as the mask filter size increases, which is
+expected because a larger filter size results in more overlap in the
+strong- and weak-eye inputs and thus less competition. Interestingly,
+the mask enhances the effect of contrast on the recovery rates in two
+ways. For low contrast value (i.e. strong- and weak-eye inputs are more
+different) the mask increases the recovery rate and can reach rates
+comparable or exceeding patch treatment. For extremely low contrast
+values, where nearly all of the input is coming in from the weak eye,
+there is possibility of causing reverse amblyopia. For high contrast
+value (i.e. strong- and weak-eye inputs are nearly the same), the masks
+not only make the recovery slower, but can even enhance the
+amblyopia.</p>
+<h2 data-number="3.5" id="conclusions-and-discussion"><span
+class="header-section-number">3.5</span> Conclusions and Discussion</h2>
+<blockquote>
+<p>This section actually seems a bit superfluous right now, I wonder if
+we don’t need to try and link the ocular dominance measures with visual
+acuity</p>
+<p>Instead, we could focus the conclusion on linking the directional
+conclusions with ODI/day to the existing experimental literature, and
+making recommendations for future amblyopia treatment studies.
+Thoughts?</p>
+</blockquote>
+<p>Now that we have a system of simulation environments to explore, we
+can compare to experimentally observed rates of recovery. From <span
+class="citation" data-cites="glaser2002randomized">(Glaser et al.,
+2002)</span> we have results from several visual protocols.</p>
+<ol type="1">
+<li>Only those patients are included if they had their <em>refractive
+error corrected for at least 4 weeks</em></li>
+<li>In the patching group most patients received <em>no more than 6-8
+hours of patching per day</em></li>
+<li>The resulting improvement in the visual acuity (measured in lines)
+is given here:</li>
+</ol>
+<p><span class="math display">\[
+\begin{array}{||l|c|c||}
+\text{Time}&amp; \text{Patch [lines]}&amp; \text{Atropine [lines]}\\
+\text{5 weeks} &amp; +2.22\pm 0.2&amp; +1.37\pm 0.2 \\
+\text{16 weeks} &amp; +2.94\pm 0.2&amp; +2.42\pm 0.2 \\
+\text{24 weeks} &amp; +3.16\pm 0.2&amp; +2.84\pm 0.2
+\end{array}
+\]</span></p>
+<p>This small amount of data lets us estimate the relative rates of
+improvement from the treatments. Since the patch treatment is only about
+1/3 day, the total time for treatment would be <span
+class="math inline">\(19 \text{weeks}\times \frac{7 \text{day}}{1
+\text{week}}\times 1/3=44 \text{day}\)</span> For patch treatment with
+the above data we have a rate of about <span class="math inline">\(0.94
+\text{lines} / 44 \text{day}=0.021 \text{lines}/\text{day}\)</span>.
+Likewise, for atropine, we have a rate of about <span
+class="math inline">\(1.47\text{lines} / 133 \text{day}=0.011
+\text{lines}/\text{day}\)</span>. So the patch treatment is
+approximately twice as fast as the atropine. Looking at Figure ?? we see
+that this can put a rough constraint on the parameters. For a closed-eye
+noise for the patch treatment of <span
+class="math inline">\(\sigma_n=0.8\)</span> (recovery rate ODI/day <span
+class="math inline">\(\sim 0.2\)</span>), the atropine treatment must
+have a lower noise level – we can look at the atropine parameters which
+yield recover rates ODI/day <span class="math inline">\(\sim
+0.1\)</span>). For little blur, we need a noise level of around <span
+class="math inline">\(\sigma_n=0.6\)</span>, but if the atropine
+produces a significant blur, then the noise level of those inputs must
+be much lower – well below <span
+class="math inline">\(\sigma_n=0.3\)</span> for blur filter size 6.0,
+for example.</p>
+<p>This noise level for atropine is entirely consistent with the same
+open-eye noise level with the glasses “fix” discussed earlier. Here we
+have an independent line of argument to suggest that atropine may blur
+the natural input, but doesn’t change the overall spontaneous activity
+of neurons. Further, it suggest that there is a significant
+physiological different in the activity distributions between
+unstructured input (e.g. patch) and degraded input (e.g. atropine).</p>
+<p>In this way we may hope to constrain other parameters of the model by
+comparing to experimental rates of recovery.</p>
+<h3 data-number="3.5.1" id="future-directions"><span
+class="header-section-number">3.5.1</span> Future Directions</h3>
+<h1 class="unnumbered" id="references">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="doc-bibliography">
+<div id="ref-BCM82" class="csl-entry" role="doc-biblioentry">
+Bienenstock, E. L., Cooper, L. N., and Munro, P. W. (1982). Theory for
+the development of neuron selectivity: Orientation specificity and
+binocular interaction in visual cortex. <em>Journal of
+Neuroscience</em>, <em>2</em>, 32–48.
+</div>
+<div id="ref-birch2013amblyopia" class="csl-entry"
+role="doc-biblioentry">
+Birch, E. E. (2013). Amblyopia and binocular vision. <em>Progress in
+Retinal and Eye Research</em>, <em>33</em>, 67–84.
+</div>
+<div id="ref-phd:Blais98" class="csl-entry" role="doc-biblioentry">
+Blais, Brian S. (1998, May). <em>The role of the environment in synaptic
+plasticity:<br />
+towards an understanding of learning and memory</em> (PhD thesis). Brown
+University, Institute for Brain; Neural Systems; Dr. Leon N Cooper,
+Thesis Supervisor.
+</div>
+<div id="ref-Blais:2008kx" class="csl-entry" role="doc-biblioentry">
+Blais, Brian S., Frenkel, M. Y., Kuindersma, S. R., Muhammad, R.,
+Shouval, H. Z., Cooper, L. N., and Bear, M. F. (2008). <a
+href="https://doi.org/10.1152/jn.90411.2008">Recovery from monocular
+deprivation using binocular deprivation</a>. <em>J Neurophysiol</em>,
+<em>100</em>(4), 2217–24.
+</div>
+<div id="ref-BlaisEtAl98" class="csl-entry" role="doc-biblioentry">
+Blais, B. S., Intrator, N., Shouval, H., and Cooper, L. N. (1998).
+Receptive field formation in natural scene environments: Comparison of
+single cell learning rules. <em>Neural Computation</em>, <em>10</em>(7),
+1797–1813.
+</div>
+<div id="ref-BlaisEtAl99" class="csl-entry" role="doc-biblioentry">
+Blais, B., Shouval, H., and Cooper, L. N. (1999). The role of
+presynaptic activity in monocular deprivation: Comparison of
+homosynaptic and heterosynaptic mechanisms. <em>Proc. Natl. Acad.
+Sci.</em>, <em>96</em>, 1083–1087.
+</div>
+<div id="ref-Gao_2018" class="csl-entry" role="doc-biblioentry">
+Gao, T. Y., Guo, C. X., Babu, R. J., Black, J. M., Bobier, W. R.,
+Chakraborty, A., … al., et. (2018). <a
+href="https://doi.org/10.1001/jamaophthalmol.2017.6090">Effectiveness of
+a binocular video game vs placebo video game for improving visual
+functions in older children, teenagers, and adults with amblyopia</a>.
+<em>JAMA Ophthalmology</em>, <em>136</em>(2), 172.
+</div>
+<div id="ref-glaser2002randomized" class="csl-entry"
+role="doc-biblioentry">
+Glaser, S. R., Matazinski, A. M., Sclar, D. M., Sala, N. A., Vroman, C.
+M., Tanner, C. E., et al.others. (2002). A randomized trial of atropine
+vs patching for treatment of moderate amblyopia in children.
+<em>Archives of Ophthalmology</em>, <em>120</em>(3), 268–278.
+</div>
+<div id="ref-Holmes_2016" class="csl-entry" role="doc-biblioentry">
+Holmes, Jonathan M., Manh, V. M., Lazar, E. L., Beck, R. W., Birch, E.
+E., Kraker, R. T., … al., et. (2016a). <a
+href="https://doi.org/10.1001/jamaophthalmol.2016.4262">Effect of a
+binocular iPad game vs part-time patching in children aged 5 to 12 years
+with amblyopia</a>. <em>JAMA Ophthalmology</em>, <em>134</em>(12), 1391.
+</div>
+<div id="ref-holmes2016randomized" class="csl-entry"
+role="doc-biblioentry">
+Holmes, Jonathan M., Manh, V. M., Lazar, E. L., Beck, R. W., Birch, E.
+E., Kraker, R. T., et al.others. (2016b). A randomized trial of a
+binocular iPad game versus part-time patching in children 5 to 12 years
+of age with amblyopia. <em>JAMA Ophthalmology</em>, <em>134</em>(12),
+1391.
+</div>
+<div id="ref-hubel1995eye" class="csl-entry" role="doc-biblioentry">
+Hubel, D. H. (1995). <em>Eye, brain, and vision.</em> Scientific
+American Library/Scientific American Books.
+</div>
+<div id="ref-JeonEtAl1998" class="csl-entry" role="doc-biblioentry">
+Jeon, C. J., Strettoi, E., and Masland, R. H. (1998). <span
+class="nocase">The major cell populations of the mouse retina</span>.
+<em>J Neurosci</em>, <em>18</em>(21), 8936–8946.
+</div>
+<div id="ref-Kelly_2016" class="csl-entry" role="doc-biblioentry">
+Kelly, K. R., Jost, R. M., Dao, L., Beauchamp, C. L., Leffler, J. N.,
+and Birch, E. E. (2016). <a
+href="https://doi.org/10.1001/jamaophthalmol.2016.4224">Binocular iPad
+game vs patching for treatment of amblyopia in children</a>. <em>JAMA
+Ophthalmology</em>, <em>134</em>(12), 1402.
+</div>
+<div id="ref-Li:2015aa" class="csl-entry" role="doc-biblioentry">
+Li, S. L., Reynaud, A., Hess, R. F., Wang, Y.-Z., Jost, R. M., Morale,
+S. E., … Birch, E. E. (2015). <a
+href="https://doi.org/10.1016/j.jaapos.2015.08.003">Dichoptic movie
+viewing treats childhood amblyopia</a>. <em>J AAPOS</em>,
+<em>19</em>(5), 401–5.
+</div>
+<div id="ref-SterlingEtAl1988" class="csl-entry" role="doc-biblioentry">
+Sterling, P., Freed, M. A., and Smith, R. G. (1988). <span
+class="nocase">Architecture of rod and cone circuits to the on-beta
+ganglion cell</span>. <em>J Neurosci</em>, <em>8</em>(2), 623–642.
+</div>
+<div id="ref-wallace2018amblyopia" class="csl-entry"
+role="doc-biblioentry">
+Wallace, D. K., Repka, M. X., Lee, K. A., Melia, M., Christiansen, S.
+P., Morse, C. L., and Sprunger, D. T. (2018). Amblyopia preferred
+practice pattern<span></span>. <em>Ophthalmology</em>, <em>125</em>(1),
+P105–P142.
+</div>
+<div id="ref-wallace2006treatment" class="csl-entry"
+role="doc-biblioentry">
+Wallace, D., Cotter, S., Edwards, A., Beck, R., Group, P. E. D. I., et
+al. (2006). Treatment of amblyopia with refractive correction alone.
+<em>Investigative Ophthalmology &amp; Visual Science</em>,
+<em>47</em>(13), 4310–4310.
+</div>
+<div id="ref-xiao2022randomized" class="csl-entry"
+role="doc-biblioentry">
+Xiao, S., Angjeli, E., Wu, H. C., Gaier, E. D., Gomez, S., Travers, D.
+A., et al.others. (2022). Randomized controlled trial of a dichoptic
+digital therapeutic for amblyopia. <em>Ophthalmology</em>,
+<em>129</em>(1), 77–85.
+</div>
+<div id="ref-xiao2020improved" class="csl-entry" role="doc-biblioentry">
+Xiao, S., Gaier, E. D., Mazow, M. L., Stout, A. U., Travers, D. A.,
+Angjeli, E., … Hunter, D. G. (2020). Improved adherence and treatment
+outcomes with an engaging, personalized digital therapeutic in
+amblyopia. <em>Scientific Reports</em>, <em>10</em>(1), 1–8.
+</div>
+<div id="ref-de2007current" class="csl-entry" role="doc-biblioentry">
+Zárate, B. R. de, and Tejedor, J. (2007). Current concepts in the
+management of amblyopia. <em>Clinical Ophthalmology (Auckland, NZ)</em>,
+<em>1</em>(4), 403.
+</div>
+</div>
+</body>
+</html>

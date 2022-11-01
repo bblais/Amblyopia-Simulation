@@ -21,6 +21,9 @@ bibliography: /Users/bblais/tex/bib/Amblyopia.bib
 
 ![[2. Methods]]
 
+![[3. Results]]
+
+![[4. Concusions and Discussion]]
 
 # References
 

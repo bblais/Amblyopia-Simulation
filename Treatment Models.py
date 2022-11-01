@@ -108,6 +108,9 @@ for i in range(24):
     imshow(im,cmap=plt.cm.gray)
     axis('off')
     
+plt.savefig('Manuscript/resources/fig-patch-inputs.png')
+plt.savefig('Manuscript/resources/fig-patch-inputs.svg')        
+    
 
 
 # 
@@ -118,7 +121,7 @@ for i in range(24):
 # A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel (Figure [4](#fig:input) D). The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.
 # 
 
-# In[6]:
+# In[4]:
 
 
 #| label: fig-contrast-modified-inputs
@@ -132,6 +135,9 @@ for i in range(24):
     subplot(4,6,i+1)
     imshow(im,cmap=plt.cm.gray)
     axis('off')
+    
+plt.savefig('Manuscript/resources/fig-contrast-modified-inputs.png')
+plt.savefig('Manuscript/resources/fig-contrast-modified-inputs.svg')        
     
 
 

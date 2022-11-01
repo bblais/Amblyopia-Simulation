@@ -62,7 +62,7 @@ if not os.path.exists('asdf/bbsk081604_all_log2dog.asdf'):
     del var_norm, var_dog, var
 
 
-# In[5]:
+# In[7]:
 
 
 #| label: fig-logdog
@@ -122,6 +122,10 @@ for i in range(24):
     subplot(4,6,i+1)
     imshow(im,cmap=plt.cm.gray)
     axis('off')
+    
+    
+plt.savefig('Manuscript/resources/fig-normal_patches.png')
+plt.savefig('Manuscript/resources/fig-normal_patches.svg')        
     
 
 

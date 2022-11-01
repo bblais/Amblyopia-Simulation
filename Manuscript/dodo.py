@@ -52,7 +52,17 @@ def task_docx():
     return {
         'file_dep': ['docs/_main.md'],
         'targets': ['docs/%s.docx' % target_name],
-        'actions': [f'pandoc  --number-sections -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.docx'],
+        'actions': [f'pandoc  --toc --number-sections -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.docx'],
+        'clean':True,
+    }
+
+def task_html():
+    import os
+
+    return {
+        'file_dep': ['docs/_main.md'],
+        'targets': ['docs/%s.html' % target_name],
+        'actions': [f'pandoc  --toc  -s --mathjax  --number-sections -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.html'],
         'clean':True,
     }
 

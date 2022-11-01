@@ -24,7 +24,7 @@ from input_environment_defs import *
 
 # The amblyopic eye is presented with image patches that have been *blurred* with a normalized Gaussian filter applied to the images with a specified width.  The larger the width the blurrier the resulting filtered image.  
 
-# In[57]:
+# In[2]:
 
 
 #| label: fig-blurred-inputs
@@ -38,13 +38,16 @@ for i in range(24):
     imshow(im,cmap=plt.cm.gray)
     axis('off')
     
+plt.savefig('Manuscript/resources/fig-blurred-inputs.png')
+plt.savefig('Manuscript/resources/fig-blurred-inputs.svg')        
+    
 
 
 # ## Strabismic amblyopia
 
 # Strabismic inputs are modeled by changing the center of the left- and right-input patches in a systematic way, with a set mean offset and a standard deviation per input patch generated.  In this way we can model completely overlapping (i.e. normal) inputs, completely non-overlapping (i.e. extreme strabismus), and any amount of overlap in between.  Some examples are shown in @fig-jitter-inputs with the offset locations shown in @fig-jitter-input-locations.
 
-# In[107]:
+# In[3]:
 
 
 #| label: fig-jitter-inputs
@@ -62,9 +65,12 @@ for i in range(24):
     imshow(im,cmap=plt.cm.gray)
     axis('off')
     
+plt.savefig('Manuscript/resources/fig-jitter-inputs.png')
+plt.savefig('Manuscript/resources/fig-jitter-inputs.svg')        
+    
 
 
-# In[121]:
+# In[4]:
 
 
 #| label: fig-jitter-input-locations
@@ -95,6 +101,9 @@ axis('equal');
 xlabel('Horizontal Visual Field Location (pixels)')
 ylabel('Vertical Visual Field Location (pixels)');
 legend();
+
+plt.savefig('Manuscript/resources/fig-jitter-locations.png')
+plt.savefig('Manuscript/resources/fig-jitter-locations.svg')        
 
 
 # In[ ]:

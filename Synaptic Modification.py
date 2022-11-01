@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[11]:
+# In[1]:
 
 
 #| output: false
@@ -59,6 +59,9 @@ plot([θ_M,θ_M],[-10,10],'r-',lw=2)
 xlabel('Neuron output ($y$)')
 ylabel('Change in the synaptic weight ($dw/dt$)');
 
+plt.savefig('Manuscript/resources/fig-bcm-phi.png')
+plt.savefig('Manuscript/resources/fig-bcm-phi.svg')        
+
 
 # 
 # The results are extremely robust to values of $\eta$  and $\tau$ , which are generally chosen for practical, rather than theoretical, considerations.   Each of these constants is related to the time-step for the simulations, but given the phenomenological nature of the BCM theory it is beyond the scope of this paper to make detailed comparisons between simulation time and real-time.  Further, the fact that $\tau$ can be changed within a factor of 100 with no noticeable effect, the experiments presented here cannot be used address the time-scales of the molecular mechanisms underlying synaptic modification.  Whenever we refer to real-time units for a simulation, we approximate a single simulation iteration as 1 iteration = 0.2 seconds[@phd:Blais98].
@@ -71,7 +74,7 @@ ylabel('Change in the synaptic weight ($dw/dt$)');
 # The synaptic weights, and the modification threshold, are set to small random initial values at the beginning of a simulation.  At each iteration, an input patch is generated as described above depending on the procedure being simulated and then presented to the neuron.  After each input patch is presented, the weights are modified using the output of the neuron, the input values and the current value of the modification threshold.   In an input environment composed of patches taken from natural images, with equal patches presented to the left- and right-eyes as shown in @fig-normal-inputs, this process orientation selective and fully binocular cells[@BlaisEtAl98].  We then present test stimulus made from sine-gratings with 24 orientations, 20 spatial frequencies, and optimized over phase.  Applying any of the blur filters to the sine gratings does not quantitatively change the result. 
 # 
 
-# In[45]:
+# In[3]:
 
 
 #| output: false
@@ -114,7 +117,7 @@ pn.save('sims/nr.asdf',sim,[pre,post],[c])
 R=Results('sims/nr.asdf')
 
 
-# In[55]:
+# In[4]:
 
 
 def argmax_rc(X):
@@ -123,7 +126,7 @@ def argmax_rc(X):
     return r,c
 
 
-# In[64]:
+# In[5]:
 
 
 #| label: fig-nr_sim
@@ -133,7 +136,6 @@ def argmax_rc(X):
 #|   - "Synaptic weights where black denotes weak weights and white denotes strone weights. A clear preference for oriented stimuli can be seen."
 #|   - "BCM modification threshold over time.  The value converges to nearly the same level for all neurons."
 #|   - "Responses to Oriented Stimuli after training.  Each neuron develops orientation selectivity to a range of optimum angles."
-
 
 figure(figsize=(4,10))
 R.plot_rf()
@@ -166,4 +168,90 @@ for neuron in range(5):
     ylabel('Response')
     xlabel('Angle of Stimulus')
     
+
+
+# In[49]:
+
+
+def mysubplot(R,C,r,c):
+    from matplotlib.pyplot import subplot2grid
+    subplot2grid((R, C), (r, c))
+
+    
+figure(figsize=(16,16))
+    
+w_im=R.weight_image(R.W[-1,::])
+number_of_neurons=w_im.shape[0]
+
+for n in range(number_of_neurons):
+    vmin=w_im[n,:,:,:].min()
+    vmax=w_im[n,:,:,:].max()
+    for c in range(2):
+        mysubplot(number_of_neurons,4,n,c)
+        im=w_im[n,c,:,:]
+        imshow(im,cmap=plt.cm.gray,vmin=vmin,vmax=vmax,interpolation='nearest')
+        plt.grid(False)
+        if c==0:
+            ylabel(f'Neuron {n}')
+            
+        if n==0:
+            if c==0:
+                title("Left")
+            else:
+                title("Right")
+            
+        gca().set_xticklabels([])
+        gca().set_yticklabels([])
+        
+        if n==0 and c==0:  # upper left
+            
+            plt.text(.1, 0.9, "A", transform=plt.gcf().transFigure,
+                fontsize=26, fontweight='bold', va='top')
+
+
+        
+mysubplot(2,2,0,1)
+plot(R.t/hour,R.θ,label=[f'Neuron {i}' for i in [0,1,2,3,4]])
+ylabel(r'$\theta_M$')
+xlabel('Time (hours)')
+legend();
+plt.text(.5, 0.9, "B", transform=plt.gcf().transFigure,
+    fontsize=26, fontweight='bold', va='top')
+        
+        
+t,y=R.all_responses[0]
+mysubplot(4,2,2,1)
+for neuron in range(number_of_neurons):
+    y_left=y[:,:,0,neuron,-1]  
+    y_right=y[:,:,1,neuron,-1]  
+    
+    r,c=argmax_rc(y_left)
+    tuning_curve=y_left[r,:]    
+    plot(R.theta_mat,tuning_curve,'-o')
+    ylabel('Left-eye\nResponse')
+    gca().set_xticklabels([])
+
+    
+    
+mysubplot(4,2,3,1)
+for neuron in range(number_of_neurons):
+    r,c=argmax_rc(y_right)
+    tuning_curve=y_right[r,:]
+    plot(R.theta_mat,tuning_curve,'-s')    
+    ylabel('Right-eye\nResponse')
+    xlabel('Angle of Stimulus')
+        
+plt.text(.5, 0.5, "C", transform=plt.gcf().transFigure,
+    fontsize=26, fontweight='bold', va='top')
+        
+    
+plt.savefig('Manuscript/resources/fig-rf-theta-tuning-curve.png')
+plt.savefig('Manuscript/resources/fig-rf-theta-tuning-curve.svg')        
+    
+
+
+# In[ ]:
+
+
+
 
