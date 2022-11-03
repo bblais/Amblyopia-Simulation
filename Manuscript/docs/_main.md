@@ -187,17 +187,27 @@ A binocular approach to treatment can be produced with contrast reduction of the
 ![ A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-contrast-modified-inputs.svg){#fig:contrast-modified-inputs}
 
 
-### Dichoptic Mask
+### Dichoptic Masks
 
-On top of the contrast modification, we can include the application of the dichoptic mask (Figure @fig:input E).  In this method, each eye receives a version of the input images filtered through independent masks in each channel, resulting in a mostly-independent pattern in each channel.  
-It has been observed that contrast modification combined with dichoptic masks can be an effective treatment for amblyopia[@Li:2015aa,@xiao2021randomized].  The motivation behind the application of the mask filter is that the neural system must use both channels to reconstruct the full image and thus may lead to enhanced recovery.  
+On top of the contrast modification, we can include the application of the dichoptic mask.  In this method, each eye receives a version of the input images filtered through independent masks in each channel, resulting in a mostly-independent pattern in each channel.   It has been observed that contrast modification combined with dichoptic masks can be an effective treatment for amblyopia[@Li:2015aa,@xiao2021randomized].  The motivation behind the application of the mask filter is that the neural system must use both channels to reconstruct the full image and thus may lead to enhanced recovery.  
 
-The dichoptic masks are constructed with the following procedure.  A blank image (i.e. all zeros) is made to which is added 15 randomly sized circles with values equal to 1 (Figure @fig:dichopic_blob).   These images are then smoothed with a Gaussian filter of a given width, $f$.  This width is a parameter we can vary to change the overlap between the left- and right-eye images.  A high value of $f$ compared with the size of the receptive field, e.g. $f=90$, yields a high overlap between the patterns in the weak- and strong-eye inputs (Figure @fig:dichopic_filter_size).  Likewise, a small value of $f$, e.g. $f=10$, the eye inputs are nearly independent -- the patterned activity falling mostly on one of the eyes and not much to both.  Finally, the smoothed images are scaled to have values from a minimum of 0 to a maximum of 1.  This image-mask we will call $A$, and is the left-eye mask whereas the right-eye mask, $F$, is the inverse of the left-eye mask, $F\equiv 1-A$.  The mask is applied to an image by multiplying the left- and right-eye images by the left- and right-eye masks, respectively, resulting in a pair of images which have no overlap at the peaks of each mask, and nearly equal overlap in the areas of the images where the masks are near 0.5 (Figure @fig:dichopic_filter_image).   
+The dichoptic masks are constructed with the following procedure.  A blank image (i.e. all zeros) is made to which is added 15 randomly sized circles with values equal to 1 (Figure @fig:dichopic_blob A).   These images are then smoothed with a Gaussian filter of a given width, $f$ (Figure @fig:dichopic_blob B).  This width is a parameter we can vary to change the overlap between the left- and right-eye images.  A high value of $f$ compared with the size of the receptive field, e.g. $f=90$, yields a high overlap between the patterns in the weak- and strong-eye inputs (Figure @fig:dichopic_filter_size).  Likewise, a small value of $f$, e.g. $f=10$, the eye inputs are nearly independent -- the patterned activity falling mostly on one of the eyes and not much to both.  Finally, the smoothed images are scaled to have values from a minimum of 0 to a maximum of 1.  This image-mask we will call $A$, and is the left-eye mask whereas the right-eye mask, $F$, is the inverse of the left-eye mask, $F\equiv 1-A$.  The mask is applied to an image by multiplying the left- and right-eye images by the left- and right-eye masks, respectively, resulting in a pair of images which have no overlap at the peaks of each mask, and nearly equal overlap in the areas of the images where the masks are near 0.5 (Figure @fig:dichopic_filter_image).   
+
+
+![ The dichoptic masks are produced by taking random circular blobs (A), convolving them a Gaussian filter of a specified size (B), resulting in the circular blobs blending into the background smoothly at the edges on the scale of the filter (C)](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/blob_convolution_example_fsig_20.svg){#fig:dichopic_blob}
+
+
+![ The dichoptic masks for several different filter sizes. The larger the filter, the larger the overlap in the patterns presented to the two eyes. For a very sharp mask (upper left) patterns are nearly all to either the left or the right eye. For a wide mask (lower right) most patterns are presented to both eyes.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/mask_filter_examples_fsigs.svg){#fig:dichopic_filter_size}
+
+![ An example of a dichoptic mask, $\sigma = 20$, applied to one of the images. The mask (A) shows how much of the input goes to each of the left and right channels.  The resulting left- and right-images (B and C, respectively) show the results of the partial independence of the two channels.  One can see areas where there is some overlap as well as areas where the pattern is only present in one of the eyes due to the application of the mask.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/mask_filter_example_fsig_20.svg){#fig:dichopic_filter_image}
 
 
 ### Atropine treatment
 
-In the atropine treatment for amblyopia[@glaser2002randomized], eye-drops of atropine are applied to the strong-eye resulting in blurred vision in that eye.  Here we use the same blurred filter used to obtain the deficit (possibly with a different width) applied to the strong eye (Figure @fig:input F).  The difference in sharpness between the strong-eye inputs and the weak-eye inputs sets up competition between the two channels with the advantage given to the weak-eye.
+In the atropine treatment for amblyopia[@glaser2002randomized], eye-drops of atropine are applied to the strong-eye resulting in blurred vision in that eye.  Here we use the same blurred filter used to obtain the deficit (possibly with a different width) applied to the strong eye (Figure @fig:atropine-inputs).  The difference in sharpness between the strong-eye inputs and the weak-eye inputs sets up competition between the two channels with the advantage given to the weak-eye.
+
+
+![ A sample of 24 input patches from an environment with atropine applied to the right eye.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-atropine-inputs.svg){#fig:atropine-inputs}
 
 ## Quantifying responses
 
@@ -224,9 +234,6 @@ As shown in @sec:results, increased *unstructured* input into the previously dom
 
 
 Figure @fig:dODI_patch_vs_noise shows the effect of the patch treatment as a function of the closed-eye noise.   For noise levels above $\sigma_n \sim 0.4$ the patch treatment is more effective than recovery with glasses alone.  There is the danger of the patch treatment and some other treatments (see below) of causing reverse amblyopia, producing a deficit in the previously stronger eye.  This will be dependent on the magnitude of the initial deficit and the amount of time for the treatment.  Because the BCM learning rule works by the competition between patterns, there is no danger of causing reverse amblyopia with the fix with glasses, but there is that danger in any treatment that has an asymmetry between the strong and weak eye, favoring the weak eye, as most treatments have.
-
-#todo 
-- [ ] example of reverse amblyopia
 
 
 

@@ -102,7 +102,7 @@ def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
     
 
 
-def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1):
+def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left'):
     
     rf_size=19
     eta=2e-6
@@ -111,18 +111,31 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1):
 
     number_of_neurons=1,
 
+    
     if blur<0:
-        blur_fname=Lnorm_fname=pi5.filtered_images(base_image_file,
+        Lnorm_fname=pi5.filtered_images(base_image_file,
                                     verbose=False)
-    else:
-        blur_fname=pi5.filtered_images(base_image_file,
+        Rnorm_fname=pi5.filtered_images(base_image_file,
+                                    verbose=False)
+    elif blurred_eye=='left':
+        Lnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'blur','size':blur},
+                                    verbose=False)
+        Rnorm_fname=pi5.filtered_images(base_image_file,
+                                    verbose=False)
+    elif blurred_eye=='right':
+        Lnorm_fname=pi5.filtered_images(base_image_file,
+                                    verbose=False)
+        Rnorm_fname=pi5.filtered_images(base_image_file,
                                     {'type':'blur','size':blur},
                                     verbose=False)
 
-    Rnorm_fname=pi5.filtered_images(base_image_file,
-                                    verbose=False)
+    else:
+        raise ValurError("You can't get there from here.")
+        
+        
 
-    pre1=pn.neurons.natural_images(blur_fname,
+    pre1=pn.neurons.natural_images(Lnorm_fname,
                                    rf_size=rf_size,verbose=False)
 
     pre2=pn.neurons.natural_images(Rnorm_fname,rf_size=rf_size,

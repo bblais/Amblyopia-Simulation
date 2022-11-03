@@ -21,7 +21,7 @@ if _debug:
 
 print(platform.platform())
 
-from numpy import linspace,array
+from numpy import linspace,array,meshgrid
 from multiprocess import Pool
 
 from collections import namedtuple
