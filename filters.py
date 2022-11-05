@@ -176,6 +176,43 @@ def make_norm(var,mu=0,sd=1,subtract_mean=True):
     print()
     return var2
 
+def make_log2dog(var,sd1=1,sd2=3,size=32,shape='valid',verbose=True):
+    from numpy import log2
+
+    im2_list=[]
+    
+    im_scale_shift=var['im_scale_shift']
+    
+    im_count=len(var['im'])
+    if verbose:
+        w = Waitbar(True)
+        w.message="Log then Difference of Gaussians"
+    for count,im in enumerate(var['im']):
+        orig_size=im.shape
+
+        im=im*im_scale_shift[0]+im_scale_shift[1]
+        im=log2(im-im.min()+1)
+
+        im2=dog_filter(im,sd1,sd2,size,shape)
+        new_size=im2.shape
+        
+        im2=im2-im2.mean()
+        im2=im2/im2.std()
+        
+        if count==0 and verbose:
+            print( "Dog %d,%d: %dx%d --> %dx%d" % (sd1,sd2,
+                                                            orig_size[0],orig_size[1],
+                                                            new_size[0],new_size[1]))
+        im2_list.append(im2)
+        
+        if verbose:
+            w.updated((count+1)/float(im_count))
+    
+    var2={'im':im2_list,'im_scale_shift':[1.0,0.0]}
+    if verbose:
+        print()
+    return var2
+
 def make_dog(var,sd1=1,sd2=3,size=32,shape='valid',verbose=True):
     
     im2_list=[]

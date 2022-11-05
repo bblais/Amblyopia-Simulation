@@ -30,9 +30,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "7e09d727c251e031",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "3. Results.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -90,7 +102,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "daily notes/2022-11-02.md",
+                "file": "3. Results.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "daily notes/2022-11-02.md"
+                "file": "3. Results.md"
               }
             }
           }
@@ -143,14 +155,14 @@
     "direction": "horizontal",
     "width": 279.5
   },
-  "active": "6de22c6c00c1d224",
+  "active": "7e09d727c251e031",
   "lastOpenFiles": [
     "2. Methods.md",
+    "3. Results.md",
+    "daily notes/2022-11-02.md",
     "main.md",
     "Untitled.md",
-    "daily notes/2022-11-02.md",
     "docs/_main.md",
-    "3. Results.md",
     "daily notes/2022-11-01.md",
     "1. Introduction.md",
     "4. Concusions and Discussion.md",

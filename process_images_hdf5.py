@@ -329,7 +329,8 @@ def png_save_images(var,dirname,bits=8):
 
 
 def filtered_images(fname,*args,resolution='uint16',
-                        cache=True,verbose=True):
+                        cache=True,verbose=True,
+                        base_directory='cache_images'):
     from numpy.random import randint,seed
     from hashlib import md5
     import os
@@ -337,7 +338,10 @@ def filtered_images(fname,*args,resolution='uint16',
 
     filter_hash=md5((fname+" "+str(args)).encode('ascii')).hexdigest()
 
-    cache_fname='cache_images_%s.asdf' % filter_hash
+    if not os.path.exists(base_directory):
+        os.mkdir(base_directory)
+
+    cache_fname=base_directory+'/cache_images_%s.asdf' % filter_hash
 
     if os.path.exists(cache_fname) and cache:
         if verbose:
@@ -357,6 +361,9 @@ def filtered_images(fname,*args,resolution='uint16',
 
             if T=='blur':
                 image_data=make_blur(image_data,f['size'],
+                                    verbose=verbose)
+            elif T=='log2dog':
+                image_data=make_log2dog(image_data,f['sd1'],f['sd2'],
                                     verbose=verbose)
             elif T=='noise':
                 image_data=add_noise(image_data,f['std'],

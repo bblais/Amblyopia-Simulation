@@ -9,7 +9,7 @@ from splikes.utils import paramtext
 import process_images_hdf5 as pi5
 import os
 from savevars import savevars
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
 import platform
 _debug = 'Darwin' in platform.platform()
