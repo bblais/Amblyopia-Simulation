@@ -195,9 +195,9 @@ to inform future protocol parameters and perhaps suggest novel
 treatments for amblyopia.
 
 In this part we will explore the clinical basis for amblyopia and its
-treatments. In the (\textbf{sec-models-of-development?}) and
-(\textbf{sec-models-of-treatments?}) we will explore the models that are
-used to describe the deficits from amblyopia and their treatment,
+treatments. In the \ref{models-of-development-of-amblyopia} and
+\ref{models-of-treatments-for-amblyopia} we will explore the models that
+are used to describe the deficits from amblyopia and their treatment,
 respectively.
 
 \hypertarget{what-is-amblyopia}{%
@@ -227,7 +227,7 @@ refractive errors or misalignment of the eyes (Zárate and Tejedor,
 \subsection{How is it Treated?}\label{how-is-it-treated}}
 
 The current primary treatment is described in the \emph{Amblyopia
-Preferred Practice Method} (D. K. Wallace et al., 2018). Treatments are
+Preferred Practice Method} (Wallace et al., 2018). Treatments are
 divided into two broad categories, monocular and binocular treatments.
 Monocular treatments produce a competition between the two eyes by
 treating only the fellow eye to that the amblyopic eye recovers.
@@ -360,8 +360,8 @@ random noise added to each of the two-eye channels avoids the artificial
 situation of having mathematically identical inputs in the channels. The
 development of the deficit and the subsequent treatment protocols are
 modeled with added preprocessing to these image patches, described later
-in (\textbf{sec-models-of-development?}) and
-(\textbf{sec-models-of-treatments?}).
+in \ref{models-of-development-of-amblyopia} and
+\ref{models-of-treatments-for-amblyopia}.
 
 For all of the simulations we use a 19x19 receptive field, which is a
 compromise between speed of simulation and the limits of spatial
@@ -483,16 +483,16 @@ of optimum angles.}\label{fig:rf-theta-tuning-curve}
 Amblyopia}\label{models-of-development-of-amblyopia}}
 
 Amblyopia is a reduction of the best-corrected visual acuity (BCVA) with
-an otherwise normal eye and has many causes(D. K. Wallace et al., 2018).
-Two of the most common forms of amblyopia are strabismic and
-anisometropic amblyiopia. Strabismic amblyopia occurs when the inputs
-from each eye do not converge and the fixating eye becomes dominant over
-a non-fixating eye. Refractive amblyopia occurs with untreated
-unilateral refractive errors, one kind being anisometropic amblyopia
-where unequal refractive power in each eye leads the retinal image from
-the amblyopic eye to be blurred relative to the fellow eye. Both of
-these processes lead to synaptic plasticity adjustments and interocular
-competition, enhancing the initial deficit.
+an otherwise normal eye and has many causes(Wallace et al., 2018). Two
+of the most common forms of amblyopia are strabismic and anisometropic
+amblyiopia. Strabismic amblyopia occurs when the inputs from each eye do
+not converge and the fixating eye becomes dominant over a non-fixating
+eye. Refractive amblyopia occurs with untreated unilateral refractive
+errors, one kind being anisometropic amblyopia where unequal refractive
+power in each eye leads the retinal image from the amblyopic eye to be
+blurred relative to the fellow eye. Both of these processes lead to
+synaptic plasticity adjustments and interocular competition, enhancing
+the initial deficit.
 
 In this work we use a model of the amblyopic deficit caused by two
 mechanisms. The first is a blurring of the amblyopic eye inputs,
@@ -542,13 +542,13 @@ eye.}\label{fig:jitter-inputs}
 \end{figure}
 
 \begin{figure}
-\hypertarget{fig:jitter-locations}{%
+\hypertarget{fig:jitter-input-locations}{%
 \centering
 \includegraphics{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-locations.svg}
 \caption{Locations of the center of the left- and right-field of view
 receptive fields, jittered randomly with set mean and standard
 deviation. The average receptive fields are shown as gray
-squares.}\label{fig:jitter-locations}
+squares.}\label{fig:jitter-input-locations}
 }
 \end{figure}
 
@@ -576,8 +576,8 @@ Competition between the left- and right-channels drives the recovery,
 and is produced from the difference between \emph{structured} input into
 the weak-eye and the \emph{unstructured} (i.e.~noise) input into the
 strong eye. It is not driven by a reduction in input activity.
-(\textbf{fig-patch-inputs?}) shows sample simulation input patterns from
-the patched eye. Compare this to \ref{fig:normal-inputs} to see that the
+\ref{fig:patch-inputs} shows sample simulation input patterns from the
+patched eye. Compare this to \ref{fig:normal-inputs} to see that the
 simulated patch has far less structure than the normal inputs.
 
 \begin{figure}
@@ -618,10 +618,10 @@ the dichoptic mask. In this method, each eye receives a version of the
 input images filtered through independent masks in each channel,
 resulting in a mostly-independent pattern in each channel. It has been
 observed that contrast modification combined with dichoptic masks can be
-an effective treatment for amblyopia(\textbf{xiao2021randomized?}). The
-motivation behind the application of the mask filter is that the neural
-system must use both channels to reconstruct the full image and thus may
-lead to enhanced recovery.
+an effective treatment for amblyopia(Li et al., 2015; Xiao et al.,
+2022). The motivation behind the application of the mask filter is that
+the neural system must use both channels to reconstruct the full image
+and thus may lead to enhanced recovery.
 
 The dichoptic masks are constructed with the following procedure. A
 blank image (i.e.~all zeros) is made to which is added 15 randomly sized
@@ -725,162 +725,42 @@ binocular cell, responding equally to stimulus in either eye.
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-\hypertarget{recovery-using-glasses}{%
-\subsection{Recovery using glasses}\label{recovery-using-glasses}}
+\hypertarget{refractory-and-strabismic-amblyopia}{%
+\subsection{Refractory and Strabismic
+Amblyopia}\label{refractory-and-strabismic-amblyopia}}
 
-The ``fix'' treatment described in Section
-\ref{sec:models-of-development-and-treatment-of-amblyopia} and Section
-\ref{sec:deficit-and-measuring-the-effectiveness-of-a-treatment} depends
-on the noise level in the open eye. Figure \ref{fig:dODI_fix_vs_noise}
-shows the rate of recovery as a function of this noise. For low-noise,
-there is very little improvement. For large noise, \(\sigma_n=1\), the
-rate achieves 0.14 {[}ODI/day{]}. This measure lets us compare different
-treatments, and determine which are the most effective under the model
-assumptions. Because the experimental observation is that glasses alone
-are only able to fully restore vision in 27\% of amblyopia cases(D.
-Wallace et al., 2006), the other simulations use an open-eye noise value
-of \(\sigma_n=0.1\).
+Figure \ref{fig:deficit-mu_c-blur} shows the production of a deficit
+effect using both refractory blurring and inter-eye jitter.
+Interestingly the larger jitter offset, for small amounts of blur,
+reduces both the deficit. While both variables increase the ODI shift to
+the stronger eye, the jitter has a more modest effect (Figure
+\ref{fig:deficit-ODI-mu_c-blur}).
 
-\hypertarget{patch-treatment-1}{%
-\subsection{Patch Treatment}\label{patch-treatment-1}}
+\begin{figure}
+\hypertarget{fig:deficit-mu_c-blur}{%
+\centering
+\includegraphics{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-deficit-mu_c-blur.svg}
+\caption{Maximum response for the deprived- and normal-input channels as
+function of the deficit blur size (in pixels) and the mean jitter offset
+(\(\mu_c\)). Interestingly the larger jitter offset, for small amounts
+of blur, reduces both the deficit.}\label{fig:deficit-mu_c-blur}
+}
+\end{figure}
 
-As shown in \ref{results}, increased \emph{unstructured} input into the
-previously dominant eye increases the rate of recovery. This is a
-general property of the BCM learning rule and has been explored
-elsewhere(B. Blais et al., 1999).
-
-Figure \ref{fig:dODI_patch_vs_noise} shows the effect of the patch
-treatment as a function of the closed-eye noise. For noise levels above
-\(\sigma_n \sim 0.4\) the patch treatment is more effective than
-recovery with glasses alone. There is the danger of the patch treatment
-and some other treatments (see below) of causing reverse amblyopia,
-producing a deficit in the previously stronger eye. This will be
-dependent on the magnitude of the initial deficit and the amount of time
-for the treatment. Because the BCM learning rule works by the
-competition between patterns, there is no danger of causing reverse
-amblyopia with the fix with glasses, but there is that danger in any
-treatment that has an asymmetry between the strong and weak eye,
-favoring the weak eye, as most treatments have.
-
-\hypertarget{atropine-treatment-1}{%
-\subsection{Atropine Treatment}\label{atropine-treatment-1}}
-
-Figure \ref{fig:dODI_atropine_vs_blur} shows the recovery rates under
-the atropine treatment, where the strong eye is presented with a
-blurred, noisy version of the natural input. Like the patch treatment,
-the effect is increased with increasing noise level due to the
-competition between patterns. When the blur filter is very small, the
-strong-eye inputs are nearly the same as the weak-eye inputs, yielding a
-result much like the glasses fix. When the blur filter is larger, the
-atropine treatment becomes comparable to the patch treatment. The
-blurred inputs are no better than the patch treatment, which has only
-the noise input.
-
-\hypertarget{contrast-modification-and-dichoptic-masks}{%
-\subsection{Contrast Modification and Dichoptic
-Masks}\label{contrast-modification-and-dichoptic-masks}}
-
-Figure \ref{fig:dODI_constrast} shows the recovery rates under a
-binocular treatment which only involves contrast modification, where the
-contrast for the strong-eye is adjusted relative to the weak eye. A
-contrast level of 1 is normal equal-eye vision. A contrast level of 0
-means that the strong-eye input is shut off entirely. We see an
-increased rate of recovery with a smaller contrast value, or a larger
-difference between the strong- and weak-eye inputs. The rate does not
-compare to the rate of the patch treatment, because while there is a
-larger difference between the strong- and weak-eye inputs for lower
-contrast value, the rate of change of the strong-eye weights is
-decreased. The patch and atropine treatments result in more competition
-between patterns, resulting in faster recovery times.
-
-Figure \ref{fig:dODI_constrast_mask} shows the recovery rates under a
-binocular treatment which includes both contrast modification and
-dichoptic masks. The effect of the mask is diminished as the mask filter
-size increases, which is expected because a larger filter size results
-in more overlap in the strong- and weak-eye inputs and thus less
-competition. Interestingly, the mask enhances the effect of contrast on
-the recovery rates in two ways. For low contrast value (i.e.~strong- and
-weak-eye inputs are more different) the mask increases the recovery rate
-and can reach rates comparable or exceeding patch treatment. For
-extremely low contrast values, where nearly all of the input is coming
-in from the weak eye, there is possibility of causing reverse amblyopia.
-For high contrast value (i.e.~strong- and weak-eye inputs are nearly the
-same), the masks not only make the recovery slower, but can even enhance
-the amblyopia.
+\begin{figure}
+\hypertarget{fig:deficit-ODI-mu_c-blur}{%
+\centering
+\includegraphics{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-deficit-ODI-mu_c-blur.svg}
+\caption{Ocular dominance index (ODI) as function of the deficit blur
+size (in pixels) and the mean jitter offset (\(\mu_c\)). Both variables
+increase the ODI shift to the stronger eye, but the jitter has a more
+modest effect.}\label{fig:deficit-ODI-mu_c-blur}
+}
+\end{figure}
 
 \hypertarget{conclusions-and-discussion}{%
 \subsection{Conclusions and
 Discussion}\label{conclusions-and-discussion}}
-
-\begin{quote}
-This section actually seems a bit superfluous right now, I wonder if we
-don't need to try and link the ocular dominance measures with visual
-acuity
-
-Instead, we could focus the conclusion on linking the directional
-conclusions with ODI/day to the existing experimental literature, and
-making recommendations for future amblyopia treatment studies. Thoughts?
-\end{quote}
-
-Now that we have a system of simulation environments to explore, we can
-compare to experimentally observed rates of recovery. From (Glaser et
-al., 2002) we have results from several visual protocols.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Only those patients are included if they had their \emph{refractive
-  error corrected for at least 4 weeks}
-\item
-  In the patching group most patients received \emph{no more than 6-8
-  hours of patching per day}
-\item
-  The resulting improvement in the visual acuity (measured in lines) is
-  given here:
-\end{enumerate}
-
-\[
-\begin{array}{||l|c|c||}
-\text{Time}& \text{Patch [lines]}& \text{Atropine [lines]}\\ 
-\text{5 weeks} & +2.22\pm 0.2& +1.37\pm 0.2 \\
-\text{16 weeks} & +2.94\pm 0.2& +2.42\pm 0.2 \\
-\text{24 weeks} & +3.16\pm 0.2& +2.84\pm 0.2
-\end{array}
-\]
-
-This small amount of data lets us estimate the relative rates of
-improvement from the treatments. Since the patch treatment is only about
-1/3 day, the total time for treatment would be
-\(19 \text{weeks}\times \frac{7 \text{day}}{1 \text{week}}\times 1/3=44 \text{day}\)
-For patch treatment with the above data we have a rate of about
-\(0.94 \text{lines} / 44 \text{day}=0.021 \text{lines}/\text{day}\).
-Likewise, for atropine, we have a rate of about
-\(1.47\text{lines} / 133 \text{day}=0.011 \text{lines}/\text{day}\). So
-the patch treatment is approximately twice as fast as the atropine.
-Looking at Figure \ref{fig:dODI_atropine_vs_blur} we see that this can
-put a rough constraint on the parameters. For a closed-eye noise for the
-patch treatment of \(\sigma_n=0.8\) (recovery rate ODI/day
-\(\sim 0.2\)), the atropine treatment must have a lower noise level --
-we can look at the atropine parameters which yield recover rates ODI/day
-\(\sim 0.1\)). For little blur, we need a noise level of around
-\(\sigma_n=0.6\), but if the atropine produces a significant blur, then
-the noise level of those inputs must be much lower -- well below
-\(\sigma_n=0.3\) for blur filter size 6.0, for example.
-
-This noise level for atropine is entirely consistent with the same
-open-eye noise level with the glasses ``fix'' discussed earlier. Here we
-have an independent line of argument to suggest that atropine may blur
-the natural input, but doesn't change the overall spontaneous activity
-of neurons. Further, it suggest that there is a significant
-physiological different in the activity distributions between
-unstructured input (e.g.~patch) and degraded input (e.g.~atropine).
-
-In this way we may hope to constrain other parameters of the model by
-comparing to experimental rates of recovery.
-
-\hypertarget{future-directions}{%
-\subsubsection{Future Directions}\label{future-directions}}
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
@@ -917,12 +797,6 @@ Blais, B. S., Intrator, N., Shouval, H., and Cooper, L. N. (1998).
 Receptive field formation in natural scene environments: Comparison of
 single cell learning rules. \emph{Neural Computation}, \emph{10}(7),
 1797--1813.
-
-\leavevmode\vadjust pre{\hypertarget{ref-BlaisEtAl99}{}}%
-Blais, B., Shouval, H., and Cooper, L. N. (1999). The role of
-presynaptic activity in monocular deprivation: Comparison of
-homosynaptic and heterosynaptic mechanisms. \emph{Proc. Natl. Acad.
-Sci.}, \emph{96}, 1083--1087.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Gao_2018}{}}%
 Gao, T. Y., Guo, C. X., Babu, R. J., Black, J. M., Bobier, W. R.,
@@ -984,12 +858,6 @@ Wallace, D. K., Repka, M. X., Lee, K. A., Melia, M., Christiansen, S.
 P., Morse, C. L., and Sprunger, D. T. (2018). Amblyopia preferred
 practice pattern{\textregistered}. \emph{Ophthalmology}, \emph{125}(1),
 P105--P142.
-
-\leavevmode\vadjust pre{\hypertarget{ref-wallace2006treatment}{}}%
-Wallace, D., Cotter, S., Edwards, A., Beck, R., Group, P. E. D. I., et
-al. (2006). Treatment of amblyopia with refractive correction alone.
-\emph{Investigative Ophthalmology \& Visual Science}, \emph{47}(13),
-4310--4310.
 
 \leavevmode\vadjust pre{\hypertarget{ref-xiao2022randomized}{}}%
 Xiao, S., Angjeli, E., Wu, H. C., Gaier, E. D., Gomez, S., Travers, D.

@@ -44,7 +44,8 @@ Printable versions of this report can be found on the GitHub site for this proje
 
 These notes are an exploration of the problem of modeling Amblyopia and its various treatments from an approach using synaptic plasticity models. The process will involve constructing a simplified mechanism for the development of amblyopic deficits and subsequently modeling both monocular and binocular treatment protocols. The goal is to understand the dynamics of the recovery from amblyopic deficits for the different treatment protocols, to compare the effectiveness of each protocol, and to explore their limitations. Ideally we would like to use these models to inform future protocol parameters and perhaps suggest novel treatments for amblyopia.
 
-In this part we will explore the clinical basis for amblyopia and its treatments. In the @sec-models-of-development and @sec-models-of-treatments we will explore the models that are used to describe the deficits from amblyopia and their treatment, respectively.
+In this part we will explore the clinical basis for amblyopia and its treatments. In the @sec:models-of-development-of-amblyopia and @sec:models-of-treatments-for-amblyopia we will explore the models that are used to describe the deficits from amblyopia and their treatment, respectively.
+
 
 ## What is Amblyopia?
 
@@ -106,7 +107,7 @@ We use natural scene stimuli for the simulated inputs to the visual system. We s
 
 Shown in Figure @fig:arch is the visual field, approximated here as a two-dimensional projection, to left and right retinal cells. These left and right retinal cells project to the left and right LGN cells, respectively, and finally to a single cortical cell. The LGN is assumed to be a simple relay, and does not modify the incoming retinal activity.  It is important to understand that the model we are pursuing here is a *single cortical cell* which receives input from both eyes.  We will encounter some limitations to this model which may necessitate exploring multi-neuron systems.  
 
-In the model, normal development is simulated with identical image patches presented to both eyes combined with small independent noise in each eye.  The random noise is generated from a zero-mean normal distribution of a particular variance, representing the natural variation in responses of LGN neurons. Practically, the independent random noise added to each of the two-eye channels avoids the artificial situation of having mathematically identical inputs in the channels.  The development of the deficit and the subsequent treatment protocols are modeled with added preprocessing to these image patches, described later in @sec-models-of-development and @sec-models-of-treatments.
+In the model, normal development is simulated with identical image patches presented to both eyes combined with small independent noise in each eye.  The random noise is generated from a zero-mean normal distribution of a particular variance, representing the natural variation in responses of LGN neurons. Practically, the independent random noise added to each of the two-eye channels avoids the artificial situation of having mathematically identical inputs in the channels.  The development of the deficit and the subsequent treatment protocols are modeled with added preprocessing to these image patches, described later in @sec:models-of-development-of-amblyopia and @sec:models-of-treatments-for-amblyopia.
 
 For all of the simulations we use a 19x19 receptive field, which is a compromise between speed of simulation and the limits of spatial discretization.  We perform at least 20 independent simulations for each condition to address variation in the results.
 
@@ -165,7 +166,7 @@ Strabismic inputs are modeled by changing the center of the left- and right-inpu
 
 ![ A sample of 24 input patches from a strabismic visual environment achieved through random jitter of the amblyopic (left) eye.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-inputs.svg){#fig:jitter-inputs}
 
-![ Locations of the center of the left- and right-field of view receptive fields, jittered randomly with set mean and standard deviation.  The average receptive fields are shown as gray squares.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-locations.svg){#fig:jitter-locations}
+![ Locations of the center of the left- and right-field of view receptive fields, jittered randomly with set mean and standard deviation.  The average receptive fields are shown as gray squares.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-jitter-locations.svg){#fig:jitter-input-locations}
 
 
 ## Models of Treatments for Amblyopia
@@ -175,7 +176,7 @@ To model the fix to the refractive imbalance we follow the deficit simulation wi
 
 ### Patch treatment
 
-The typical patch treatment is done by depriving the strong-eye of input with an eye-patch.  In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input.  Competition between the left- and right-channels drives the recovery, and is produced from the difference between *structured* input into the weak-eye and the *unstructured* (i.e. noise) input into the strong eye.  It is not driven by a reduction in input activity.  @fig-patch-inputs shows sample simulation input patterns from the patched eye.  Compare this to @fig:normal-inputs to see that the simulated patch has far less structure than the normal inputs.
+The typical patch treatment is done by depriving the strong-eye of input with an eye-patch.  In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input.  Competition between the left- and right-channels drives the recovery, and is produced from the difference between *structured* input into the weak-eye and the *unstructured* (i.e. noise) input into the strong eye.  It is not driven by a reduction in input activity.  @fig:patch-inputs shows sample simulation input patterns from the patched eye.  Compare this to @fig:normal-inputs to see that the simulated patch has far less structure than the normal inputs.
 
 ![ A sample of 24 input patches from a patched visual environment. ](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-patch-inputs.svg){#fig:patch-inputs}
 
@@ -189,7 +190,7 @@ A binocular approach to treatment can be produced with contrast reduction of the
 
 ### Dichoptic Masks
 
-On top of the contrast modification, we can include the application of the dichoptic mask.  In this method, each eye receives a version of the input images filtered through independent masks in each channel, resulting in a mostly-independent pattern in each channel.   It has been observed that contrast modification combined with dichoptic masks can be an effective treatment for amblyopia[@Li:2015aa,@xiao2021randomized].  The motivation behind the application of the mask filter is that the neural system must use both channels to reconstruct the full image and thus may lead to enhanced recovery.  
+On top of the contrast modification, we can include the application of the dichoptic mask.  In this method, each eye receives a version of the input images filtered through independent masks in each channel, resulting in a mostly-independent pattern in each channel.   It has been observed that contrast modification combined with dichoptic masks can be an effective treatment for amblyopia[@Li:2015aa;@xiao2022randomized].  The motivation behind the application of the mask filter is that the neural system must use both channels to reconstruct the full image and thus may lead to enhanced recovery.  
 
 The dichoptic masks are constructed with the following procedure.  A blank image (i.e. all zeros) is made to which is added 15 randomly sized circles with values equal to 1 (Figure @fig:dichopic_blob A).   These images are then smoothed with a Gaussian filter of a given width, $f$ (Figure @fig:dichopic_blob B).  This width is a parameter we can vary to change the overlap between the left- and right-eye images.  A high value of $f$ compared with the size of the receptive field, e.g. $f=90$, yields a high overlap between the patterns in the weak- and strong-eye inputs (Figure @fig:dichopic_filter_size).  Likewise, a small value of $f$, e.g. $f=10$, the eye inputs are nearly independent -- the patterned activity falling mostly on one of the eyes and not much to both.  Finally, the smoothed images are scaled to have values from a minimum of 0 to a maximum of 1.  This image-mask we will call $A$, and is the left-eye mask whereas the right-eye mask, $F$, is the inverse of the left-eye mask, $F\equiv 1-A$.  The mask is applied to an image by multiplying the left- and right-eye images by the left- and right-eye masks, respectively, resulting in a pair of images which have no overlap at the peaks of each mask, and nearly equal overlap in the areas of the images where the masks are near 0.5 (Figure @fig:dichopic_filter_image).   
 
@@ -222,67 +223,20 @@ The ocular dominance index (ODI) has a value of $\text{ODI} \approx 1$ when stim
 
 # Results
 
+## Refractory and Strabismic Amblyopia
 
-## Recovery using glasses
-
-The "fix" treatment described in Section @sec:models-of-development-and-treatment-of-amblyopia and Section @sec:deficit-and-measuring-the-effectiveness-of-a-treatment depends on the noise level in the open eye.  Figure @fig:dODI_fix_vs_noise shows the rate of recovery as a function of this noise.  For low-noise, there is very little improvement.  For large noise, $\sigma_n=1$, the rate achieves 0.14 [ODI/day].  This measure lets us compare different treatments, and determine which are the most effective under the model assumptions.                Because the experimental observation is that glasses alone are only able to fully restore vision in 27% of amblyopia cases[@wallace2006treatment], the other simulations use an open-eye noise value of $\sigma_n=0.1$.  
-
-
-## Patch Treatment
-
-As shown in @sec:results, increased *unstructured* input into the previously dominant eye increases the rate of recovery.  This is a general property of the BCM learning rule and has been explored elsewhere[@BlaisEtAl99].
+Figure @fig:deficit-mu_c-blur shows the production of a deficit effect using both refractory blurring and inter-eye jitter.  Interestingly the larger jitter offset, for small amounts of blur, reduces both the deficit.  While both variables increase the ODI shift to the stronger eye, the jitter has a more modest effect (Figure @fig:deficit-ODI-mu_c-blur).
 
 
-Figure @fig:dODI_patch_vs_noise shows the effect of the patch treatment as a function of the closed-eye noise.   For noise levels above $\sigma_n \sim 0.4$ the patch treatment is more effective than recovery with glasses alone.  There is the danger of the patch treatment and some other treatments (see below) of causing reverse amblyopia, producing a deficit in the previously stronger eye.  This will be dependent on the magnitude of the initial deficit and the amount of time for the treatment.  Because the BCM learning rule works by the competition between patterns, there is no danger of causing reverse amblyopia with the fix with glasses, but there is that danger in any treatment that has an asymmetry between the strong and weak eye, favoring the weak eye, as most treatments have.
+![ Maximum response for the deprived- and normal-input channels as function of the deficit blur size (in pixels) and the mean jitter offset ($\mu_c$).  Interestingly the larger  jitter offset, for small amounts of blur, reduces both the deficit. ](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-deficit-mu_c-blur.svg){#fig:deficit-mu_c-blur}
 
+![ Ocular dominance index (ODI) as function of the deficit blur size (in pixels) and the mean jitter offset ($\mu_c$).  Both variables increase the ODI shift to the stronger eye, but the jitter has a more modest effect. ](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-deficit-ODI-mu_c-blur.svg){#fig:deficit-ODI-mu_c-blur}
 
-
-## Atropine Treatment
-
-Figure @fig:dODI_atropine_vs_blur shows the recovery rates under the atropine treatment, where the strong eye is presented with a blurred, noisy version of the natural input.  Like the patch treatment, the effect is increased with increasing noise level due to the competition between patterns.  When the blur filter is very small, the strong-eye inputs are nearly the same as the weak-eye inputs, yielding a result much like the glasses fix.  When the blur filter is larger, the atropine treatment becomes comparable to the patch treatment.  The blurred inputs are no better than the patch treatment, which has only the noise input.  
-
-
-## Contrast Modification and Dichoptic Masks
-
-
-Figure @fig:dODI_constrast shows the recovery rates under a binocular treatment which only involves contrast modification, where the contrast for the strong-eye is adjusted relative to the weak eye.  A contrast level of 1 is normal equal-eye vision.  A contrast level of 0 means that the strong-eye input is shut off entirely.  We see an increased rate of recovery with a smaller contrast value, or a larger difference between the strong- and weak-eye inputs.  The rate does not compare to the rate of the patch treatment, because while there is a larger difference between the strong- and weak-eye inputs for lower contrast value, the rate of change of the strong-eye weights is decreased.  The patch and atropine treatments result in more competition between patterns, resulting in faster recovery times.
-
-Figure @fig:dODI_constrast_mask shows the recovery rates under a binocular treatment which includes both contrast modification and dichoptic masks.  The effect of the mask is diminished as the mask filter size increases, which is expected because a larger filter size results in more overlap in the strong- and weak-eye inputs and thus less competition.  Interestingly, the mask enhances the effect of contrast on the recovery rates in two ways.  For low contrast value (i.e. strong- and weak-eye inputs are more different) the mask increases the recovery rate and can reach rates comparable or exceeding patch treatment.  For extremely low contrast values, where nearly all of the input is coming in from the weak eye, there is possibility of causing reverse amblyopia.  For high contrast value (i.e. strong- and weak-eye inputs are nearly the same), the masks not only make the recovery slower, but can even enhance the amblyopia.
 
 
 
 ## Conclusions and Discussion
 
->  This section actually seems a bit superfluous right now, I wonder if we don’t need to try and link the ocular dominance measures with visual acuity
->  
->  Instead, we could focus the conclusion on linking the directional conclusions with ODI/day to the existing experimental literature, and making recommendations for future amblyopia treatment studies. Thoughts?
-
-
-Now that we have a system of simulation environments to explore, we can compare to experimentally observed rates of recovery.  From [@glaser2002randomized] we have results from several visual protocols.
-
-1. Only those patients are included if they had their *refractive error corrected for at least 4 weeks*
-2. In the patching group most patients received *no more than 6-8 hours of patching per day*
-3. The resulting improvement in the visual acuity (measured in lines) is given here:
-
-$$
-\begin{array}{||l|c|c||}
-\text{Time}& \text{Patch [lines]}& \text{Atropine [lines]}\\ 
-\text{5 weeks} & +2.22\pm 0.2& +1.37\pm 0.2 \\
-\text{16 weeks} & +2.94\pm 0.2& +2.42\pm 0.2 \\
-\text{24 weeks} & +3.16\pm 0.2& +2.84\pm 0.2
-\end{array}
-$$
-
-This small amount of data lets us estimate the relative rates of improvement from the treatments.  Since the patch treatment is only about 1/3 day, the total time for treatment would be $19 \text{weeks}\times \frac{7 \text{day}}{1 \text{week}}\times 1/3=44 \text{day}$ For patch treatment with the above data we have a rate of about $0.94 \text{lines} / 44 \text{day}=0.021 \text{lines}/\text{day}$.    Likewise, for atropine, we have a rate of about $1.47\text{lines} / 133 \text{day}=0.011 \text{lines}/\text{day}$.  So the patch treatment is approximately twice as fast as the atropine.  Looking at Figure @fig:dODI_atropine_vs_blur we see that this can put a rough constraint on the parameters.  For a closed-eye noise for the patch treatment of $\sigma_n=0.8$ (recovery rate ODI/day $\sim 0.2$), the atropine treatment must have a lower noise level -- we can look at the atropine parameters which yield recover rates ODI/day $\sim 0.1$).  For little blur, we need a noise level of around $\sigma_n=0.6$, but if the atropine produces a significant blur, then the noise level of those inputs must be much lower -- well below $\sigma_n=0.3$ for blur filter size 6.0, for example.  
-
-This noise level for atropine is entirely consistent with the same open-eye noise level with the glasses "fix" discussed earlier.  Here we have an independent line of argument to suggest that atropine may blur the natural input, but doesn't change the overall spontaneous activity of neurons.  Further, it suggest that there is a significant physiological different in the activity distributions between unstructured input (e.g. patch) and degraded input (e.g. atropine).  
-
-In this way we may hope to constrain other parameters of the model by comparing to experimental rates of recovery.  
-
-
-
-
-### Future Directions
 
 # References
 

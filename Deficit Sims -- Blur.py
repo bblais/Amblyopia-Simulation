@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 get_ipython().run_line_magic('pylab', 'inline')
 
 
-# In[2]:
+# In[3]:
 
 
 from deficit_defs import *
 
 
-# In[16]:
+# In[4]:
 
 
 _debug = False
@@ -21,7 +21,7 @@ if _debug:
     print("Debugging")
 
 
-# In[3]:
+# In[5]:
 
 
 base='sims/2022-11-03'
@@ -30,7 +30,7 @@ if not os.path.exists(base):
     os.mkdir(base)
 
 
-# In[4]:
+# In[6]:
 
 
 rf_size=19
@@ -42,7 +42,7 @@ number_of_neurons=20
 number_of_processes=4
 
 
-# In[5]:
+# In[7]:
 
 
 base_image_file='asdf/bbsk081604_all.asdf'
@@ -61,7 +61,7 @@ Rfname=pi5.filtered_images(
 
 
 
-# In[6]:
+# In[8]:
 
 
 image_data=pi5.asdf_load_images(Lfname)
@@ -76,7 +76,7 @@ for i in range(6):
     plt.axis('off')
 
 
-# In[7]:
+# In[9]:
 
 
 image_data=pi5.asdf_load_images(Rfname)
@@ -93,13 +93,13 @@ for i in range(6):
 
 # ## Premake the image files
 
-# In[8]:
+# In[10]:
 
 
 blur_mat=linspace(0,8,17)
 
 
-# In[9]:
+# In[11]:
 
 
 base_image_file='asdf/bbsk081604_all.asdf'
@@ -120,7 +120,7 @@ for blur in blur_mat:
 
 
 
-# In[18]:
+# In[12]:
 
 
 def blur_deficit(blur=[2.5,-1],
@@ -138,7 +138,7 @@ def blur_deficit(blur=[2.5,-1],
     images=[]
     
     for bv in blur:
-        if bv<0:
+        if bv<=0:
             im=pi5.filtered_images(
                                 base_image_file,
                                 {'type':'log2dog','sd1':1,'sd2':3},
@@ -181,7 +181,7 @@ def blur_deficit(blur=[2.5,-1],
     return sim,[pre,post],[c]
 
 
-# In[23]:
+# In[13]:
 
 
 def run_one_left_blur(params,overwrite=False):
@@ -214,14 +214,14 @@ def run_one_left_blur(params,overwrite=False):
     
 
 
-# In[24]:
+# In[14]:
 
 
 total_time=8*day
 real_time=5*60+ 55
 
 
-# In[25]:
+# In[15]:
 
 
 from collections import namedtuple
@@ -250,7 +250,14 @@ print(len(all_params))
 print(time2str(real_time*len(all_params)/number_of_processes))
 
 
-# In[26]:
+# In[17]:
+
+
+do_params=make_do_params(all_params)
+len(do_params)
+
+
+# In[18]:
 
 
 get_ipython().run_cell_magic('time', '', 'run_one_left_blur(all_params[0],overwrite=True)')
@@ -267,5 +274,31 @@ print(result.get())
 # In[ ]:
 
 
+RR={}
+count=0
+for params in all_params:
+    RR[params.sfname]=Results(params.sfname)
 
+
+# In[ ]:
+
+
+count=0
+for blur_count,blur in enumerate(blur_mat):
+    params=all_params[count]
+    count+=1
+    R=RR[params.sfname]
+    blur=params.blur
+    μ1,μ2=R.μσ[0][0]
+    σ1,σ2=R.μσ[1][0]
+
+    s+=blur,μ1,μ2,σ1,σ2
+
+blur,μ1,μ2,σ1,σ2=s.arrays()
+figure()
+errorbar(blur,μ1,yerr=2*σ1,marker='o',elinewidth=1,label='Deprived',color=cm.Oranges(0.3))
+errorbar(blur,μ2,yerr=2*σ2,marker='s',elinewidth=1,label='Normal',color=cm.Blues(0.3))
+xlabel('Blur Size [pixels]')
+ylabel('Maximum Response')
+text(0,38.5,r'($2\sigma$ errorbars)',fontsize=12)
 

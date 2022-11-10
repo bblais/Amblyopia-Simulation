@@ -8,30 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "2888dc3e19ef4b20",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "daily notes/2022-11-02.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "6de22c6c00c1d224",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "daily notes/2022-11-02.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "7e09d727c251e031",
             "type": "leaf",
             "state": {
@@ -42,9 +18,20 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "8e55bac287dfe2db",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "4. Concusions and Discussion.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -73,7 +60,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "\"effective treatment\"",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -157,15 +144,15 @@
   },
   "active": "7e09d727c251e031",
   "lastOpenFiles": [
-    "2. Methods.md",
-    "3. Results.md",
-    "daily notes/2022-11-02.md",
-    "main.md",
-    "Untitled.md",
-    "docs/_main.md",
-    "daily notes/2022-11-01.md",
-    "1. Introduction.md",
     "4. Concusions and Discussion.md",
-    "10. Figures.md"
+    "daily notes/2022-11-10.md",
+    "2. Methods.md",
+    "docs/_main.md",
+    "1. Introduction.md",
+    "4a. Conclusions and Discussion -- Old.md",
+    "3a. Results -- Old.md",
+    "3. Results.md",
+    "main.md",
+    "resources/fig-deficit-mu_c-blur.svg"
   ]
 }

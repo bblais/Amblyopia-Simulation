@@ -791,6 +791,27 @@ def μσ(y,axis=None):
     
 
 
+# In[ ]:
+
+
+def make_do_params(all_params,verbose=False):
+    do_params=[]
+    for p in all_params:
+        if os.path.exists(p.sfname):
+            if verbose:
+                print("Skipping %s...already exists" % p.sfname)
+        else:
+            do_params+=[p]
+
+    if verbose:
+        print("%d sims" % len(do_params))
+        if len(do_params)<=15:
+            print(do_params)
+        else:
+            print(do_params[:5],"...",do_params[-5:])
+    return do_params
+
+
 # In[2]:
 
 
