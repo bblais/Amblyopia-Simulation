@@ -13,7 +13,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3. Results.md",
+                "file": "2. Methods.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ec28a2342dc3b8f3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/_main.md",
                 "mode": "source",
                 "source": false
               }
@@ -60,7 +72,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "\"effective treatment\"",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -89,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "3. Results.md",
+                "file": "2. Methods.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -132,7 +144,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "3. Results.md"
+                "file": "2. Methods.md"
               }
             }
           }
@@ -144,14 +156,14 @@
   },
   "active": "7e09d727c251e031",
   "lastOpenFiles": [
-    "4. Concusions and Discussion.md",
-    "daily notes/2022-11-10.md",
+    "1. Introduction.md",
     "2. Methods.md",
     "docs/_main.md",
-    "1. Introduction.md",
+    "4. Concusions and Discussion.md",
+    "3. Results.md",
+    "daily notes/2022-11-10.md",
     "4a. Conclusions and Discussion -- Old.md",
     "3a. Results -- Old.md",
-    "3. Results.md",
     "main.md",
     "resources/fig-deficit-mu_c-blur.svg"
   ]
