@@ -266,7 +266,7 @@ if do_params:
 
 # ## View the sims
 
-# In[17]:
+# In[90]:
 
 
 sfname=all_params[0].sfname
@@ -278,14 +278,14 @@ sfname=[params for params in all_params if
 sfname
 
 
-# In[18]:
+# In[91]:
 
 
 
 R=Results(sfname)
 
 
-# In[20]:
+# In[92]:
 
 
 R.μσ
@@ -295,6 +295,12 @@ R.μσ
 
 
 t,y,θ,W=R[16*day]
+
+
+# In[95]:
+
+
+R.t[-1]/day
 
 
 # In[22]:

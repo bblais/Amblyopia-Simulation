@@ -164,7 +164,7 @@ def blur_jitter_deficit(blur=[2.5,-1],
     return sim,[pre,post],[c]
 
 
-# In[9]:
+# In[10]:
 
 
 def run_one(params,overwrite=False):
@@ -199,14 +199,13 @@ def run_one(params,overwrite=False):
     
 
 
-# In[10]:
+# In[15]:
 
 
-total_time=8*day
-real_time=5*60+ 55
+real_time=11*60+ 39
 
 
-# In[11]:
+# In[16]:
 
 
 from collections import namedtuple
@@ -243,20 +242,20 @@ print(len(all_params))
 print(time2str(real_time*len(all_params)/number_of_processes))
 
 
-# In[12]:
+# In[20]:
 
 
 do_params=make_do_params(all_params)
 len(do_params)
 
 
-# In[27]:
+# In[ ]:
 
 
 get_ipython().run_cell_magic('time', '', 'run_one(all_params[0],overwrite=True)')
 
 
-# In[13]:
+# In[21]:
 
 
 if do_params:
@@ -267,7 +266,7 @@ if do_params:
 
 # ## View the sims
 
-# In[17]:
+# In[34]:
 
 
 sfname=all_params[0].sfname
@@ -279,28 +278,34 @@ sfname=[params for params in all_params if
 sfname
 
 
-# In[18]:
-
+# In[35]:
 
 
 R=Results(sfname)
 
 
-# In[20]:
+# In[36]:
 
 
 R.μσ
 
 
-# In[21]:
+# In[37]:
+
+
+R.t[-1]/day
+
+
+# In[38]:
 
 
 t,y,θ,W=R[16*day]
 
 
-# In[22]:
+# In[39]:
 
 
+t,y,θ,W=R[16*day]
 vmin=W.min()
 vmax=W.max()
 
@@ -321,7 +326,31 @@ for n in range(4):
         count+=1
 
 
-# In[26]:
+# In[40]:
+
+
+t,y,θ,W=R[-1]
+vmin=W.min()
+vmax=W.max()
+
+w_im=R.weight_image(W)
+count=1
+for n in range(4):
+    for c in range(2):
+        subplot(4,2,count)
+        pcolormesh(w_im[n,c,...],cmap=py.cm.gray,
+                        vmin=vmin,vmax=vmax)
+        ax2=gca()
+        ax2.set_aspect('equal')
+        ax2.set_xticklabels([])
+        ax2.set_yticklabels([])
+        ax2.xaxis.set_ticks_position('none') 
+        ax2.yaxis.set_ticks_position('none') 
+        
+        count+=1
+
+
+# In[27]:
 
 
 RR={}
@@ -333,7 +362,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
         RR[params.sfname]=Results(params.sfname)
 
 
-# In[27]:
+# In[28]:
 
 
 
@@ -390,7 +419,7 @@ for mu_count,mu_c in enumerate(mu_c_mat):
 legend()    
 
 
-# In[69]:
+# In[30]:
 
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -452,13 +481,13 @@ title(r'$\mu_c$')
 savefig('fig-deficit-mu_c-blur')
 
 
-# In[70]:
+# In[31]:
 
 
 sfname
 
 
-# In[75]:
+# In[32]:
 
 
 R=RR[params.sfname]
@@ -472,7 +501,7 @@ R=RR[params.sfname]
 
 
 
-# In[80]:
+# In[33]:
 
 
 count=0
@@ -505,51 +534,6 @@ plt.gcf().add_axes(ax_cb2)
 title(r'$\mu_c$')
 
 savefig('fig-deficit-ODI-mu_c-blur')
-
-
-# In[36]:
-
-
-cmap
-
-
-# In[37]:
-
-
-v=np.flip(linspace(0.3,1,20))
-for i in range(20):
-    color=cm.Blues(v[i])
-    plot(randn(100)*.1+i,color=color)
-
-
-# In[30]:
-
-
-v=linspace(0.5,1,20)
-
-
-# In[31]:
-
-
-v
-
-
-# In[34]:
-
-
-np.flip(v)
-
-
-# In[35]:
-
-
-v
-
-
-# In[67]:
-
-
-cm.Blues(0.3)
 
 
 # In[ ]:
