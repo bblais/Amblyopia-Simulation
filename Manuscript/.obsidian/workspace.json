@@ -25,31 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "daily notes/2022-11-11.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "ec28a2342dc3b8f3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/_main.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "8e55bac287dfe2db",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "4. Concusions and Discussion.md",
+                "file": "main.md",
                 "mode": "source",
                 "source": false
               }
@@ -114,7 +90,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "daily notes/2022-11-11.md",
+                "file": "main.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -157,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "daily notes/2022-11-11.md"
+                "file": "main.md"
               }
             }
           }
@@ -169,15 +145,15 @@
   },
   "active": "7c2fc189ce3b522f",
   "lastOpenFiles": [
+    "daily notes/2022-11-11.md",
+    "main.md",
+    "4. Concusions and Discussion.md",
+    "docs/_main.md",
     "daily notes/2022-11-10.md",
     "daily notes/2022-10-20.md",
     "daily notes/2022-10-31.md",
     "daily notes/2022-11-01.md",
     "2. Methods.md",
-    "1. Introduction.md",
-    "docs/_main.md",
-    "4. Concusions and Discussion.md",
-    "3. Results.md",
-    "4a. Conclusions and Discussion -- Old.md"
+    "1. Introduction.md"
   ]
 }
