@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3. Results.md",
+                "file": "daily notes/2022-11-15.md",
                 "mode": "source",
                 "source": false
               }
@@ -90,7 +90,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "3. Results.md",
+                "file": "daily notes/2022-11-15.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "3. Results.md"
+                "file": "daily notes/2022-11-15.md"
               }
             }
           }
@@ -145,6 +145,7 @@
   },
   "active": "7c2fc189ce3b522f",
   "lastOpenFiles": [
+    "3. Results.md",
     "main.md",
     "daily notes/2022-11-11.md",
     "4. Concusions and Discussion.md",
@@ -153,7 +154,6 @@
     "daily notes/2022-10-20.md",
     "daily notes/2022-10-31.md",
     "daily notes/2022-11-01.md",
-    "2. Methods.md",
-    "1. Introduction.md"
+    "2. Methods.md"
   ]
 }
