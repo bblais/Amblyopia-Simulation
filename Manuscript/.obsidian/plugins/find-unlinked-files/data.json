@@ -17,6 +17,7 @@
   "fileTypesToDelete": [],
   "ignoreFileTypes": true,
   "ignoreDirectories": true,
+  "unresolvedLinksIgnoreDirectories": true,
   "unresolvedLinksOutputFileName": "unresolved links output",
   "unresolvedLinksDirectoriesToIgnore": [],
   "unresolvedLinksFilesToIgnore": [],
@@ -25,5 +26,10 @@
   "unresolvedLinksTagsToIgnore": [],
   "withoutTagsDirectoriesToIgnore": [],
   "withoutTagsFilesToIgnore": [],
-  "withoutTagsOutputFileName": "files without tags"
+  "withoutTagsOutputFileName": "files without tags",
+  "emptyFilesOutputFileName": "empty files",
+  "emptyFilesDirectories": [],
+  "emptyFilesFilesToIgnore": [],
+  "emptyFilesIgnoreDirectories": true,
+  "openOutputFile": true
 }

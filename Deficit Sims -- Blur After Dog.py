@@ -4,8 +4,7 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('matplotlib', 'inline')
-from pylab import *
+get_ipython().run_line_magic('pylab', 'inline')
 
 
 # In[2]:
@@ -25,7 +24,7 @@ if _debug:
 # In[4]:
 
 
-base='sims/2022-11-03'
+base='sims/2022-11-03b'
 if not os.path.exists(base):
     print(f"mkdir {base}")
     os.mkdir(base)
@@ -52,8 +51,8 @@ print("Base Image File:",base_image_file)
 blur=2.5
 Lfname=pi5.filtered_images(
                             base_image_file,
-                            {'type':'blur','size':blur},
                             {'type':'log2dog','sd1':1,'sd2':3},
+                            {'type':'blur','size':blur},
                             )
 Rfname=pi5.filtered_images(
                             base_image_file,
@@ -98,22 +97,17 @@ for i in range(6):
 
 
 blur_mat=linspace(0,8,17)
-
-
-# In[10]:
-
-
 blur_mat
 
 
-# In[17]:
+# In[10]:
 
 
 blur_mat=linspace(0,16,33)
 blur_mat
 
 
-# In[12]:
+# In[22]:
 
 
 base_image_file='asdf/bbsk081604_all.asdf'
@@ -128,13 +122,13 @@ for blur in blur_mat:
 
     Lfname=pi5.filtered_images(
                                 base_image_file,
-                                {'type':'blur','size':blur},
                                 {'type':'log2dog','sd1':1,'sd2':3},
+                                {'type':'blur','size':blur},
                                 )
 
 
 
-# In[9]:
+# In[11]:
 
 
 def blur_deficit(blur=[2.5,-1],
@@ -160,8 +154,8 @@ def blur_deficit(blur=[2.5,-1],
         else:
             im=pi5.filtered_images(
                                     base_image_file,
-                                    {'type':'blur','size':bv},
                                     {'type':'log2dog','sd1':1,'sd2':3},
+                                    {'type':'blur','size':bv},
                                     )
         images.append(im)
         
@@ -195,7 +189,7 @@ def blur_deficit(blur=[2.5,-1],
     return sim,[pre,post],[c]
 
 
-# In[10]:
+# In[12]:
 
 
 def run_one_left_blur(params,overwrite=False):
@@ -228,14 +222,14 @@ def run_one_left_blur(params,overwrite=False):
     
 
 
-# In[11]:
+# In[13]:
 
 
 total_time=8*day
 real_time=5*60+ 55
 
 
-# In[18]:
+# In[14]:
 
 
 from collections import namedtuple
@@ -264,20 +258,20 @@ print(len(all_params))
 print(time2str(real_time*len(all_params)/number_of_processes))
 
 
-# In[19]:
+# In[15]:
 
 
 do_params=make_do_params(all_params)
 len(do_params)
 
 
-# In[33]:
+# In[18]:
 
 
 get_ipython().run_cell_magic('time', '', 'run_one_left_blur(all_params[0],overwrite=True)')
 
 
-# In[ ]:
+# In[28]:
 
 
 pool = Pool(processes=number_of_processes)
@@ -285,13 +279,13 @@ result = pool.map_async(run_one_left_blur, all_params)
 print(result.get())
 
 
-# In[20]:
+# In[17]:
 
 
 get_ipython().run_cell_magic('time', '', 'RR={}\ncount=0\nfor params in all_params:\n    RR[params.sfname]=Results(params.sfname)')
 
 
-# In[21]:
+# In[23]:
 
 
 s=Storage()
@@ -312,8 +306,8 @@ errorbar(blur,μ1,yerr=2*σ1,marker='o',elinewidth=1,label='Deprived',color=cm.O
 errorbar(blur,μ2,yerr=2*σ2,marker='s',elinewidth=1,label='Fellow',color=cm.Blues(0.7))
 xlabel('Blur Size [pixels]')
 ylabel('Maximum Response')
-title('Blur before difference-of-Gaussians')
 legend()
+title('Blur after difference-of-Gaussians')
 
 
 # In[ ]:

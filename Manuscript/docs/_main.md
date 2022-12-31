@@ -183,7 +183,7 @@ The typical patch treatment is done by depriving the strong-eye of input with an
 
 ### Contrast modification
 
-A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel. The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.
+A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the fellow-eye channel with a simple scalar multiplier applied to each pixel. The contrast difference sets up competition between the two channels with the advantage given to the amblyopic channel.
 
 ![ A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-contrast-modified-inputs.svg){#fig:contrast-modified-inputs}
 
