@@ -256,6 +256,53 @@ class Results(object):
         return μ_mat,σ_mat
         
     
+    def plot_rf_grid(self,which_neurons=None):
+        from pylab import GridSpec,subplot,imshow,ylabel,title,gca,xlabel,grid,cm,figure,axis
+
+        w_im=self.weight_image(self.W[-1,::])
+        number_of_neurons=w_im.shape[0]
+        
+        if which_neurons is None:
+            which_neurons=list(range(number_of_neurons))
+
+        N=len(which_neurons)
+        
+        num_channels=2
+
+        nr=int(np.ceil(np.sqrt(N)))
+        nc=int(np.ceil(N/nr))
+
+        
+        fig1=figure(figsize=(12,12))
+        ni=0
+        for i in range(number_of_neurons):
+            
+            if i not in which_neurons:
+                continue
+
+            vmin=w_im[i,:,:,:].min()
+            vmax=w_im[i,:,:,:].max()
+            for c in range(num_channels):
+                
+                subplot(nr,nc*num_channels,num_channels*ni+c+1)
+                axis('equal')
+                im=w_im[i,c,:,:]
+                imshow(im,cmap=cm.gray,vmin=vmin,vmax=vmax,interpolation='nearest')
+                grid(False)
+                if c==0:
+                    ylabel(f'Neuron {i}')
+                if ni==0:
+                    if c==0:
+                        title("Left")
+                    else:
+                        title("Right")
+                gca().set_xticklabels([])
+                gca().set_yticklabels([])                
+                
+                
+            ni+=1
+            
+
     
     def plot_rf(self):
         from pylab import GridSpec,subplot,imshow,ylabel,title,gca,xlabel,grid,cm
@@ -371,6 +418,7 @@ def μσ(V,axis=None):
     
     return μ,σ
 
+global base_image_file
 base_image_file='asdf/bbsk081604_all_log2dog.asdf'
 print("Base Image File:",base_image_file)
 
@@ -1114,4 +1162,412 @@ def run_one_continuous_mask(params,overwrite=False):
     return sfname
     
     
+
+
+# In[ ]:
+
+
+def savefig(base):
+    import matplotlib.pyplot as plt
+    for fname in [f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']:
+        print(fname)
+        plt.savefig(fname, bbox_inches='tight')
+
+
+# In[ ]:
+
+
+def mydisplay(t,sim,neurons,connections):
+    global _fig
+    from IPython.display import display, clear_output
+    from pylab import figure,close,gcf
+    try:
+        clear_output(wait=True)
+
+        _fig=pn.utils.plot_rfs_and_theta(sim,neurons,connections)
+        _fig.suptitle("%.2f" % (t/hour))
+        display(_fig)
+        close(_fig)
+    except KeyboardInterrupt:
+        close(_fig)
+        raise
+
+
+# In[ ]:
+
+
+def blur_jitter_deficit(blur=[2.5,-1],
+                        noise=[0.1,.1],
+                        rf_size=19,eta=2e-6,
+                        mu_c=0,sigma_c=0,    
+                        mu_r=0,sigma_r=0,
+                        number_of_neurons=10,
+                        total_time=8*day,
+                        save_interval=1*hour):
+
+    base_image_file='asdf/bbsk081604_all.asdf'
+    
+    if _debug:
+        total_time=1*minute
+        save_interval=1*second
+        
+    images=[]
+    dt=200*ms
+    
+    print(base_image_file)
+    
+    for bv in blur:
+        if bv<=0:
+            im=pi5.filtered_images(
+                                base_image_file,
+                                {'type':'log2dog','sd1':1,'sd2':3},
+                                )
+        else:
+            im=pi5.filtered_images(
+                                    base_image_file,
+                                    {'type':'blur','size':bv},
+                                    {'type':'log2dog','sd1':1,'sd2':3},
+                                    )
+        images.append(im)
+        
+        
+    dt=200*ms        
+    pre1=pn.neurons.natural_images_with_jitter(images[0],
+                                                rf_size=rf_size,
+                                                time_between_patterns=dt,
+                                                sigma_r=0,
+                                                sigma_c=0,
+                                                buffer_c=mu_c+2*sigma_c,
+                                                buffer_r=mu_r+2*sigma_r,
+                                                verbose=False)
+
+    pre2=pn.neurons.natural_images_with_jitter(images[1],
+                                                rf_size=rf_size,
+                                                other_channel=pre1,
+                                                time_between_patterns=dt,
+                                                mu_r=mu_r,mu_c=mu_c,
+                                                sigma_r=sigma_r,sigma_c=sigma_c,
+                                                verbose=False)
+
+
+
+    sigma=noise
+    pre1+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    sigma=noise
+    pre2+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    pre=pre1+pre2
+
+    post=default_post(number_of_neurons)
+    c=default_bcm(pre,post)
+    c.eta=eta
+
+    sim=pn.simulation(total_time)
+    sim.dt=dt
+
+    sim.monitor(post,['output'],save_interval)
+    sim.monitor(c,['weights','theta'],save_interval)
+
+    sim+=pn.grating_response(print_time=False)
+
+    return sim,[pre,post],[c]
+
+
+# In[ ]:
+
+
+def fix_jitter(noise=0.1,rf_size=19,
+           number_of_neurons=10,
+            mu_c=0,sigma_c=0,    
+            mu_r=0,sigma_r=0,
+           total_time=8*day,
+           save_interval=1*hour,
+           eta=2e-6):
+    
+    if _debug:
+        total_time=1*minute
+        save_interval=1*second
+    base_image_file='asdf/bbsk081604_all.asdf'
+        
+    print(base_image_file)
+
+    im=pi5.filtered_images(
+                        base_image_file,
+                        {'type':'log2dog','sd1':1,'sd2':3},
+                        )
+    
+    dt=200*ms        
+    pre1=pn.neurons.natural_images_with_jitter(im,
+                                                rf_size=rf_size,
+                                                time_between_patterns=dt,
+                                                sigma_r=0,
+                                                sigma_c=0,
+                                                buffer_c=mu_c+2*sigma_c,
+                                                buffer_r=mu_r+2*sigma_r,
+                                                verbose=False)
+    pre2=pn.neurons.natural_images_with_jitter(im,
+                                                rf_size=rf_size,
+                                                other_channel=pre1,
+                                                time_between_patterns=dt,
+                                                mu_r=mu_r,mu_c=mu_c,
+                                                sigma_r=sigma_r,sigma_c=sigma_c,
+                                                verbose=False)
+
+
+    sigma=noise
+    pre1+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    sigma=noise
+    pre2+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    pre=pre1+pre2
+
+    post=default_post(number_of_neurons)
+    c=default_bcm(pre,post)
+    c.eta=eta
+
+    save_interval=save_interval
+
+    sim=pn.simulation(total_time)
+    sim.dt=dt
+
+    sim.monitor(post,['output'],save_interval)
+    sim.monitor(c,['weights','theta'],save_interval)
+
+    sim+=pn.grating_response(print_time=False)
+
+    return sim,[pre,post],[c]
+
+
+# In[ ]:
+
+
+def treatment_jitter(contrast=1,noise=0.1,noise2=0.1,
+              rf_size=19,eta=5e-6,
+              f=30,  # size of the blur for mask, which is a measure of overlap
+            mu_c=0,sigma_c=0,    
+            mu_r=0,sigma_r=0,
+           number_of_neurons=20,
+           total_time=8*day,
+           save_interval=1*hour,
+             mask=None,
+             blur=0):
+    
+    if _debug:
+        total_time=1*minute
+        save_interval=1*second
+    base_image_file='asdf/bbsk081604_all.asdf'
+    
+    im=pi5.filtered_images(
+                        base_image_file,
+                        {'type':'log2dog','sd1':1,'sd2':3},
+                        )
+    dt=200*ms        
+    
+    if not f in [10,30,50,70,90]:
+        raise ValueError("Unknown f %s" % str(f))
+
+    if mask:
+        if blur:
+            maskA_fname=pi5.filtered_images(im,
+                                        {'type':'blur','size':blur},
+                                        {'type':'mask',
+                                         'name':'bblais-masks-20210615/2021-06-15-*-A-fsig%d.png'% f, 
+                                        'seed':101},
+                                            verbose=False,
+                                      )
+            maskF_fname=pi5.filtered_images(im,
+                                        {'type':'blur','size':blur},
+                                        {'type':'mask',
+                                         'name':'bblais-masks-20210615/2021-06-15-*-F-fsig%d.png' % f, 
+                                        'seed':101},
+                                            verbose=False,
+                                      )            
+        else:
+            maskA_fname=pi5.filtered_images(im,
+                                        {'type':'mask',
+                                         'name':'bblais-masks-20210615/2021-06-15-*-A-fsig%d.png' % f,
+                                        'seed':101},
+                                            verbose=False,
+                                      )
+            maskF_fname=pi5.filtered_images(im,
+                                        {'type':'mask',
+                                         'name':'bblais-masks-20210615/2021-06-15-*-F-fsig%d.png' % f,
+                                        'seed':101},
+                                            verbose=False,
+                                      )
+        
+        pre1=pn.neurons.natural_images_with_jitter(maskA_fname,
+                                                   rf_size=rf_size,
+                                                time_between_patterns=dt,
+                                                sigma_r=0,
+                                                sigma_c=0,
+                                                buffer_c=mu_c+2*sigma_c,
+                                                buffer_r=mu_r+2*sigma_r,
+                                    verbose=False)
+        pre2=pn.neurons.natural_images_with_jitter(maskF_fname,rf_size=rf_size,
+                                    other_channel=pre1,
+                                    mu_r=mu_r,mu_c=mu_c,
+                                    sigma_r=sigma_r,sigma_c=sigma_c,
+                                    verbose=False)
+        
+    else:
+        
+        if blur:
+            blur_fname=pi5.filtered_images(im,
+                                        {'type':'blur','size':blur},
+                                            verbose=False,
+                                          )
+        
+        norm_fname=pi5.filtered_images(im,
+                                            verbose=False,
+                                      )
+    
+        
+        pre1=pn.neurons.natural_images_with_jitter(norm_fname,rf_size=rf_size,
+                                                time_between_patterns=dt,
+                                                sigma_r=0,
+                                                sigma_c=0,
+                                                buffer_c=mu_c+2*sigma_c,
+                                                buffer_r=mu_r+2*sigma_r,
+                                    verbose=False)
+        
+        if blur:
+            pre2=pn.neurons.natural_images_with_jitter(blur_fname,rf_size=rf_size,
+                                        other_channel=pre1,
+                                    mu_r=mu_r,mu_c=mu_c,
+                                    sigma_r=sigma_r,sigma_c=sigma_c,
+                                        verbose=False)
+        else:
+            pre2=pn.neurons.natural_images_with_jitter(norm_fname,rf_size=rf_size,
+                                        other_channel=pre1,
+                                    mu_r=mu_r,mu_c=mu_c,
+                                    sigma_r=sigma_r,sigma_c=sigma_c,
+                                        verbose=False)
+            
+
+
+    sigma=noise
+    pre1+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    sigma=noise2
+    pre2+=pn.neurons.process.scale_shift(contrast,0)
+    pre2+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    pre=pre1+pre2
+
+    post=pn.neurons.linear_neuron(number_of_neurons)
+    post+=pn.neurons.process.sigmoid(-1,50)
+
+    c=pn.connections.BCM(pre,post,[-.1,.1],[.1,.2])
+    c.eta=eta
+    c.tau=100*second
+
+    save_interval=save_interval
+
+    sim=pn.simulation(total_time)
+
+    sim.dt=dt
+
+    sim.monitor(post,['output'],save_interval)
+    sim.monitor(c,['weights','theta'],save_interval)
+
+    sim+=pn.grating_response(print_time=False)
+
+    return sim,[pre,post],[c]
+
+def patch_treatment_jitter(noise=0.1,patch_noise=0.1,rf_size=19,
+                   number_of_neurons=20,
+                    mu_c=0,sigma_c=0,    
+                    mu_r=0,sigma_r=0,
+                   total_time=8*day,
+                   save_interval=1*hour,
+                   eta=2e-6,
+                   ):
+    
+    if _debug:
+        total_time=1*minute
+        save_interval=1*second
+    base_image_file='asdf/bbsk081604_all.asdf'
+
+    im=pi5.filtered_images(
+                        base_image_file,
+                        {'type':'log2dog','sd1':1,'sd2':3},
+                        )
+    dt=200*ms        
+        
+    norm_fname=pi5.filtered_images(im,
+                                verbose=False
+                                  )
+    
+        
+    pre1=pn.neurons.natural_images_with_jitter(norm_fname,rf_size=rf_size,
+                                                time_between_patterns=dt,
+                                                sigma_r=0,
+                                                sigma_c=0,
+                                                buffer_c=mu_c+2*sigma_c,
+                                                buffer_r=mu_r+2*sigma_r,
+                                verbose=False)
+        
+    pre2=pn.neurons.natural_images_with_jitter(norm_fname,rf_size=rf_size,
+                                other_channel=pre1,
+                                time_between_patterns=dt,
+                                mu_r=mu_r,mu_c=mu_c,
+                                sigma_r=sigma_r,sigma_c=sigma_c,
+                                verbose=False)
+            
+
+
+    sigma=noise
+    pre1+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    sigma=patch_noise
+    pre2+=pn.neurons.process.scale_shift(0.0,0) # zero out signal
+    pre2+=pn.neurons.process.add_noise_normal(0,sigma)
+
+    pre=pre1+pre2
+
+    post=default_post(number_of_neurons)
+    c=default_bcm(pre,post)
+    c.eta=eta
+
+    save_interval=save_interval
+
+    sim=pn.simulation(total_time)
+
+    sim.dt=dt
+
+    sim.monitor(post,['output'],save_interval)
+    sim.monitor(c,['weights','theta'],save_interval)
+
+    sim+=pn.grating_response(print_time=False)
+
+    return sim,[pre,post],[c]
+
+
+# In[ ]:
+
+
+def seq_load(seq,fname):
+    s,n,c=seq.sims[0],seq.neurons[0],seq.connections[0]
+    
+    assert len(c)==1,"Need to implement more then one connection"
+    with asdf.open(fname) as af:
+        L=af.tree['attrs']['sequence length']
+        i=L-1  # last one
+        m=af.tree['sequence %d' % i]['connection 0']['monitor weights'] 
+        t,W=m['t'],m['values']
+        W=np.array(W)
+        t=np.array(t)
+    
+        
+        m=af.tree['sequence %d' % i]['connection 0']['monitor theta']           
+        t,theta=m['t'],m['values']
+        theta=np.array(theta)
+        
+        c[0].initial_weights=W[-1]
+        c[0].reset_to_initial=True
+        c[0].initial_theta=theta[-1]        
+        c[0]._reset()
 
