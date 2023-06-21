@@ -22,12 +22,12 @@ from plasticnet import day,ms,minute,hour,second
 from matplotlib.pyplot import figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis,title
 
 
-# In[ ]:
+# In[1]:
 
 
 #| output: false
 
-def inputs_to_images(X,buffer=5):
+def inputs_to_images(X,buffer=5,scale_each_patch=False):
     ims=[]
     vmin=X.min()
     vmax=X.max()
@@ -37,40 +37,96 @@ def inputs_to_images(X,buffer=5):
     for xx in X:
         xx1=xx[:rf_size*rf_size].reshape(rf_size,rf_size)
         xx2=xx[rf_size*rf_size:].reshape(rf_size,rf_size)
+        if scale_each_patch:
+            vmax=max([xx1.max(),xx2.max()])
+            vmin=max([xx1.min(),xx2.min()])
+        
         im=np.concatenate((xx1,np.ones((rf_size,buffer))*vmax,xx2),axis=1)   
         ims.append(im)
         
     return ims
 
+def get_input_examples(im1,im2,
+                       noise1=0.1,noise2=0.1,
+                       scale1=1,scale2=1,
+                     mu_c=0,sigma_c=0,    
+                     mu_r=0,sigma_r=0,    
+                     base_image_file='asdf/bbsk081604_all_scale2.asdf'
+                ):
+    
+    rf_size=19
+    eta=2e-6
+    pre1=pn.neurons.natural_images_with_jitter(im1,
+                                   rf_size=rf_size,
+                                    sigma_r=1,
+                                   sigma_c=1,
+                                   verbose=False)
+
+    pre2=pn.neurons.natural_images_with_jitter(im2,
+                                               rf_size=rf_size,
+                                other_channel=pre1,
+                               mu_r=mu_r,mu_c=mu_c,
+                               sigma_r=sigma_r,sigma_c=sigma_c,
+                                verbose=False)
+
+    pre1+=pn.neurons.process.scale_shift(scale1,0)
+    pre2+=pn.neurons.process.scale_shift(scale2,0)
+
+    pre1+=pn.neurons.process.add_noise_normal(0,noise1)
+    pre2+=pn.neurons.process.add_noise_normal(0,noise2)
+
+    pre=pre1+pre2
+
+    sim=pn.simulation(99)
+    sim.monitor(pre,['output'],1)
+    sim.monitor(pre1,['pattern','p','c','r','pa','ca','ra'],1)
+    sim.monitor(pre2,['pattern','p','c','r','pa','ca','ra'],1)
+
+    pn.run_sim(sim,[pre],[],display_hash=False,print_time=False)
+
+    m=sim.monitors['output']
+    
+    t,X=m.arrays()
+    
+    
+    X=X[1:,:]
+
+    
+    
+    return sim,X
+    
+
 def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
                                          mu_c=10,sigma_c=2,    
                                            mu_r=0,sigma_r=1,
+                                         base_image_file='asdf/bbsk081604_all_log2dog.asdf'
                                         ):
     
     rf_size=19
     eta=2e-6
 
-    base_image_file='asdf/bbsk081604_all_log2dog.asdf'
+    
 
     number_of_neurons=1,
 
     if blur<0:
         blur_fname=Lnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
     else:
         blur_fname=Lnorm_fname=pi5.filtered_images(base_image_file,
                                     {'type':'blur','size':blur},
+                                    {'type':'norm'},
                                     verbose=False)
 
     Rnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
 
     pre1=pn.neurons.natural_images_with_jitter(Lnorm_fname,
                                    rf_size=rf_size,
                                     sigma_r=1,
                                    sigma_c=1,
-                                   buffer_c=mu_c+2*sigma_c,
-                                   buffer_r=mu_r+2*sigma_r,
                                    verbose=False)
 
     pre2=pn.neurons.natural_images_with_jitter(Rnorm_fname,rf_size=rf_size,
@@ -98,36 +154,48 @@ def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
     
     t,X=m.arrays()
     
+    
+    X=X[1:,:]
+
+    
+    
     return sim,X
     
 
 
-def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left'):
+def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
+                            base_image_file='asdf/bbsk081604_all_log2dog.asdf'):
     
     rf_size=19
     eta=2e-6
 
-    base_image_file='asdf/bbsk081604_all_log2dog.asdf'
+    
 
     number_of_neurons=1,
 
     
     if blur<0:
         Lnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
         Rnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
     elif blurred_eye=='left':
         Lnorm_fname=pi5.filtered_images(base_image_file,
                                     {'type':'blur','size':blur},
+                                    {'type':'norm'},
                                     verbose=False)
         Rnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
     elif blurred_eye=='right':
         Lnorm_fname=pi5.filtered_images(base_image_file,
+                                    {'type':'norm'},
                                     verbose=False)
         Rnorm_fname=pi5.filtered_images(base_image_file,
                                     {'type':'blur','size':blur},
+                                    {'type':'norm'},
                                     verbose=False)
 
     else:
@@ -151,7 +219,7 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left'):
     pre2+=pn.neurons.process.add_noise_normal(0,sigma)
     pre=pre1+pre2
 
-    sim=pn.simulation(99)
+    sim=pn.simulation(100)
     sim.monitor(pre,['output'],1)
 
     pn.run_sim(sim,[pre],[],display_hash=False,print_time=False)
@@ -159,7 +227,48 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left'):
     m=sim.monitors['output']
     t,X=m.arrays()
     
+    X=X[1:,:]
+    
+    
     return sim,X
+
+
+# In[ ]:
+
+
+def get_input_patch_examples_treatment():
+    from deficit_defs import patch_treatment
+    seq=pn.Sequence()    
+    seq+=patch_treatment(patch_noise=0.5,
+               total_time=1000,number_of_neurons=1,
+               eta=1e-6,
+               save_interval=1)
+    sim=seq.sims[0]
+    pre=seq[0][1][0]
+    sim.monitor(pre,['output'],1)
+
+    seq.run(display_hash=False,print_time=False)
+    m=sim.monitors['output_1']
+    t,X=m.arrays()    
+    X=X[1:,:]
+    return seq,X
+
+
+# In[ ]:
+
+
+def savefig(origfname):
+    base,ext=os.path.splitext(origfname)
+    import matplotlib.pyplot as plt
+    
+    print_fnames=[f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']
+    if ext:
+        if ext!='.png' and ext!='.svg':
+            print_fnames+=[f'Manuscript/resources/{origfname}']
+    
+    for fname in print_fnames:
+        print(fname)
+        plt.savefig(fname, bbox_inches='tight')
 
 
 # In[ ]:

@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
 import numpy as np
 import pylab as py
 import asdf
@@ -111,7 +117,6 @@ def plotvar(t,y,name,*args,**kwargs):
     py.ylabel(name)
 
 
-
 def plot_mini_rfs(fname,*args):
     
     with asdf.open(fname) as af:
@@ -128,15 +133,15 @@ def plot_mini_rfs(fname,*args):
                 m=af.tree['sequence %d' % si]['connection 0']['monitor weights']
                 t,W=m['t'],m['values']
 
-                idx=np.where(t>=_t)[0][0]
+                idx=np.where(t>=_t)[0]
 
-                if idx:
-                    ww=W[idx,:]
+                if len(idx):
+                    ww=W[idx[0],:]
                     break
             
-            if min(ww)<vmin:
+            if ww.min()<vmin:
                 vmin=W.min()
-            if max(ww)>vmin:
+            if ww.max()>vmin:
                 vmax=W.max()
 
     
@@ -159,23 +164,40 @@ def plot_mini_rfs(fname,*args):
                 m=af.tree['sequence %d' % si]['connection 0']['monitor weights']
                 t,W=m['t'],m['values']
 
-                idx=np.where(t>=_t)[0][0]
+                idx=np.where(t>=_t)[0]
 
-                if idx:
-                    ww=W[idx,:]
+                if len(idx):
+                    ww=W[idx[0],:]
                     break
 
-            for c in range(number_of_channels):
-                ax2 = py.gcf().add_axes([_x+.06*c, _y, 0.05, 0.1],aspect='equal')
-                subw=ww[c*rf_size*rf_size:(c+1)*rf_size*rf_size]
-                w_rf=subw.reshape((rf_size,rf_size))
+            if not len(idx):
+                ww=W[-1,:]
+                    
+                    
+            if len(ww.shape)==2:
+                number_of_neurons=ww.shape[0]
+            else:
+                number_of_neurons=1
+                
+            for n in range(number_of_neurons):
+                for c in range(number_of_channels):
+                    ax2 = py.gcf().add_axes([_x+.06*c, _y+.07*n, 0.05, 0.1],aspect='equal')
 
-                h=ax2.pcolormesh(w_rf,cmap=py.cm.gray,
-                        vmin=vmin,vmax=vmax)
-                ax2.set_xticklabels([])
-                ax2.set_yticklabels([])
-                ax2.xaxis.set_ticks_position('none') 
-                ax2.yaxis.set_ticks_position('none') 
+                    if number_of_neurons==1:
+                        subw=ww[c*rf_size*rf_size:(c+1)*rf_size*rf_size]
+                    else:
+                        subw=ww[n,c*rf_size*rf_size:(c+1)*rf_size*rf_size]
+                        
+                    w_rf=subw.reshape((rf_size,rf_size))
+                    ax2.grid(False)
+                    h=ax2.pcolormesh(w_rf,cmap=py.cm.gray,
+                            vmin=vmin,vmax=vmax)
+                    ax2.set_xticklabels([])
+                    ax2.set_yticklabels([])
+                    ax2.xaxis.set_ticks_position('none') 
+                    ax2.yaxis.set_ticks_position('none') 
+
+
 
 def plot_max_response(fname,which_neurons=None):
     
@@ -236,3 +258,4 @@ def plot_theta(fname):
             m=af.tree['sequence %d' % i]['connection 0']['monitor theta']           
             t,theta=m['t'],m['values']
             plotvar(t,theta,'theta')
+

@@ -362,6 +362,15 @@ def filtered_images(fname,*args,resolution='uint16',
             if T=='blur':
                 image_data=make_blur(image_data,f['size'],
                                     verbose=verbose)
+            elif T=="norm":
+                image_data=make_norm(image_data,
+                                    verbose=verbose)                
+            elif T=="Rtodog":
+                image_data=make_Rtodog(image_data,f['sd1'],f['sd2'],
+                                    verbose=verbose)                
+            elif T=='dog':
+                image_data=make_dog(image_data,f['sd1'],f['sd2'],
+                                    verbose=verbose)
             elif T=='log2dog':
                 image_data=make_log2dog(image_data,f['sd1'],f['sd2'],
                                     verbose=verbose)

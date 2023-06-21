@@ -15,5 +15,6 @@
   ],
   "legacyEditor": false,
   "livePreview": true,
-  "showInlineTitle": false
+  "showInlineTitle": false,
+  "showFrontmatter": true
 }

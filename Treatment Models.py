@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 #| output: false
@@ -23,7 +23,7 @@ def savefig(base):
         plt.savefig(fname)
 
 
-# In[2]:
+# In[3]:
 
 
 for i in tqdm(range(100)):
@@ -35,7 +35,7 @@ for i in tqdm(range(100)):
 # To model the fix to the refractive imbalance we follow the deficit simulation with an input environment that is rebalanced, both eyes receiving nearly identical input patches (@fig-normal-inputs).   This process is a model of the application of refractive correction.  Although both eyes receive nearly identical input patches, we add independent Gaussian noise to each input channel to represent the natural variation in the activity in each eye.  In addition, in those cases where use employ strabismic amblyopia, the inter-eye jitter is not corrected with the refractive correction.  
 # 
 
-# In[2]:
+# In[4]:
 
 
 #| output: false
@@ -106,7 +106,7 @@ def get_input_patch_examples_treatment():
 # The typical patch treatment is done by depriving the strong-eye of input with an eye-patch.  In the model this is equivalent to presenting the strong-eye with random noise instead of the natural image input.  Competition between the left- and right-channels drives the recovery, and is produced from the difference between *structured* input into the weak-eye and the *unstructured* (i.e. noise) input into the strong eye.  It is not driven by a reduction in input activity.  @fig-patch-inputs shows sample simulation input patterns from the patched eye.  Compare this to @fig-normal-inputs to see that the simulated patch has far less structure than the normal inputs.
 # 
 
-# In[3]:
+# In[6]:
 
 
 #| echo: false
@@ -135,13 +135,14 @@ plt.savefig('Manuscript/resources/fig-patch-inputs.svg')
 # A binocular approach to treatment can be produced with contrast reduction of the non-deprived channel relative to the deprived channel. Experimentally this can be accomplished with VR headsets[@xiao2020improved]. In the model we implement this by down-scaling the normal, unblurred channel with a simple scalar multiplier applied to each pixel (Figure [4](#fig:input) D). The contrast difference sets up competition between the two channels with the advantage given to the weak-eye channel.
 # 
 
-# In[4]:
+# In[7]:
 
 
 #| label: fig-contrast-modified-inputs
 #| fig-cap: A sample of 24 input patches from a normal visual environment with the right-channel down-scaled relative to the left.
 #| 
-sim,X=get_input_patch_examples(blur=-1,contrast=0.3)
+sim,X=get_input_patch_examples(blur=-1,contrast=0.3,
+                               base_image_file='asdf/bbsk081604_all_RtoDOG.asdf')
 ims=inputs_to_images(X,buffer=2)
 figure(figsize=(20,6))
 for i in range(24):
@@ -163,7 +164,7 @@ plt.savefig('Manuscript/resources/fig-contrast-modified-inputs.svg')
 # The dichoptic masks are constructed with the following procedure.  A blank image (i.e. all zeros) is made to which is added 15 randomly sized circles with values equal to 1 (Figure @fig:dichopic_blob).   These images are then smoothed with a Gaussian filter of a given width, $f$.  This width is a parameter we can vary to change the overlap between the left- and right-eye images.  A high value of $f$ compared with the size of the receptive field, e.g. $f=90$, yields a high overlap between the patterns in the weak- and strong-eye inputs (Figure @fig:dichopic_filter_size).  Likewise, a small value of $f$, e.g. $f=10$, the eye inputs are nearly independent -- the patterned activity falling mostly on one of the eyes and not much to both.  Finally, the smoothed images are scaled to have values from a minimum of 0 to a maximum of 1.  This image-mask we will call $A$, and is the left-eye mask whereas the right-eye mask, $F$, is the inverse of the left-eye mask, $F\equiv 1-A$.  The mask is applied to an image by multiplying the left- and right-eye images by the left- and right-eye masks, respectively, resulting in a pair of images which have no overlap at the peaks of each mask, and nearly equal overlap in the areas of the images where the masks are near 0.5 (Figure @fig:dichopic_filter_image).   
 # 
 
-# In[3]:
+# In[8]:
 
 
 from PIL import Image
@@ -172,7 +173,7 @@ from random import choice
 from numpy import meshgrid,arange
 
 
-# In[4]:
+# In[9]:
 
 
 def gaussian2d(x,y,x0,y0,sigma):
@@ -205,7 +206,7 @@ def pixel2deg(P):
     return D
 
 
-# In[5]:
+# In[16]:
 
 
 def make_mask(fsig=35,g=None):
@@ -241,7 +242,7 @@ def make_mask(fsig=35,g=None):
     return res
 
 
-# In[22]:
+# In[17]:
 
 
 mx,my=660,495
@@ -259,7 +260,7 @@ imshow(g,extent=[0,pixel2deg(mx),0,pixel2deg(my)])
 savefig('fig-dichopic_blob')
 
 
-# In[23]:
+# In[18]:
 
 
 fsig=20 # pixels
@@ -272,20 +273,20 @@ imshow(f,extent=[0,pixel2deg(f.shape[1]),0,pixel2deg(f.shape[0])])
 plt.colorbar()
 
 
-# In[31]:
+# In[19]:
 
 
 get_ipython().run_cell_magic('time', '', "res=convolve2d(g,f,mode='same')\nres=res/res.max()")
 
 
-# In[32]:
+# In[22]:
 
 
 plt.imshow(res,extent=[0,pixel2deg(res.shape[1]),0,pixel2deg(res.shape[0])])
 plt.colorbar()
 
 
-# In[33]:
+# In[23]:
 
 
 figure(figsize=(15,12))
@@ -315,7 +316,7 @@ plt.text(.5, 0.5, "C", transform=plt.gcf().transFigure,
 savefig('blob_convolution_example_fsig_%d' % fsig)
 
 
-# In[34]:
+# In[24]:
 
 
 res=res[:495,:660]
@@ -337,16 +338,16 @@ imshow(im)
 plt.title(FF.shape)
 
 
-# In[35]:
+# In[25]:
 
 
-fname='asdf/bbsk081604_all_log2dog.asdf'
+fname='asdf/bbsk081604_all_RtoDOG.asdf'
 image_data=pi5.asdf_load_images(fname)
 im1=image_data['im'][5]*image_data['im_scale_shift'][0]+image_data['im_scale_shift'][1]
 imshow(im1,cmap=plt.cm.gray)
 
 
-# In[36]:
+# In[26]:
 
 
 figure(figsize=(12,8))
@@ -368,7 +369,7 @@ im2=im1*alpha_F
 imshow(im2,cmap=plt.cm.gray)
 
 
-# In[37]:
+# In[27]:
 
 
 figure(figsize=(15,12))
@@ -405,7 +406,7 @@ plt.text(.5, 0.5, "C", transform=plt.gcf().transFigure,
 savefig('mask_filter_example_fsig_%d' % fsig)
 
 
-# In[38]:
+# In[28]:
 
 
 masks={}
@@ -414,7 +415,7 @@ for f,fsig in tqdm(enumerate([10,30,50,70,90,110])):
     masks[fsig]=res
 
 
-# In[40]:
+# In[29]:
 
 
 fig, axs = plt.subplots(3, 2,figsize=(18,15))
@@ -437,26 +438,25 @@ h.set_ticklabels(['Right','Both','Left'])
 savefig('mask_filter_examples_fsigs')
 
 
-# from input_environment_defs import *
-# 
 # ## Atropine treatment
 # 
 # In the atropine treatment for amblyopia[@glaser2002randomized], eye-drops of atropine are applied to the strong-eye resulting in blurred vision in that eye.  Here we use the same blurred filter used to obtain the deficit (possibly with a different width) applied to the strong eye (Figure @fig:input F).  The difference in sharpness between the strong-eye inputs and the weak-eye inputs sets up competition between the two channels with the advantage given to the weak-eye.
 # 
 # 
 
-# In[3]:
+# In[30]:
 
 
 from input_environment_defs import *
 
 
-# In[4]:
+# In[33]:
 
 
 #| label: fig-atropine-inputs
 #| fig-cap: A sample of 24 input patches from an  environment with atropine applied to the strong eye. The amblyopic (blurred) input is the square on the left-hand side of each pair.
-sim,X=get_input_patch_examples(blur=2.5,blurred_eye='right')
+sim,X=get_input_patch_examples(blur=2.5,blurred_eye='right',
+                               base_image_file='asdf/bbsk081604_all_RtoDOG.asdf')
 ims=inputs_to_images(X,buffer=2)
 figure(figsize=(20,6))
 for i in range(24):

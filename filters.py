@@ -135,6 +135,8 @@ def apply_mask(var,mask_name):
         r,c=0,0
         alpha_A=A[(0+r):(im1.shape[0]+r),(0+c):(im1.shape[1]+c),3]/255
         
+        
+        
         im2=im2*alpha_A
 
         if count==0:
@@ -149,7 +151,7 @@ def apply_mask(var,mask_name):
     return var2
 
 
-def make_norm(var,mu=0,sd=1,subtract_mean=True):
+def make_norm(var,mu=0,sd=1,subtract_mean=True,verbose=True):
     
     im2_list=[]
     
@@ -157,7 +159,8 @@ def make_norm(var,mu=0,sd=1,subtract_mean=True):
     
     im_count=len(var['im'])
     
-    w = Waitbar(True)
+    if verbose:
+        w = Waitbar(True)
     for count,im in enumerate(var['im']):
         im2=im.copy()
         
@@ -167,14 +170,57 @@ def make_norm(var,mu=0,sd=1,subtract_mean=True):
         im2=im2/im2.std()
         
         if count==0:
-            print( "Norm %.1f,%.1f" % (mu,sd))
+            if verbose:
+                print( "Norm %.1f,%.1f" % (mu,sd))
+                
         im2_list.append(im2)
         
-        w.updated((count+1)/float(im_count))
+        if verbose:
+            w.updated((count+1)/float(im_count))
     
     var2={'im':im2_list,'im_scale_shift':[1.0,0.0]}
-    print()
+    if verbose:
+        print()
     return var2
+
+def make_Rtodog(var,sd1=1,sd2=3,size=32,shape='valid',verbose=True):
+    from numpy import log2
+
+    im2_list=[]
+    
+    im_scale_shift=var['im_scale_shift']
+    
+    im_count=len(var['im'])
+    if verbose:
+        w = Waitbar(True)
+        w.message="Photoreceptor then Difference of Gaussians"
+    for count,im in enumerate(var['im']):
+        orig_size=im.shape
+
+        im=im*im_scale_shift[0]+im_scale_shift[1]
+        im=im/(im.mean()+im)
+
+        im2=dog_filter(im,sd1,sd2,size,shape)
+        new_size=im2.shape
+        
+        im2=im2-im2.mean()
+        im2=im2/im2.std()
+        
+        if count==0 and verbose:
+            print( "Dog %d,%d: %dx%d --> %dx%d" % (sd1,sd2,
+                                                            orig_size[0],orig_size[1],
+                                                            new_size[0],new_size[1]))
+        im2_list.append(im2)
+        
+        if verbose:
+            w.updated((count+1)/float(im_count))
+    
+    var2={'im':im2_list,'im_scale_shift':[1.0,0.0]}
+    if verbose:
+        print()
+    return var2
+
+
 
 def make_log2dog(var,sd1=1,sd2=3,size=32,shape='valid',verbose=True):
     from numpy import log2
@@ -442,8 +488,6 @@ def make_blur(var,sd=1.0,radius=None,verbose=True):
         im2=dog_filter(im*im_scale_shift[0]+im_scale_shift[1],sd,0,2*radius+1,shape='same')
         new_size=im2.shape
         
-        im2=im2-im2.mean()
-        im2=im2/im2.std()
         if verbose and count==0:
             print( "Blur %d,%d: %dx%d --> %dx%d" % (sd,radius,
                                                         orig_size[0],orig_size[1],

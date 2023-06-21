@@ -25,7 +25,7 @@ from input_environment_defs import *
 make_original_image_files()
 
 
-# In[5]:
+# In[3]:
 
 
 #| label: fig-orig
@@ -45,30 +45,48 @@ plt.savefig('Manuscript/resources/fig-orig.png')
 plt.savefig('Manuscript/resources/fig-orig.svg')
 
 
+# In[4]:
+
+
+im[0].shape
+
+
+# In[4]:
+
+
+plt.hist(im[5].ravel(),300);
+
+
 # In[6]:
 
 
 #| output: false
 
-# Make the logged image files
+# Make the photoreceptor + ganglion cell image files
 
-if not os.path.exists('asdf/bbsk081604_all_log2dog.asdf'):
-    im=[np.log2(I-I.min()+1) for I in var['im']]
-    var_log={'im':im,'im_scale_shift':[1.0,0.0]}
-    var_norm=filters.make_norm(var_log)
+run_anyway=True
+if not os.path.exists('asdf/bbsk081604_all_RtoDOG.asdf') or run_anyway:
+    print('asdf/bbsk081604_all_RtoDOG.asdf')
+    fname='asdf/bbsk081604_all.asdf'
+    image_data=pi5.asdf_load_images(fname)
+    im=[arr.astype(float)*image_data['im_scale_shift'][0]+
+            image_data['im_scale_shift'][1] for arr in image_data['im']]
+    
+    
+    im=[I/(I.mean()+I) for I in im]
+    var_R={'im':im,'im_scale_shift':[1.0,0.0]}
+    var_norm=filters.make_norm(var_R)
     var_dog=filters.make_dog(var_norm)
     filters.set_resolution(var_dog,'uint16')
-    pi5.asdf_save_images(var_dog,'asdf/bbsk081604_all_log2dog.asdf') 
-    del var_norm, var_dog, var
+    pi5.asdf_save_images(var_dog,'asdf/bbsk081604_all_RtoDOG.asdf') 
+    del var_norm, var_dog, var_R
 
 
 # In[7]:
 
 
-#| label: fig-logdog
-#| fig-cap: A Small Subset of the Natural Images filtered with a base-2 Log function and a difference of Gaussians (DOG)
 
-fname='asdf/bbsk081604_all_log2dog.asdf'
+fname='asdf/bbsk081604_all_RtoDOG.asdf'
 image_data=pi5.asdf_load_images(fname)
 im=[arr.astype(float)*image_data['im_scale_shift'][0]+
         image_data['im_scale_shift'][1] for arr in image_data['im']]
@@ -79,8 +97,8 @@ for i in range(6):
     plt.imshow(im[i],cmap=plt.cm.gray)
     plt.axis('off')
     
-plt.savefig('Manuscript/resources/fig-logdog.png')
-plt.savefig('Manuscript/resources/fig-logdog.svg')    
+plt.savefig('Manuscript/resources/fig-Rdog.png')
+plt.savefig('Manuscript/resources/fig-Rdog.svg')    
 
 
 # ## Two-eye architecture
@@ -93,7 +111,7 @@ plt.savefig('Manuscript/resources/fig-logdog.svg')
 # 
 # 
 
-# In[6]:
+# In[21]:
 
 
 #| output: false
@@ -108,13 +126,14 @@ plt.axis('off');
 
 # ![Two-eye Architecture.](resources/arch){#fig-arch}
 
-# In[8]:
+# In[3]:
 
 
 #| label: fig-normal-inputs
 #| fig-cap: A sample of 24 input patches from a normal visual environment. The left- and right-eye inputs are shown in pairs.
 #| 
-sim,X=get_input_patch_examples(blur=-1)
+sim,X=get_input_patch_examples(blur=-1,
+                               base_image_file='asdf/bbsk081604_all_RtoDOG.asdf')
 ims=inputs_to_images(X,buffer=2)
 figure(figsize=(20,6))
 for i in range(24):

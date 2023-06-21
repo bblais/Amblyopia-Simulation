@@ -2,5 +2,7 @@
   "obsidian-pandoc",
   "obsidian-checklist-plugin",
   "find-unlinked-files",
-  "better-word-count"
+  "better-word-count",
+  "dataview",
+  "obsidian-image-toolkit"
 ]

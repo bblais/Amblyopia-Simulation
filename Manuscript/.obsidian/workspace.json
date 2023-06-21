@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "7cf4d0eb5b1409ab",
+        "id": "8c68339ac92f6002",
         "type": "tabs",
         "children": [
           {
-            "id": "3c67ee1ee1a32444",
+            "id": "d0c686aac08b39f3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3. Results.md",
+                "file": "daily notes/2023-06-09.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,13 +48,21 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "normal -file:_main",
+                "query": "tag:#DailyNote",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               }
+            }
+          },
+          {
+            "id": "5ec38691fd743c35",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
             }
           }
         ]
@@ -77,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "3. Results.md",
+                "file": "daily notes/2023-06-09.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +108,17 @@
             }
           },
           {
-            "id": "537d1a3b12a47471",
+            "id": "d26d9bc79494bcfd",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "daily notes/2023-06-09.md"
+              }
+            }
+          },
+          {
+            "id": "0dc9eb2887a9d051",
             "type": "leaf",
             "state": {
               "type": "todo",
@@ -108,23 +126,7 @@
             }
           }
         ],
-        "currentTab": 2
-      },
-      {
-        "id": "5d2f7b6744cea69a",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "d26d9bc79494bcfd",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "3. Results.md"
-              }
-            }
-          }
-        ]
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -141,17 +143,42 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "3c67ee1ee1a32444",
+  "active": "d0c686aac08b39f3",
   "lastOpenFiles": [
-    "2. Methods.md",
+    "daily notes/resources/Pasted image 20230616092131.png",
+    "daily notes/resources/Pasted image 20230616091531.png",
+    "daily notes/resources/Pasted image 20230616090953.png",
+    "daily notes/resources/Pasted image 20230616085111.png",
+    "daily notes/resources/Pasted image 20230616085019.png",
     "3. Results.md",
-    "3a. Results -- Old.md",
-    "1. Introduction.md",
-    "main.md",
+    "resources/fig-patch-ODI-recovery-rate-mu-sigma.svg",
+    "resources/fig-patch-ODI-recovery-rate-mu-sigma.png",
+    "resources/fig-fix-ODI-recovery-rate-mu-sigma.svg",
+    "resources/fig-fix-ODI-recovery-rate-mu-sigma.png",
+    "resources/fig-deficit-response-ODI-mu-sigma.svg",
+    "resources/fig-deficit-response-ODI-mu-sigma.png",
+    "daily notes/2023-06-09.md",
+    "daily notes/2022-12-05.md",
     "daily notes/2022-12-11.md",
-    "templates/Daily Note Template.md",
+    "daily notes/2023-02-07.md",
+    "daily notes/2023-02-19.md",
+    "daily notes/2023-05-30.md",
+    "daily notes/2023-06-02.md",
+    "daily notes/2023-06-08.md",
     "4. Concusions and Discussion.md",
-    "docs/_main.md",
-    "4a. Conclusions and Discussion -- Old.md"
+    "2. Methods.md",
+    "3a. Results -- Old.md",
+    "main.md",
+    "1. Introduction.md",
+    "templates/Daily Note Template.md",
+    "0. Preface.md",
+    "0. Dataview Tables.md",
+    "daily notes/2022-10-20.md",
+    "daily notes/2022-10-31.md",
+    "daily notes/2022-11-01.md",
+    "daily notes/2022-11-02.md",
+    "daily notes/2022-11-10.md",
+    "daily notes/2022-11-11.md",
+    "daily notes/2022-11-15.md"
   ]
 }

@@ -74,12 +74,17 @@ plt.savefig('Manuscript/resources/fig-bcm-phi.svg')
 # The synaptic weights, and the modification threshold, are set to small random initial values at the beginning of a simulation.  At each iteration, an input patch is generated as described above depending on the procedure being simulated and then presented to the neuron.  After each input patch is presented, the weights are modified using the output of the neuron, the input values and the current value of the modification threshold.   In an input environment composed of patches taken from natural images, with equal patches presented to the left- and right-eyes as shown in @fig-normal-inputs, this process orientation selective and fully binocular cells[@BlaisEtAl98].  We then present test stimulus made from sine-gratings with 24 orientations, 20 spatial frequencies, and optimized over phase.  Applying any of the blur filters to the sine gratings does not quantitatively change the result. 
 # 
 
-# In[3]:
+# In[4]:
 
 
 #| output: false
+base_image_file='asdf/bbsk081604_all_scale2.asdf'
 
-fname=pi5.filtered_images('asdf/bbsk081604_all_log2dog.asdf')
+fname=pi5.filtered_images(
+                    base_image_file,
+                    {'type':'dog','sd1':1,'sd2':3},
+                    {'type':'norm'},
+                    )
 
 pre1=pn.neurons.natural_images(fname,
                                rf_size=19,verbose=False)
@@ -117,7 +122,7 @@ pn.save('sims/nr.asdf',sim,[pre,post],[c])
 R=Results('sims/nr.asdf')
 
 
-# In[4]:
+# In[5]:
 
 
 def argmax_rc(X):
@@ -126,7 +131,7 @@ def argmax_rc(X):
     return r,c
 
 
-# In[5]:
+# In[6]:
 
 
 #| label: fig-nr_sim
@@ -170,7 +175,7 @@ for neuron in range(5):
     
 
 
-# In[49]:
+# In[7]:
 
 
 def mysubplot(R,C,r,c):
@@ -235,6 +240,9 @@ for neuron in range(number_of_neurons):
     
 mysubplot(4,2,3,1)
 for neuron in range(number_of_neurons):
+    y_left=y[:,:,0,neuron,-1]  
+    y_right=y[:,:,1,neuron,-1]  
+    
     r,c=argmax_rc(y_right)
     tuning_curve=y_right[r,:]
     plot(R.theta_mat,tuning_curve,'-s')    

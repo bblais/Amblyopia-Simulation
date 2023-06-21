@@ -77,7 +77,7 @@ def make_do_params(all_params,verbose=False):
 # In[7]:
 
 
-number_of_neurons=20
+number_of_neurons=25
 eta=1e-6
 number_of_processes=4
 
@@ -338,7 +338,7 @@ closed_eye_noise_mat=linspace(0,1,11)
 all_params=[]
 for b,blur in enumerate(atropine_blur_mat):
     for n,noise in enumerate(closed_eye_noise_mat):
-        sfname=base+f's/continuous atropine {number_of_neurons} neurons noise {noise:.1f} blur {blur:0.1f}.asdf'
+        sfname=base+f'/continuous atropine {number_of_neurons} neurons noise {noise:.1f} blur {blur:0.1f}.asdf'
 
         p=Struct()
         p.eta=eta
@@ -452,7 +452,7 @@ f_mat=array([10,30,50,70,90])
 all_params=[]
 for c,contrast in enumerate(contrast_mat):
     for fi,f in enumerate(f_mat):
-        sfname=f'sims-2021-11-19/continuous contrast {number_of_neurons} neurons contrast {contrast:.1f} mask f {f}.asdf'
+        sfname=base+f'/continuous contrast {number_of_neurons} neurons contrast {contrast:.1f} mask f {f}.asdf'
 
         p=Struct()
         p.eta=eta
@@ -486,7 +486,7 @@ real_time=1*minute+ 51
 print(time2str(real_time*len(do_params)/number_of_processes))
 
 
-# In[32]:
+# In[31]:
 
 
 pool = Pool(processes=number_of_processes)

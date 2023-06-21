@@ -8,7 +8,7 @@ import plasticnet as pn
 from splikes.utils import paramtext
 import process_images_hdf5 as pi5
 import os
-from savevars import savevars
+from savevars import savevars,loadvars
 from tqdm.notebook import tqdm
 
 import platform
@@ -116,9 +116,11 @@ def default_post(number_of_neurons):
     post+=pn.neurons.process.sigmoid(0,50)
     return post
 
-def default_bcm(pre,post):
+def default_bcm(pre,post,orthogonalization=True):
     c=pn.connections.BCM(pre,post,[-.01,.01],[.1,.2])
-    c+=pn.connections.process.orthogonalization(10*minute)
+    
+    if orthogonalization:
+        c+=pn.connections.process.orthogonalization(10*minute)
 
     c.eta=2e-6
     c.tau=15*pn.minute   
@@ -126,43 +128,128 @@ def default_bcm(pre,post):
     return c
 
 
+from asdf.extension import Converter
+
+
+class ResultsConverter(Converter):
+    tags = ["asdf://example.com/deficit_defs/tags/results-1.0.0"]
+    types = ["deficit_defs.Results"]
+    varnames=['fname','all_responses','k_mat','theta_mat',
+                    'sequence_index','sequence_times','sequence_weights',
+                    't','y','θ','num_neurons','num_channels','rf_size']
+
+    def to_yaml_tree(self, obj, tag, ctx):
+        D={}
+        
+        for name in self.varnames:
+            D[name]=obj.__getattribute__(name)
+        
+        return D
+    
+
+    def from_yaml_tree(self, node, tag, ctx):
+        import time
+        D={}
+        
+        for name in self.varnames:
+            D[name]=node[name]
+            
+            
+        D['fname']=str(D['fname'])
+        names=['num_neurons','num_channels','rf_size']
+        for name in names:
+            D['name']=int(D[name])
+
+        names=['sequence_index','sequence_times',]
+        for name in names:
+            D['name']=list(D[name])
+
+        name='sequence_weights'
+        D[name]=[(np.array(_[0]),np.array(_[1])) for _ in D[name]]
+        
+            
+        name='all_responses'
+        D[name]=[(np.array(_[0]),np.array(_[1])) for _ in D[name]]
+        
+        
+        names=['k_mat','theta_mat',
+                    't','y','θ']
+        for name in names:
+            D['name']=np.array(D[name])
+        
+        return Results(D)
+
+import asdf
+from asdf.extension import Extension
+
+
+class ResultsExtension(Extension):
+    extension_uri = "asdf://example.com/deficit_defs/extensions/results-1.0.0"
+    converters = [ResultsConverter()]
+    tags = ["asdf://example.com/deficit_defs/tags/results-1.0.0"]
+
+
+asdf.get_config().add_extension(ResultsExtension())
+
+
 class Results(object):
     
     def __init__(self,sfname):
-        
-        self.fname=sfname
-    
-        t_mat,y_mat=self.get_max_responses()
-        self.all_responses,self.k_mat,self.theta_mat=get_responses(self.fname)
+        if isinstance(sfname,dict):
+            D=sfname
+            for key in D:
+                self.__setattr__(key,D[key])
+            
+        else:
+            self.fname=sfname
 
-            
-        self.sequence_index=[]
-        self.sequence_times=[]
-        count=0
-        for t in t_mat:
-            self.sequence_times.append((t.min(),t.max()))
-            self.sequence_index.append((count,count+len(t)-1))
-            count+=len(t)
-            
-        self.t=np.concatenate(t_mat)
-        self.y=np.concatenate(y_mat)
-        
-        _,self.num_neurons,self.num_channels=self.y.shape
-        
-                                       
-        t2_mat,θ_mat=self.get_theta()
-        assert sum(t2_mat[0]-t_mat[0])==0.0
-        
-        self.θ=np.concatenate(θ_mat)
-        
-        t2_mat,W_mat=self.get_weights()
-        assert sum(t2_mat[0]-t_mat[0])==0.0
-        
-        self.W=np.concatenate(W_mat)
-        
-        
-        self.rf_size=int(np.sqrt(self.W.shape[-1]/self.num_channels))
+            t_mat,y_mat=self.get_max_responses()
+            self.all_responses,self.k_mat,self.theta_mat=get_responses(self.fname)
+
+
+            self.sequence_index=[]
+            self.sequence_times=[]
+            count=0
+            for t in t_mat:
+                self.sequence_times.append((t.min(),t.max()))
+                self.sequence_index.append((count,count+len(t)-1))
+                count+=len(t)
+
+            self.t=np.concatenate(t_mat)
+            self.y=np.concatenate(y_mat)
+
+            _,self.num_neurons,self.num_channels=self.y.shape
+
+
+            t2_mat,θ_mat=self.get_theta()
+            assert sum(t2_mat[0]-t_mat[0])==0.0
+
+            self.θ=np.concatenate(θ_mat)
+
+            t2_mat,W_mat=self.get_weights()
+            assert sum(t2_mat[0]-t_mat[0])==0.0
+            self._W=np.concatenate(W_mat)
+    
+
+            self.sequence_weights=[]
+            for idx1,idx2 in self.sequence_index:
+                self.sequence_weights.append( (self.W[idx1,:,:],self.W[idx2,:,:]) )
                 
+                
+            self.rf_size=int(np.sqrt(self.W.shape[-1]/self.num_channels))
+
+        
+    @property
+    def W(self):
+        if self._W is None:
+            t2_mat,W_mat=self.get_weights()
+            self._W=np.concatenate(W_mat)
+            
+        return self._W
+        
+    
+    
+    
     def __getitem__(self,idx):
         if idx==-1:  # make time the 0th index
             return [np.stack([_]) for _ in (self.t[-1],self.y[-1,...],self.θ[-1,...],self.W[-1,...])]
@@ -420,7 +507,7 @@ def μσ(V,axis=None):
 
 global base_image_file
 base_image_file='asdf/bbsk081604_all_log2dog.asdf'
-print("Base Image File:",base_image_file)
+#print("Base Image File:",base_image_file)
 
 def deficit(blur=2.5,noise=0.1,rf_size=19,eta=2e-6,
            number_of_neurons=10,
@@ -1167,9 +1254,16 @@ def run_one_continuous_mask(params,overwrite=False):
 # In[ ]:
 
 
-def savefig(base):
+def savefig(origfname):
+    base,ext=os.path.splitext(origfname)
     import matplotlib.pyplot as plt
-    for fname in [f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']:
+    
+    print_fnames=[f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']
+    if ext:
+        if ext!='.png' and ext!='.svg':
+            print_fnames+=[f'Manuscript/resources/{origfname}']
+    
+    for fname in print_fnames:
         print(fname)
         plt.savefig(fname, bbox_inches='tight')
 
@@ -1177,20 +1271,20 @@ def savefig(base):
 # In[ ]:
 
 
-def mydisplay(t,sim,neurons,connections):
-    global _fig
-    from IPython.display import display, clear_output
-    from pylab import figure,close,gcf
-    try:
-        clear_output(wait=True)
+# def mydisplay(t,sim,neurons,connections):
+#     global _fig
+#     from IPython.display import display, clear_output
+#     from pylab import figure,close,gcf
+#     try:
+#         clear_output(wait=True)
 
-        _fig=pn.utils.plot_rfs_and_theta(sim,neurons,connections)
-        _fig.suptitle("%.2f" % (t/hour))
-        display(_fig)
-        close(_fig)
-    except KeyboardInterrupt:
-        close(_fig)
-        raise
+#         _fig=pn.utils.plot_rfs_and_theta(sim,neurons,connections)
+#         _fig.suptitle("%.2f" % (t/hour))
+#         display(_fig)
+#         close(_fig)
+#     except KeyboardInterrupt:
+#         close(_fig)
+#         raise
 
 
 # In[ ]:
@@ -1220,13 +1314,13 @@ def blur_jitter_deficit(blur=[2.5,-1],
         if bv<=0:
             im=pi5.filtered_images(
                                 base_image_file,
-                                {'type':'log2dog','sd1':1,'sd2':3},
+                                {'type':'Rtodog','sd1':1,'sd2':3},
                                 )
         else:
             im=pi5.filtered_images(
                                     base_image_file,
                                     {'type':'blur','size':bv},
-                                    {'type':'log2dog','sd1':1,'sd2':3},
+                                    {'type':'Rtodog','sd1':1,'sd2':3},
                                     )
         images.append(im)
         
@@ -1294,7 +1388,7 @@ def fix_jitter(noise=0.1,rf_size=19,
 
     im=pi5.filtered_images(
                         base_image_file,
-                        {'type':'log2dog','sd1':1,'sd2':3},
+                        {'type':'Rtodog','sd1':1,'sd2':3},
                         )
     
     dt=200*ms        
@@ -1361,7 +1455,7 @@ def treatment_jitter(contrast=1,noise=0.1,noise2=0.1,
     
     im=pi5.filtered_images(
                         base_image_file,
-                        {'type':'log2dog','sd1':1,'sd2':3},
+                        {'type':'Rtodog','sd1':1,'sd2':3},
                         )
     dt=200*ms        
     
@@ -1493,7 +1587,7 @@ def patch_treatment_jitter(noise=0.1,patch_noise=0.1,rf_size=19,
 
     im=pi5.filtered_images(
                         base_image_file,
-                        {'type':'log2dog','sd1':1,'sd2':3},
+                        {'type':'Rtodog','sd1':1,'sd2':3},
                         )
     dt=200*ms        
         

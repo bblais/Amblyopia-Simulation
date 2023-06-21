@@ -42,7 +42,7 @@ def task_tex():
     return {
         'file_dep': ['docs/_main.md','config/paper_template.tex'],
         'targets': ['docs/%s.tex' % target_name],
-        'actions': [f'pandoc  --number-sections --template=config/paper_template.tex -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.tex'],
+        'actions': [f'pandoc  --number-sections --template=config/paper_template.tex -M xnos-warning-level=1 --filter pandoc-xnos  --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.tex'],
         'clean':True,
     }
 
@@ -52,7 +52,7 @@ def task_docx():
     return {
         'file_dep': ['docs/_main.md'],
         'targets': ['docs/%s.docx' % target_name],
-        'actions': [f'pandoc  --toc --number-sections -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.docx'],
+        'actions': [f'pandoc  --toc --number-sections -M xnos-warning-level=1 --filter pandoc-xnos  --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.docx'],
         'clean':True,
     }
 
@@ -62,7 +62,7 @@ def task_html():
     return {
         'file_dep': ['docs/_main.md'],
         'targets': ['docs/%s.html' % target_name],
-        'actions': [f'pandoc  --toc  -s --mathjax  --number-sections -M fignos-warning-level=1 --filter pandoc-fignos  --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.html'],
+        'actions': [f'pandoc  --toc  -s --mathjax  --number-sections -M xnos-warning-level=1 --filter pandoc-xnos   --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.html'],
         'clean':True,
     }
 
@@ -72,6 +72,6 @@ def task_pdf():
     return {
         'file_dep': ['docs/_main.md','config/paper_template.tex'],
         'targets': ['docs/%s.pdf' % target_name],
-        'actions': [f'pandoc  --number-sections --template=config/paper_template.tex -M fignos-warning-level=1 --filter pandoc-fignos --filter pandoc-secnos --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.pdf'],
+        'actions': [f'pandoc  --number-sections --template=config/paper_template.tex -M xnos-warning-level=1 --filter pandoc-xnos   --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.pdf'],
         'clean':True,
     }
