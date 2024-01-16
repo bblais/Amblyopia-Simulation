@@ -39,14 +39,14 @@ f_mat=array([10,50,90])
 contrast_mat,mu_c_mat,sigma_c_mat,f_mat
 
 
-# In[9]:
+# In[4]:
 
 
 loadvars('results/2023-06-11 - Contrast Sims - Results.asdf')
 all_params=[Struct(_) for _ in all_params]
 
 
-# In[11]:
+# In[5]:
 
 
 top=.9
@@ -56,7 +56,7 @@ plasma=truncate_colormap(cm.plasma,0, top)
 viridis=truncate_colormap(cm.viridis,0, top)
 
 
-# In[12]:
+# In[6]:
 
 
 figure()
@@ -135,7 +135,8 @@ for fc,f in tqdm(enumerate(f_mat),total=len(f_mat)):
     title(r'$\mu_c$')
 
 
-# In[14]:
+
+# In[7]:
 
 
 figure()
@@ -210,7 +211,8 @@ for fc,f in tqdm(enumerate(f_mat),total=len(f_mat)):
     title(r'$\sigma_c$')
 
 
-# In[28]:
+
+# In[8]:
 
 
 figure(figsize=(16,8))

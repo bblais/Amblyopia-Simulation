@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "8c68339ac92f6002",
+        "id": "abee7533d7606687",
         "type": "tabs",
         "children": [
           {
-            "id": "d0c686aac08b39f3",
+            "id": "765bfeab634c3c0d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "daily notes/2023-06-09.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "daily notes/2023-06-09.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,9 +107,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "daily notes/2023-06-09.md"
-              }
+              "state": {}
             }
           },
           {
@@ -130,7 +123,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 371.5
+    "width": 371.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -143,42 +137,52 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "d0c686aac08b39f3",
+  "active": "765bfeab634c3c0d",
   "lastOpenFiles": [
-    "daily notes/resources/Pasted image 20230616092131.png",
-    "daily notes/resources/Pasted image 20230616091531.png",
-    "daily notes/resources/Pasted image 20230616090953.png",
-    "daily notes/resources/Pasted image 20230616085111.png",
-    "daily notes/resources/Pasted image 20230616085019.png",
-    "3. Results.md",
-    "resources/fig-patch-ODI-recovery-rate-mu-sigma.svg",
-    "resources/fig-patch-ODI-recovery-rate-mu-sigma.png",
-    "resources/fig-fix-ODI-recovery-rate-mu-sigma.svg",
-    "resources/fig-fix-ODI-recovery-rate-mu-sigma.png",
-    "resources/fig-deficit-response-ODI-mu-sigma.svg",
-    "resources/fig-deficit-response-ODI-mu-sigma.png",
-    "daily notes/2023-06-09.md",
-    "daily notes/2022-12-05.md",
-    "daily notes/2022-12-11.md",
-    "daily notes/2023-02-07.md",
-    "daily notes/2023-02-19.md",
-    "daily notes/2023-05-30.md",
-    "daily notes/2023-06-02.md",
-    "daily notes/2023-06-08.md",
-    "4. Concusions and Discussion.md",
     "2. Methods.md",
-    "3a. Results -- Old.md",
     "main.md",
+    "test.md",
+    "structure.tex",
+    "config/book_template.tex",
+    "test.tex",
+    "test.pdf",
+    "resources/fig-orig.png",
+    "test.w18",
+    "docs/Comparing-Monocular-Treatments-for-Amblyopia.pdf",
+    "docs/Comparing-Monocular-Treatments-for-Amblyopia.tex",
+    "docs/_main.md",
+    "docs",
+    "test.synctex(busy)",
+    "_test.md",
+    "docs/Comparing-Monocular-Treatments-for-Amblyopia.html",
+    "main copy.md",
+    "daily notes/2024-01-02 - Low D.md",
+    "daily notes/2023-07-03.md",
+    "daily notes/2024-01-12.md",
+    "3. Results.md",
+    "daily notes/2023-10-19.md",
+    "daily notes/resources/Pasted image 20240103135043.png",
+    "daily notes/resources/Pasted image 20240103134902.png",
+    "daily notes/resources/Pasted image 20240103134826.png",
+    "daily notes/resources/Pasted image 20240103134758.png",
+    "daily notes/resources/Pasted image 20240103104848.png",
+    "daily notes/resources/Pasted image 20240103104410.png",
+    "daily notes/resources/Pasted image 20240102142914.png",
+    "daily notes/resources/Pasted image 20240102140939.png",
+    "daily notes/resources/Pasted image 20240102140517.png",
+    "daily notes/2023-10-31 - Neuron Author Info.md",
+    "0. Frontmatter.md",
     "1. Introduction.md",
-    "templates/Daily Note Template.md",
-    "0. Preface.md",
+    "sn-article-template/Submission guidelines - Journal of Computational Neuroscience.md",
     "0. Dataview Tables.md",
-    "daily notes/2022-10-20.md",
-    "daily notes/2022-10-31.md",
-    "daily notes/2022-11-01.md",
-    "daily notes/2022-11-02.md",
-    "daily notes/2022-11-10.md",
-    "daily notes/2022-11-11.md",
-    "daily notes/2022-11-15.md"
+    "archive/June 2023/main.md",
+    "archive/June 2023/docs/_main.md",
+    "archive/June 2023/4a. Conclusions and Discussion -- Old.md",
+    "archive/June 2023/4. Concusions and Discussion.md",
+    "archive/June 2023/3a. Results -- Old.md",
+    "archive/June 2023/3. Results.md",
+    "archive/June 2023/2. Methods.md",
+    "archive/June 2023/1. Introduction.md",
+    "archive/June 2023/0. Preface.md"
   ]
 }

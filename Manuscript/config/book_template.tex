@@ -1,0 +1,210 @@
+\documentclass[11pt,fleqn,$for(classoption)$$classoption$$sep$,$endfor$]{book} % Default font size and left-justified equations
+
+\usepackage[height=11in,width=8.5in,top=3cm,bottom=3cm,left=3.2cm,right=3.2cm,headsep=10pt,letterpaper]{geometry} % Page margins
+
+
+\topmargin=-0.5in
+\textheight=9.2in
+\oddsidemargin=-0.2in
+\evensidemargin=0.0in
+\textwidth=6.90in
+\parindent=30pt
+\parskip=3pt
+\headheight=15pt
+\reversemarginpar
+\marginparwidth=.75in
+
+\usepackage{xcolor} % Required for specifying colors by name
+\definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
+
+% Font Settings
+\usepackage{avant} % Use the Avantgarde font for headings
+%\usepackage{times} % Use the Times font for headings
+\usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{amsthm}
+
+% Bibliography
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+\addbibresource{bibliography.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
+
+\setcounter{secnumdepth}{1}
+
+\usepackage{graphicx} % Required for including pictures
+\graphicspath{{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/}} 
+
+%\input{structure} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+%----------------------------------------------------------------------------------------
+%	Definitions of new commands
+%----------------------------------------------------------------------------------------
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+\usepackage{caption}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+
+  \usepackage{supertabular}
+  %\renewenvironment{longtable}{\begin{center}\begin{mpsupertabular}}{\end{mpsupertabular}\end{center}}
+  \renewcommand{\endhead}{}
+  
+%% pandoc-fignos: environment to disable figure caption prefixes
+% \makeatletter
+% \newcounter{figno}
+% \newenvironment{fignos:no-prefix-figure-caption}{
+%   \caption@ifcompatibility{}{
+%     \let\oldthefigure\thefigure
+%     \let\oldtheHfigure\theHfigure
+%     \renewcommand{\thefigure}{figno:\thefigno}
+%     \renewcommand{\theHfigure}{figno:\thefigno}
+%     \stepcounter{figno}
+%     \captionsetup{labelformat=empty}
+%   }
+% }{
+%   \caption@ifcompatibility{}{
+%     \captionsetup{labelformat=default}
+%     \let\thefigure\oldthefigure
+%     \let\theHfigure\oldtheHfigure
+%     \addtocounter{figure}{-1}
+%   }
+% }
+% \makeatother  
+
+\usepackage{float}
+\floatplacement{figure}{H}
+
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+
+$if(title)$
+\begingroup
+\thispagestyle{empty}
+$if(cover)$
+\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{$cover$}}} % Image background
+$else$
+\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{cover}}} % Image background
+$endif$
+\centering
+\vspace*{5cm}
+\par\normalfont\fontsize{35}{35}\sffamily\selectfont
+\textbf{$title$}\\
+$if(subtitle)$
+{\LARGE $subtitle$}\par % Book title
+$endif$
+\vspace*{1cm}
+{\Huge $for(author)$$author$$sep$ \and $endfor$}\par % Author name
+\endgroup
+$endif$
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+~\vfill
+\thispagestyle{empty}
+
+%\noindent Copyright \copyright\ 2014 Andrea Hidalgo\\ % Copyright notice
+
+\noindent \textsc{Copyright \copyright\ \the\year\ $author$}\\
+
+\noindent \textsc{Published by $publisher$}\\ % URL
+
+\noindent The format of this text is taken from the Overleaf Template \href{https://www.overleaf.com/project/61b7363d24c1693cff73f3a0}{CPSC 542F Notes}\\
+
+\noindent \textit{First release, January 2004} % Printing/edition date
+
+% this needs to be after the cover page, so that the figures have a max size but the
+% big cover image isn't affected
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\chapterimage{heading_toc.png} % Table of contents heading image
+
+\pagestyle{empty} % No headers
+
+\tableofcontents % Print the table of contents itself
+
+\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
+
+\pagestyle{fancy} % Print headers again
+
+$if(lot)$
+\listoftables
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+$if(linestretch)$
+\setstretch{$linestretch$}
+$endif$
+$if(has-frontmatter)$
+\mainmatter
+$endif$
+$body$
+
+$if(has-frontmatter)$
+\backmatter
+$endif$
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(has-chapters)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+  \bibliographytrue
+$endif$
+  \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$if(beamer)$
+\end{frame}
+$endif$
+
+$endif$
+$endif$
+$if(biblatex)$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+  \bibliographytrue
+  \printbibliography[heading=none]
+\end{frame}
+$else$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}

@@ -1,21 +1,23 @@
 ---
-title: Comparing Treatments for Amblyopia with a Synaptic Plasticity Model
-subtitle: 
-author: Brian S. Blais
-tags: [bcm, amblyopia,synaptic plasticity]
-toc: true
-classoption: onecolumn
-colorlinks: true
-linestretch: 1.5
-secnumdepth: 2
-lineno: false
-implicit_figures: true
-
-csl: /Users/bblais/tex/bib/apalike.csl
+title: Comparing Monocular Treatments for Amblyopia
+shorttitle: Treatments for Amblyopia
+documentclass: sn-jnl
+numbersections: true
 bibliography: /Users/bblais/tex/bib/Amblyopia.bib
+classoption:
+  - sn-apa
+  - pdflatex
+abstract: The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. Authors are advised to check the author instructions for the journal they are submitting to for word limits and if structural elements like subheadings, citations, or equations are permitted.
+author:
+  - \author*[1,2]{\fnm{First} \sur{Author}}
+  - \author[3,4]{\fnm{Again} \sur{Another}}
+keywords:
+  - bcm
+  - amblyopia
+  - synaptic plasticity
+toc: true
+colorlinks: true
 ---
-
-![[0. Preface]]
 
 ![[1. Introduction]]
 
@@ -25,8 +27,6 @@ bibliography: /Users/bblais/tex/bib/Amblyopia.bib
 
 ![[4. Concusions and Discussion]]
 
-# References
 
-
-
+## References
 

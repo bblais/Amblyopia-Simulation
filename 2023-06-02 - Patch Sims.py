@@ -77,7 +77,7 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[7]:
+# In[6]:
 
 
 blur
@@ -85,7 +85,7 @@ blur
 
 # ## Premake the image files
 
-# In[8]:
+# In[7]:
 
 
 base_image_file='asdf/bbsk081604_all_scale2.asdf'
@@ -230,7 +230,7 @@ for n in range(4):
         count+=1
 
 
-# In[8]:
+# In[11]:
 
 
 RR={}
@@ -241,7 +241,7 @@ for params in tqdm(all_params):
 
 # ![image.png](attachment:aebd2839-95ec-49e3-9ab4-d83fb6e2d3f9.png)
 
-# In[19]:
+# In[12]:
 
 
 count=0
@@ -322,7 +322,7 @@ xlim([-.2,1.105])
 
 
 
-# In[12]:
+# In[14]:
 
 
 v=np.flip(linspace(0.3,1,4))
@@ -361,7 +361,7 @@ plot(xl,[0,0],'k-',lw=2)
     
 
 
-# In[14]:
+# In[15]:
 
 
 v=np.flip(linspace(0.3,1,4))
@@ -402,7 +402,7 @@ legend()
 
 
 
-# In[9]:
+# In[16]:
 
 
 figure(figsize=(25,16))
@@ -557,7 +557,7 @@ savefig('fig-patch-response-ODI-blur.png')
 
 
 
-# In[20]:
+# In[17]:
 
 
 total_time=R.t.max()

@@ -1,39 +1,23 @@
 ---
-title: Comparing Treatments for Amblyopia with a Synaptic Plasticity Model
-subtitle: 
-author: Brian S. Blais
-tags: [bcm, amblyopia,synaptic plasticity]
-toc: true
-classoption: onecolumn
-colorlinks: true
-linestretch: 1.5
-secnumdepth: 2
-lineno: false
-implicit_figures: true
-
-csl: /Users/bblais/tex/bib/apalike.csl
+title: Comparing Monocular Treatments for Amblyopia
+shorttitle: Treatments for Amblyopia
+documentclass: sn-jnl
+numbersections: true
 bibliography: /Users/bblais/tex/bib/Amblyopia.bib
+classoption:
+  - sn-apa
+  - pdflatex
+abstract: The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. Authors are advised to check the author instructions for the journal they are submitting to for word limits and if structural elements like subheadings, citations, or equations are permitted.
+author:
+  - \author*[1,2]{\fnm{First} \sur{Author}}
+  - \author[3,4]{\fnm{Again} \sur{Another}}
+keywords:
+  - bcm
+  - amblyopia
+  - synaptic plasticity
+toc: true
+colorlinks: true
 ---
-
-# Preface {.unnumbered}
-
-These notes are produced with a combination of Obsidian ([https://obsidian.md](https://obsidian.md)), pandoc ([https://pandoc.org](https://pandoc.org)), and some self-styled python scripts ([https://github.com/bblais/Amblyopia-Simulation/tree/main/Manuscript](https://github.com/bblais/Amblyopia-Simulation/tree/main/Manuscript))
-
-## Software Installation {.unnumbered}
-
-The software is Python-based with parts written in Cython.  
-
-- Download the Anaconda Distribution of Python: 
-
-[https://www.anaconda.com/products/individual#downloads](https://www.anaconda.com/products/individual#downloads)  
-
-- Download and extract the *PlasticNet* package at: 
-
-[https://github.com/bblais/Plasticnet/archive/refs/heads/master.zip](https://github.com/bblais/Plasticnet/archive/refs/heads/master.zip)
-
-- Run the script `install.py`
-
-
 
 # Introduction
 
@@ -276,8 +260,6 @@ Here are just a couple of things I noticed, that I need to look into to see if t
 
 
 
-# References
 
-
-
+## References
 
