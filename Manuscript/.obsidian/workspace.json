@@ -8,14 +8,43 @@
         "type": "tabs",
         "children": [
           {
-            "id": "765bfeab634c3c0d",
+            "id": "fa00ea87231e123a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "main.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "2778238ff0b1c999",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "1. Introduction.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a880e8740209758b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2. Structure vs Noise.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -81,6 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "2. Structure vs Noise.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -107,11 +137,13 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "2. Structure vs Noise.md"
+              }
             }
           },
           {
-            "id": "0dc9eb2887a9d051",
+            "id": "d3cde9dd4c11d9f6",
             "type": "leaf",
             "state": {
               "type": "todo",
@@ -137,52 +169,52 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "765bfeab634c3c0d",
+  "active": "d3cde9dd4c11d9f6",
   "lastOpenFiles": [
-    "2. Methods.md",
+    "3. Normal and Deprived Visual Environments.md",
     "main.md",
-    "test.md",
-    "structure.tex",
-    "config/book_template.tex",
-    "test.tex",
-    "test.pdf",
-    "resources/fig-orig.png",
-    "test.w18",
-    "docs/Comparing-Monocular-Treatments-for-Amblyopia.pdf",
-    "docs/Comparing-Monocular-Treatments-for-Amblyopia.tex",
+    "docs/BCM-and-Amblyopia.docx",
+    "docs/BCM-and-Amblyopia.pdf",
+    "docs/BCM-and-Amblyopia.tex",
     "docs/_main.md",
     "docs",
-    "test.synctex(busy)",
-    "_test.md",
-    "docs/Comparing-Monocular-Treatments-for-Amblyopia.html",
-    "main copy.md",
-    "daily notes/2024-01-02 - Low D.md",
-    "daily notes/2023-07-03.md",
-    "daily notes/2024-01-12.md",
-    "3. Results.md",
-    "daily notes/2023-10-19.md",
-    "daily notes/resources/Pasted image 20240103135043.png",
-    "daily notes/resources/Pasted image 20240103134902.png",
-    "daily notes/resources/Pasted image 20240103134826.png",
-    "daily notes/resources/Pasted image 20240103134758.png",
-    "daily notes/resources/Pasted image 20240103104848.png",
-    "daily notes/resources/Pasted image 20240103104410.png",
-    "daily notes/resources/Pasted image 20240102142914.png",
-    "daily notes/resources/Pasted image 20240102140939.png",
-    "daily notes/resources/Pasted image 20240102140517.png",
-    "daily notes/2023-10-31 - Neuron Author Info.md",
-    "0. Frontmatter.md",
+    "resources/Pasted image 20240301091600.png",
+    "resources/Pasted image 20240301091538.png",
+    "resources/Pasted image 20240301091523.png",
+    "resources/Pasted image 20240301091503.png",
+    "resources/Pasted image 20240301091305.png",
+    "resources/Pasted image 20240301091247.png",
+    "resources/Pasted image 20240301091231.png",
+    "resources/Pasted image 20240301091213.png",
+    "resources/Pasted image 20240301091111.png",
+    "2. Structure vs Noise.md",
     "1. Introduction.md",
-    "sn-article-template/Submission guidelines - Journal of Computational Neuroscience.md",
-    "0. Dataview Tables.md",
-    "archive/June 2023/main.md",
-    "archive/June 2023/docs/_main.md",
-    "archive/June 2023/4a. Conclusions and Discussion -- Old.md",
-    "archive/June 2023/4. Concusions and Discussion.md",
-    "archive/June 2023/3a. Results -- Old.md",
-    "archive/June 2023/3. Results.md",
-    "archive/June 2023/2. Methods.md",
-    "archive/June 2023/1. Introduction.md",
-    "archive/June 2023/0. Preface.md"
+    "resources/Pasted image 20240228124932.png",
+    "resources/RF and Output dist.drawio",
+    "daily notes/2024-01-02 - Low D.md",
+    "daily notes/2024-01-12.md",
+    "resources/weights and output distribution natural images.drawio",
+    "docs/blah.pdf",
+    "old/myobsidian.py",
+    "old",
+    "python/2024-01-23 - Debug myobsidian.py",
+    "9. References.md",
+    "test.md",
+    "archive/Jan 16 2024/templates/Daily Note Template.md",
+    "archive/Jan 16 2024/sn-article-template/Submission guidelines - Journal of Computational Neuroscience.md",
+    "archive/Jan 16 2024/docs/_main.md",
+    "archive/Jan 16 2024/daily notes/2024-01-12.md",
+    "archive/Jan 16 2024/daily notes/2024-01-02 - Low D.md",
+    "archive/Jan 16 2024/daily notes/2023-10-31 - Neuron Author Info.md",
+    "archive/Jan 16 2024/daily notes/2023-10-19.md",
+    "archive/Jan 16 2024/daily notes/2023-07-03.md",
+    "archive/Jan 16 2024/daily notes/2023-06-09.md",
+    "archive/Jan 16 2024/daily notes/2023-06-08.md",
+    "archive/Jan 16 2024/daily notes/2023-06-02.md",
+    "archive/Jan 16 2024/daily notes/2023-05-30.md",
+    "archive/Jan 16 2024/daily notes/2023-02-19.md",
+    "archive/Jan 16 2024/daily notes/2023-02-07.md",
+    "archive/Jan 16 2024/daily notes/2022-12-11.md",
+    "archive/Jan 16 2024/daily notes/2022-12-05.md"
   ]
 }

@@ -1,0 +1,171 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[41]:
+
+
+from pprint import pprint
+file_extensions=['.pdf','.png','.html','.gif','.svg']
+
+def full_path(fname,tag):
+    from pathlib import Path
+    import os
+    
+    base,rest=os.path.split(fname)
+    if not base:
+        base="."
+
+    tag_base,tag_ext=os.path.splitext(tag)
+
+
+    if tag_ext.lower() not in file_extensions:  # markdown file
+        tag=tag+".md"
+        
+    parts=Path(tag).parts
+    new_fname=None
+    if len(parts)==1:  # not a relative path
+        for root, dirs, files in os.walk(base):
+            if tag in files:
+                new_fname=os.path.join(root, tag)
+                break
+    else:
+        new_fname=os.path.join(base)
+
+    assert not new_fname is None
+
+    return os.path.abspath(new_fname)
+
+
+def handle_unicode_error(line,fname):
+    if any([ord(x)>127 for x in line]):
+        S=fname+" : "
+        for x in line:
+            if ord(x)<=127:
+                S+=x
+            else:
+                S+=" [%d] " % ord(x)
+        raise ValueError("Unicode in %s" % S)
+
+
+def parse_include_links(fname):
+    import os
+
+    if fname.startswith("!"):  # not a file
+        return fname
+    
+    with open(fname) as fid:
+        S=fid.read()
+    
+    lines=S.split('\n')
+    
+    includes=[]
+    new_lines=[]
+    
+    D={}
+    captions={}
+    caption=[]
+    look_for_caption=False
+
+    embed="![["
+
+    for line in lines:
+        handle_unicode_error(line,fname)
+
+        if look_for_caption:
+            if line.startswith('>'):
+                caption.append(line[1:])
+                continue
+            elif line.strip():  # non-empty line
+                caption.append(line)
+                continue
+            else:  # blank line
+                look_for_caption=False
+                if caption:
+                    captions[tag]="\n".join(caption)
+                    caption=[]
+        
+        if not embed in line:
+            new_lines.append(line)
+            continue
+        
+        part=line
+        print("line:",line)
+
+        assert line.count("]]")==1  # only one include per line -- is there a reason to do another?
+
+
+        tag=line.split("[[")[1].split(']]')[0]
+        path=full_path(fname,tag)
+        base,ext=os.path.splitext(path)
+
+        if ext in file_extensions:  # a figure
+            look_for_caption=True
+            caption=[]   
+
+            line=line.replace("![[%s]]" % tag,
+                              f'![{tag}]({path}){{#figref:{tag}}}')  # change ![[filename.png]] to ![filename.png](/full/path/to/filename.png){#figref:filename.png}
+        elif ext=='.md':  # a markdown file
+            line=line.replace("![[%s]]" % tag,parse_include_links(path)) # change ![[mdfilename]] to "full contents of mdfilename")           
+        else:
+            raise("You can't get there from here.")
+            
+        # example
+        #![Simple model of a neuron with 4 inputs ($x_1, x_2, x_3,$ and $x_4$), connecting to the cell via 4 synaptic weights ($w_1, w_2, w_3,$ and $w_4$), yielding an output ($y$).](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Simple Neuron.pdf){#fig:simple-neuron-pdf}
+                
+        new_lines.append(line)    
+        
+    S='\n'.join(new_lines)
+    for tag in captions:
+        text=captions[tag]
+        assert text.count("{#")<=1  # no more than one reference
+
+        print("text",text)
+        
+        if "{#" in text:
+            idx0=text.index("{#")
+            idx1=text[idx0:].index("}")+idx0+1
+            full_ref=text[idx0:idx1]
+            ref=full_ref
+            text=text.replace(full_ref,'')
+        else:
+            ref='{#fig:%s}' % tag 
+            
+        print("ref",ref)
+
+
+
+        S=S.replace(f'{{#figref:{tag}}}',ref)
+        S=S.replace(f"[{tag}]",f"[{text}]")
+        
+            
+        
+    pprint(captions)
+    print("---")
+    
+    return S
+    
+
+
+# In[42]:
+
+
+print(parse_include_links('../main.md'))
+
+
+# In[38]:
+
+
+text="The output distribution for a BCM neuron.  The initial distribution (above) shows that the BCM neuron responds strongly to both patterns about the same amount of time.  The final distribution (below) shows that the BCM neuron responds to only one of the patterns strongly most of the time, and the other pattern yields a weak response. {#fig:output_dist_2d} "
+idx0=text.index("{#")
+idx1=text[idx0:].index("}")+idx0+1
+full_ref=text[idx0:idx1]
+ref=full_ref[2:-1]
+print(full_ref)
+print(ref)
+
+
+# In[ ]:
+
+
+
+

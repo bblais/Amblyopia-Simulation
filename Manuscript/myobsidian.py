@@ -28,9 +28,21 @@ def full_path(fname,tag):
 
     return os.path.abspath(new_fname)
 
+
+def handle_unicode_error(line,fname):
+    if any([ord(x)>127 for x in line]):
+        S=fname+" : "
+        for x in line:
+            if ord(x)<=127:
+                S+=x
+            else:
+                S+=" [%d] " % ord(x)
+        raise ValueError("Unicode in %s" % S)
+
+
 def parse_include_links(fname):
     import os
-    
+
     if fname.startswith("!"):  # not a file
         return fname
     
@@ -46,15 +58,17 @@ def parse_include_links(fname):
     captions={}
     caption=[]
     look_for_caption=False
-    
+
+    embed="![["
+
     for line in lines:
+        handle_unicode_error(line,fname)
+
         if look_for_caption:
             if line.startswith('>'):
                 caption.append(line[1:])
                 continue
-            elif line.startswith("--"):
-                continue
-            elif line.strip():
+            elif line.strip():  # non-empty line
                 caption.append(line)
                 continue
             else:  # blank line
@@ -63,48 +77,55 @@ def parse_include_links(fname):
                     captions[tag]="\n".join(caption)
                     caption=[]
         
-        
-        if not "![[" in line:
+        if not embed in line:
             new_lines.append(line)
             continue
-
-        part=line
-            
-        while "![[" in part:
-            idx1=part.index("![[")+3
-            idx2=part[idx1:].index(']]')+idx1
-            tag=part[idx1:idx2]
-            includes.append(tag)
-            part=part[idx2+2:]
-            
-            if not tag in D:
-                path=full_path(fname,tag)
-
-                base,ext=os.path.splitext(path)
-                if ext in file_extensions:
-                    D[tag]=f'![{tag}]({path})'
-                else:
-                    D[tag]=path
-
-            line=line.replace("![[%s]]" % tag,parse_include_links(D[tag]))
-                
-        base,ext=os.path.splitext(path)
-        if ext in file_extensions:   
-            look_for_caption=True
-            caption=[]
-            
         
-                
+        part=line
+
+        assert line.count("]]")==1  # only one include per line -- is there a reason to do another?
+
+
+        tag=line.split("[[")[1].split(']]')[0]
+        path=full_path(fname,tag)
+        base,ext=os.path.splitext(path)
+
+        if ext in file_extensions:  # a figure
+            look_for_caption=True
+            caption=[]   
+
+            line=line.replace("![[%s]]" % tag,
+                              f'![{tag}]({path}){{#figref:{tag}}}')  # change ![[filename.png]] to ![filename.png](/full/path/to/filename.png){#figref:filename.png}
+        elif ext=='.md':  # a markdown file
+            line=line.replace("![[%s]]" % tag,parse_include_links(path)) # change ![[mdfilename]] to "full contents of mdfilename")           
+        else:
+            raise("You can't get there from here.")
+            
+        # example
+        #![Simple model of a neuron with 4 inputs ($x_1, x_2, x_3,$ and $x_4$), connecting to the cell via 4 synaptic weights ($w_1, w_2, w_3,$ and $w_4$), yielding an output ($y$).](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Simple Neuron.pdf){#fig:simple-neuron-pdf}
                 
         new_lines.append(line)    
         
     S='\n'.join(new_lines)
     for tag in captions:
-        S=S.replace(f"[{tag}]",f"[{captions[tag]}]")
+        text=captions[tag]
+        assert text.count("{#")<=1  # no more than one reference
+
+        
+        if "{#" in text:
+            idx0=text.index("{#")
+            idx1=text[idx0:].index("}")+idx0+1
+            full_ref=text[idx0:idx1]
+            ref=full_ref
+            text=text.replace(full_ref,'')
+        else:
+            ref='{#fig:%s}' % tag.replace(" ","_") 
+            
+
+        S=S.replace(f'{{#figref:{tag}}}',ref)
+        S=S.replace(f"[{tag}]",f"[{text}]")
+        
             
         
-        
-    
-    
     return S
     

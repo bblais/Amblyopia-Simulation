@@ -5,6 +5,7 @@
     "tags": "tags",
     "author": "multitext",
     "keywords": "multitext",
-    "classoption": "multitext"
+    "classoption": "multitext",
+    "autoSectionLabels": "checkbox"
   }
 }
