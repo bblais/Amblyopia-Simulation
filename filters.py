@@ -4,7 +4,6 @@ import numpy
 from Waitbar import Waitbar
 import array
 from PIL import Image
-import pil_numpy as pn
 # for difference of gaussians (dog)
 import scipy.signal as sig
 
@@ -14,7 +13,32 @@ from scipy.io import loadmat
 # for whitening
 from scipy.fftpack import fft2, fftshift, ifft2, ifftshift
 from scipy import real,absolute
-    
+
+def image2array(im):
+    if im.mode not in ("L", "F"):
+        raise ValueError( "can only convert single-layer images")
+    if im.mode == "L":
+        a = numpy.frombytes(im.tobytes(), numpy.uint8)
+    else:
+        a = numpy.frombytes(im.tobytes(), numpy.float32)
+    a.shape = im.size[1], im.size[0]
+    return a
+
+def array2image(a):
+    if a.dtype.name == 'uint8':
+        mode = "L"
+    elif a.dtype.name == 'float32':
+        mode = "F"
+    elif a.dtype.name == 'float64':
+        a=a.astype('float32')
+        mode = "F"
+    else:
+        raise ValueError("unsupported image mode %s" % a.dtype.name)
+    return Image.frombytes(mode, (a.shape[1], a.shape[0]), a.tobytes())
+
+
+
+
     
 def dog(sd1,sd2,size):
     
@@ -350,8 +374,8 @@ def make_rot(var,which_angles,more=False,verbose=True):
             sz=im.shape
             new_size=sz
             
-            Im=pn.array2image(im).rotate(a)
-            im2=pn.image2array(Im)
+            Im=array2image(im).rotate(a)
+            im2=image2array(Im)
             
             
             # assume square images, and worst case (45 deg)
@@ -377,8 +401,8 @@ def make_rot(var,which_angles,more=False,verbose=True):
                 sz=im.shape
                 new_size=sz
                 
-                Im=pn.array2image(im).rotate(a)
-                im2=pn.image2array(Im)
+                Im=array2image(im).rotate(a)
+                im2=image2array(Im)
                 
                 
                 # assume square images, and worst case (45 deg)
