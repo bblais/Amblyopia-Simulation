@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import matplotlib.pyplot as plt
@@ -22,7 +22,7 @@ from plasticnet import day,ms,minute,hour,second
 from matplotlib.pyplot import figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis,title
 
 
-# In[1]:
+# In[ ]:
 
 
 #| output: false
@@ -233,6 +233,7 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
     return sim,X
 
 
+
 # In[ ]:
 
 
@@ -334,4 +335,5 @@ def make_original_image_files():
         var={'im':im_list,'im_scale_shift':[1.0,0.0]}
 
         pi5.asdf_save_images(var,'asdf/bbsk081604_all.asdf')
+
 

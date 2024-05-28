@@ -22,5 +22,6 @@ autoSectionLabels: true
 ![[3. Normal and Deprived Visual Environments]]
 
 
+![[4. Results]]
 
 ![[9. References]]

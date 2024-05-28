@@ -41,7 +41,8 @@ Blues2 = truncate_colormap(cm.Blues, 0.3, 1.0).reversed()
 Oranges2 = truncate_colormap(cm.Oranges, 0.3, 1.0).reversed()
 
 
-# In[1]:
+
+# In[ ]:
 
 
 def mydisplay(t,sim,neurons,connections):

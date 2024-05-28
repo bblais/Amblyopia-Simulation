@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import plasticnet as pn
@@ -506,8 +506,8 @@ def μσ(V,axis=None):
     return μ,σ
 
 global base_image_file
-base_image_file='asdf/bbsk081604_all_log2dog.asdf'
-#print("Base Image File:",base_image_file)
+base_image_file='asdf/bbsk081604_all_scale2.asdf'
+print("Base Image File:",base_image_file)
 
 def deficit(blur=2.5,noise=0.1,rf_size=19,eta=2e-6,
            number_of_neurons=10,
@@ -947,7 +947,7 @@ def make_do_params(all_params,verbose=False):
     return do_params
 
 
-# In[2]:
+# In[ ]:
 
 
 def run_one_fix(params,overwrite=False):
@@ -990,7 +990,7 @@ def run_one_fix(params,overwrite=False):
     
 
 
-# In[3]:
+# In[ ]:
 
 
 def run_one_blur(params):

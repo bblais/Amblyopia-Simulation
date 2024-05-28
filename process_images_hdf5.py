@@ -390,16 +390,22 @@ def filtered_images(fname,*args,resolution='uint16',
                 else:
                     seed(101)
 
-                mask_filenames=sorted(glob(f['name']))
-                if not mask_filenames:
-                    raise ValueError('No Masks matching pattern %s' % f['name'])
-                chosen_mask=randint(0,len(mask_filenames),len(image_data['im']))
-                
-                actual_names=[mask_filenames[_] for _ in chosen_mask]
-                if verbose:
-                    print("Actual masks: ",",".join(actual_names))
+                if f['name']:
+                    mask_filenames=sorted(glob(f['name']))
+                    if not mask_filenames:
+                        raise ValueError('No Masks matching pattern %s' % f['name'])
+                    chosen_mask=randint(0,len(mask_filenames),len(image_data['im']))
 
-                image_data=apply_mask(image_data,actual_names)
+                    actual_names=[mask_filenames[_] for _ in chosen_mask]
+                    if verbose:
+                        print("Actual masks: ",",".join(actual_names))
+                else:
+                    actual_names=None
+                    
+                apply_to_average=f.get('apply_to_average',False)
+                contrast=f.get('contrast',1.0)
+                    
+                image_data=apply_mask(image_data,actual_names,apply_to_average,contrast)
             else:
                 raise ValueError("Filter type %s not implemented." % T)
                 

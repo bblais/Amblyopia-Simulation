@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
 from pylab import *
 
 
-# In[2]:
+# In[ ]:
 
 
 from deficit_defs import *
 
 
-# In[3]:
+# In[ ]:
 
 
 def savefig(base):
@@ -24,7 +24,7 @@ def savefig(base):
         plt.savefig(fname, bbox_inches='tight')
 
 
-# In[4]:
+# In[ ]:
 
 
 _debug = False
@@ -32,7 +32,7 @@ if _debug:
     print("Debugging")
 
 
-# In[5]:
+# In[ ]:
 
 
 base='sims/2023-01-27'
@@ -41,7 +41,7 @@ if not os.path.exists(base):
     os.mkdir(base)
 
 
-# In[6]:
+# In[ ]:
 
 
 rf_size=19
@@ -59,13 +59,13 @@ number_of_processes=4
 
 # ## Premake the image files
 
-# In[7]:
+# In[ ]:
 
 
 blur_mat=linspace(0,8,17)
 
 
-# In[8]:
+# In[ ]:
 
 
 base_image_file='asdf/bbsk081604_all.asdf'
@@ -88,7 +88,8 @@ for blur in blur_mat:
 
 
 
-# In[9]:
+
+# In[ ]:
 
 
 def blur_jitter_deficit(blur=[2.5,-1],
@@ -168,7 +169,7 @@ def blur_jitter_deficit(blur=[2.5,-1],
     return sim,[pre,post],[c]
 
 
-# In[13]:
+# In[ ]:
 
 
 def run_one(params,overwrite=False):
@@ -203,13 +204,13 @@ def run_one(params,overwrite=False):
     
 
 
-# In[14]:
+# In[ ]:
 
 
 real_time=11*60+ 39
 
 
-# In[15]:
+# In[ ]:
 
 
 from collections import namedtuple
@@ -246,20 +247,20 @@ print(len(all_params))
 print(time2str(real_time*len(all_params)/number_of_processes))
 
 
-# In[18]:
+# In[ ]:
 
 
 do_params=make_do_params(all_params)
 len(do_params)
 
 
-# In[21]:
+# In[ ]:
 
 
-get_ipython().run_cell_magic('time', '', 'run_one(all_params[0],overwrite=True)')
+get_ipython().run_cell_magic('time', '', 'run_one(all_params[0],overwrite=True)\n')
 
 
-# In[15]:
+# In[ ]:
 
 
 if do_params:
@@ -270,7 +271,7 @@ if do_params:
 
 # ## View the sims
 
-# In[21]:
+# In[ ]:
 
 
 sfname=all_params[0].sfname
@@ -282,31 +283,31 @@ sfname=[params for params in all_params if
 sfname
 
 
-# In[22]:
+# In[ ]:
 
 
 R=Results(sfname)
 
 
-# In[23]:
+# In[ ]:
 
 
 R.μσ
 
 
-# In[24]:
+# In[ ]:
 
 
 R.t[-1]/day
 
 
-# In[25]:
+# In[ ]:
 
 
 t,y,θ,W=R[16*day]
 
 
-# In[26]:
+# In[ ]:
 
 
 t,y,θ,W=R[16*day]
@@ -330,26 +331,26 @@ for n in range(4):
         count+=1
 
 
-# In[31]:
+# In[ ]:
 
 
 pwd
 
 
-# In[17]:
+# In[ ]:
 
 
 from glob import glob
 
 
-# In[18]:
+# In[ ]:
 
 
 # sims/2023-01-27/deficit 20 neurons dog 0 eta 0 noise 0 blur 0 mu_c 1 sigma_c.asdf'
 glob("sims/2023-01-27/deficit 20 neurons dog 0 eta 0 noise 0*")
 
 
-# In[19]:
+# In[ ]:
 
 
 RR={}
@@ -361,8 +362,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
         RR[params.sfname]=Results(params.sfname)
 
 
-# In[20]:
-
+# In[ ]:
 
 
 count=0
@@ -391,7 +391,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
     legend()    
 
 
-# In[21]:
+# In[ ]:
 
 
 count=0
@@ -480,7 +480,8 @@ title(r'$\mu_c$')
 savefig('fig-deficit-mu_c-blur')
 
 
-# In[24]:
+
+# In[ ]:
 
 
 R=RR[params.sfname]
@@ -494,7 +495,7 @@ R=RR[params.sfname]
 
 
 
-# In[25]:
+# In[ ]:
 
 
 count=0
@@ -527,6 +528,7 @@ plt.gcf().add_axes(ax_cb2)
 title(r'$\mu_c$')
 
 savefig('fig-deficit-ODI-mu_c-blur')
+
 
 
 # In[ ]:

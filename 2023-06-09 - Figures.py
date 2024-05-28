@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[18]:
+# In[ ]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
 from pylab import *
 
 
-# In[19]:
+# In[ ]:
 
 
 from deficit_defs import *
@@ -17,7 +17,7 @@ from input_environment_defs import *
 
 # ## Tuning Curves
 
-# In[19]:
+# In[ ]:
 
 
 #| output: false
@@ -65,7 +65,7 @@ pn.save('sims/nr.asdf',sim,[pre,post],[c])
 R=Results('sims/nr.asdf')
 
 
-# In[21]:
+# In[ ]:
 
 
 def mysubplot(R,C,r,c):
@@ -153,7 +153,7 @@ savefig('fig-rf-theta-tuning-curve.png')
 
 # ## Original Images
 
-# In[3]:
+# In[ ]:
 
 
 base_image_file='asdf/bbsk081604_all_scale2.asdf'
@@ -167,7 +167,8 @@ imfname=pi5.filtered_images(
 image_data=pi5.asdf_load_images(imfname)
 
 
-# In[4]:
+
+# In[ ]:
 
 
 im=[_*image_data['im_scale_shift'][0]+image_data['im_scale_shift'][1] for _ in image_data['im'][:6]]
@@ -182,7 +183,7 @@ savefig('fig-orig.png')
 
 # ## LGN responses (DOG)
 
-# In[5]:
+# In[ ]:
 
 
 base_image_file='asdf/bbsk081604_all_scale2.asdf'
@@ -196,7 +197,7 @@ image_data=pi5.asdf_load_images(imfname)
 im=[_*image_data['im_scale_shift'][0]+image_data['im_scale_shift'][1] for _ in image_data['im'][:6]]
 
 
-# In[6]:
+# In[ ]:
 
 
 figure(figsize=(16,8))
@@ -210,7 +211,7 @@ savefig('fig-LGNresponses.png')
 
 # ## Normal Inputs
 
-# In[4]:
+# In[ ]:
 
 
 im1=im2=pi5.filtered_images(
@@ -223,8 +224,7 @@ sim,X=get_input_examples(im1,im2,
                         noise1=0,noise2=0)
 
 
-# In[5]:
-
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)
@@ -241,7 +241,7 @@ savefig('fig-normal_patches.png')
 
 # ## Blurred Inputs
 
-# In[14]:
+# In[ ]:
 
 
 im1=pi5.filtered_images(
@@ -260,8 +260,7 @@ sim,X=get_input_examples(im1,im2,
                         noise1=0,noise2=0)
 
 
-# In[15]:
-
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)
@@ -278,7 +277,7 @@ savefig('fig-blurred-inputs.png')
 
 # ## Jitter Inputs
 
-# In[9]:
+# In[ ]:
 
 
 im1=im2=pi5.filtered_images(
@@ -296,7 +295,7 @@ sim,X=get_input_examples(im1,im2,
                         )
 
 
-# In[10]:
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)
@@ -310,7 +309,7 @@ for i in range(24):
 savefig('fig-jitter-inputs.png')
 
 
-# In[7]:
+# In[ ]:
 
 
 import matplotlib.patches as patches
@@ -343,7 +342,7 @@ savefig('fig-jitter-locations.png')
 
 # ## Patch treatment
 
-# In[6]:
+# In[ ]:
 
 
 im1=im2=pi5.filtered_images(
@@ -356,7 +355,7 @@ sim,X=get_input_examples(im1,im2,
                         scale1=1,scale2=0)
 
 
-# In[7]:
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)
@@ -373,7 +372,7 @@ savefig('fig-patch-inputs.png')
 
 # ## Contrast Modulation
 
-# In[14]:
+# In[ ]:
 
 
 im1=im2=pi5.filtered_images(
@@ -388,7 +387,7 @@ sim,X=get_input_examples(im1,im2,
                         )
 
 
-# In[15]:
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)
@@ -405,7 +404,7 @@ savefig('fig-contrast-modified-inputs.png')
 
 # ## Atropine treatment
 
-# In[16]:
+# In[ ]:
 
 
 im1=pi5.filtered_images(
@@ -425,7 +424,7 @@ sim,X=get_input_examples(im1,im2,
                         noise1=0,noise2=0)
 
 
-# In[17]:
+# In[ ]:
 
 
 ims=inputs_to_images(X,buffer=2,scale_each_patch=True)

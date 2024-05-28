@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[2]:
+# In[ ]:
 
 
 from treatment_sims_2023_02_21 import *
 
 
-# In[3]:
+# In[ ]:
 
 
 base='sims/2023-04-06'
 
 
-# In[4]:
+# In[ ]:
 
 
 rf_size=19
@@ -42,7 +42,7 @@ varnames=['rf_size',
 
 # ## Deficit
 
-# In[5]:
+# In[ ]:
 
 
 from collections import namedtuple
@@ -73,7 +73,8 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[6]:
+
+# In[ ]:
 
 
 RR={}
@@ -81,7 +82,7 @@ for params in tqdm(all_params):
     RR[params.sfname]=Results(params.sfname)
 
 
-# In[9]:
+# In[ ]:
 
 
 savevars(base+"/deficit_results.asdf",
@@ -91,7 +92,7 @@ savevars(base+"/deficit_results.asdf",
         )
 
 
-# In[10]:
+# In[ ]:
 
 
 params=all_params[-1]
@@ -100,13 +101,13 @@ sfname=params.sfname
 R=RR[sfname]
 
 
-# In[8]:
+# In[ ]:
 
 
 
 
 
-# In[9]:
+# In[ ]:
 
 
 plot(R.t,R.y[:,0,strong_i],'b',label='Fellow Eye')
@@ -125,7 +126,7 @@ reformat_time_axis()
 
 # ### Maximum response - deficit
 
-# In[10]:
+# In[ ]:
 
 
 n = 10
@@ -187,9 +188,10 @@ ax.add_artist(leg)
 text(7,40,'Fellow',color=cm.Blues(v[1]))
 
 
+
 # ### ODI deficit
 
-# In[11]:
+# In[ ]:
 
 
 import cycler
@@ -238,7 +240,7 @@ legend()
 
 # ## Fix
 
-# In[11]:
+# In[ ]:
 
 
 from collections import namedtuple
@@ -284,7 +286,8 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[12]:
+
+# In[ ]:
 
 
 RR={}
@@ -292,7 +295,7 @@ for params in tqdm(all_params):
     RR[params.sfname]=Results(params.sfname)
 
 
-# In[13]:
+# In[ ]:
 
 
 varnames=['rf_size',
@@ -312,7 +315,7 @@ savevars(base+"/fix_results.asdf",
         )
 
 
-# In[14]:
+# In[ ]:
 
 
 figure()
@@ -401,7 +404,7 @@ title(r'noise')
             
 
 
-# In[15]:
+# In[ ]:
 
 
 figure()
@@ -492,7 +495,7 @@ title(r'blur')
 
 # ## Patch
 
-# In[16]:
+# In[ ]:
 
 
 noise_mat=linspace(0,1,11)
@@ -524,7 +527,8 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[17]:
+
+# In[ ]:
 
 
 RR={}
@@ -532,8 +536,7 @@ for params in tqdm(all_params):
     RR[params.sfname]=Results(params.sfname)
 
 
-# In[19]:
-
+# In[ ]:
 
 
 figure()
@@ -625,7 +628,7 @@ title(r'blur')
 
 # ## Atropine
 
-# In[20]:
+# In[ ]:
 
 
 noise_mat=linspace(0,1,11)
@@ -657,7 +660,8 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[21]:
+
+# In[ ]:
 
 
 RR={}
@@ -665,8 +669,7 @@ for params in tqdm(all_params):
     RR[params.sfname]=Results(params.sfname)
 
 
-# In[22]:
-
+# In[ ]:
 
 
 figure()
@@ -759,7 +762,7 @@ title(r'blur')
             
 
 
-# In[23]:
+# In[ ]:
 
 
 v=np.flip(linspace(0.3,1,len(blur_mat)))
@@ -823,7 +826,7 @@ title(r'blur')
 
 # ## Contrast Mask
 
-# In[24]:
+# In[ ]:
 
 
 contrast_mat=linspace(0,1,6)  # linspace(0,1,11)
@@ -877,7 +880,8 @@ for a in all_params[-5:]:
     print(a)
 
 
-# In[25]:
+
+# In[ ]:
 
 
 RR={}
@@ -885,8 +889,7 @@ for params in tqdm(all_params):
     RR[params.sfname]=Results(params.sfname)
 
 
-# In[26]:
-
+# In[ ]:
 
 
 figure()
@@ -984,8 +987,7 @@ title(r'blur')
     
 
 
-# In[27]:
-
+# In[ ]:
 
 
 figure()
@@ -1074,8 +1076,8 @@ plt.gcf().add_axes(ax_cb2)
 title('no\nmask\nblur',size=10)
 
 
-# In[28]:
 
+# In[ ]:
 
 
 figure()
@@ -1162,6 +1164,7 @@ ax_cb2.grid(True)
 title(f'f={f}\nblur',size=10)
 plt.gcf().add_axes(ax_cb2)
 title('no\nmask\nblur',size=10)
+
 
 
 # In[ ]:
