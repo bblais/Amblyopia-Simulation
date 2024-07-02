@@ -31,7 +31,7 @@ def default_post(number_of_neurons):
     return post
 
 def default_bcm(pre,post,orthogonalization=True):
-    c=pn.connections.BCM(pre,post,[-.01,.01],[.1,.2])
+    c=pn.connections.BCM(pre,post,[-.05,.05],[.1,.2])
     
     if orthogonalization:
         c+=pn.connections.process.orthogonalization(10*minute)
@@ -221,6 +221,26 @@ all_params=to_named_tuple(all_params)
 # In[ ]:
 
 
+im=pi5.filtered_images('asdf/bbsk081604_all_scale2.asdf',
+                        {'type':'norm'},
+                        {'type':'dog','sd1':1,'sd2':3},   
+                        verbose=True,
+                        )
+
+
+# In[ ]:
+
+
+im=pi5.filtered_images('asdf/bbsk081604_all_scale2_rot8.asdf',
+                        {'type':'norm'},
+                        {'type':'dog','sd1':1,'sd2':3},   
+                        verbose=True,
+                        )
+
+
+# In[ ]:
+
+
 ### premake the images
 for params in tqdm(all_params):
     result=func.remote(params,run=False,overwrite=True)
@@ -244,23 +264,44 @@ sfnames=ray.get(results)
 # In[ ]:
 
 
+RR={}
+for params in tqdm(all_params):
+    RR[params.sfname]=Results(params.sfname)
+
+
+# In[ ]:
+
+
 assert func==run_one_continuous_fix
-S=Storage()
+St=Storage()
 for params in tqdm(all_params):
     sfname=params.sfname
     noise=params.noise[1]
     
-    R=Results(sfname)
+    R=RR[sfname]
+
+    
     idx1,idx2=[_[1] for _ in R.sequence_index]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
-    S+=noise,recovery_rate_μ,recovery_rate_σ
-    
-noise,recovery_rate_μ,recovery_rate_σ=S.arrays()    
 
+    ODI_μ2=R.ODI[idx2,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx2,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ2=K*S/np.sqrt(N)
 
-glasses_result=noise,recovery_rate_μ,recovery_rate_σ
+    ODI_μ1=R.ODI[idx1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ1=K*S/np.sqrt(N)
+    
+    St+=noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 
+        
+noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=St.arrays()
+
+glasses_result=noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2
 savevars(f'{base_sim_dir}/glasses_results.asdf','glasses_result')    
 
 
@@ -268,6 +309,38 @@ savevars(f'{base_sim_dir}/glasses_results.asdf','glasses_result')
 
 
 params.noise
+
+
+# In[ ]:
+
+
+R=RR[all_params[-1].sfname]
+plot(R.t,R.ODI,'b');
+
+
+# In[ ]:
+
+
+plot(R.t,R.y[:,:,0],'b');
+plot(R.t,R.y[:,:,1],'m');
+
+
+# In[ ]:
+
+
+def normal(x,μ,σ):
+    return 1/(σ*np.sqrt(2*np.pi))*np.exp(-(x-μ)**2/(2*σ**2))
+
+for params in tqdm(all_params):
+    R=RR[params.sfname]
+    μ=R.ODI[-1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[-1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    σ=K*S/np.sqrt(N)
+
+    x=linspace(-1,1,200)
+    plot(x,normal(x,μ,σ),color=cm.Oranges(params.noise[1]))
 
 
 # ## Patch treatment
@@ -391,6 +464,15 @@ do_params=make_do_params(all_params,verbose=True)
 # In[ ]:
 
 
+### premake the images
+for params in tqdm(all_params):
+    result=func.remote(params,run=False,overwrite=True)
+    sfname=ray.get(result)
+
+
+# In[ ]:
+
+
 results = [func.remote(p) for p in do_params]
 sfnames=ray.get(results)
 
@@ -398,25 +480,161 @@ sfnames=ray.get(results)
 # In[ ]:
 
 
-assert func==run_one_continuous_patch
+RR={}
+for params in tqdm(all_params):
+    RR[params.sfname]=Results(params.sfname)
+
+
+# In[ ]:
+
+
+R=RR[all_params[-1].sfname]
+plot(R.t,R.ODI,'b');
+
+
+# In[ ]:
+
+
+plot(R.t,R.y[:,:,0],'b');
+plot(R.t,R.y[:,:,1],'m');
+
+
+# In[ ]:
+
+
+R.ODI[-1,:]
+
+
+# In[ ]:
+
+
+def normal(x,μ,σ):
+    return 1/(σ*np.sqrt(2*np.pi))*np.exp(-(x-μ)**2/(2*σ**2))
+
+
+# In[ ]:
+
+
+μ=R.ODI[-1,:].mean()  # average across neurons, at the end of a seq, for each channel
+S=R.ODI[-1,:].std()
+N=R.ODI.shape[1]
+K=1+20/N**2
+σ=K*S/np.sqrt(N)
+
+x=linspace(-1,1,200)
+plot(x,normal(x,μ,σ))
+
+
+# In[ ]:
+
+
+for params in tqdm(all_params):
+    R=RR[params.sfname]
+    μ=R.ODI[-1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[-1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    σ=K*S/np.sqrt(N)
+
+    x=linspace(-1,1,200)
+    plot(x,normal(x,μ,σ),color=cm.Oranges(params.noise[1]))
+
+
+# In[ ]:
+
+
+idx1,idx2=[_[1] for _ in R.sequence_index]
+t=R.t/day
+v=-(R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1])  # speed
+Tμ,Tσ=μσ(R.ODI[idx1,:]/v) # time to zero
+Tμ,Tσ
+
+
+# In[ ]:
+
+
+R.ODI[idx1,:]
+
+
+# In[ ]:
+
+
+R.ODI[idx2,:]
+
+
+# In[ ]:
+
+
 S=Storage()
 for params in tqdm(all_params):
     sfname=params.sfname
     noise=params.noise[1]
     
-    R=Results(sfname)
+    R=RR[sfname]
+
+    
+    idx1,idx2=[_[1] for _ in R.sequence_index]
+    t=R.t/day
+    v=-(R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1])  # speed
+    Tμ,Tσ=μσ(R.ODI[idx1,:]/v) # time to zero
+    
+    S+=noise,Tμ,Tσ    
+        
+noise,Tμ,Tσ=S.arrays()
+
+
+# In[ ]:
+
+
+errorbar(noise,Tμ,yerr=Tσ)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+assert func==run_one_continuous_patch
+St=Storage()
+for params in tqdm(all_params):
+    sfname=params.sfname
+    noise=params.noise[1]
+    
+    R=RR[sfname]
 
     
     idx1,idx2=[_[1] for _ in R.sequence_index]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
-    S+=noise,recovery_rate_μ,recovery_rate_σ    
-        
-noise,recovery_rate_μ,recovery_rate_σ=S.arrays()
 
-patch_result=noise,recovery_rate_μ,recovery_rate_σ
+    ODI_μ2=R.ODI[idx2,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx2,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ2=K*S/np.sqrt(N)
+
+    ODI_μ1=R.ODI[idx1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ1=K*S/np.sqrt(N)
+    
+    St+=noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 
+        
+noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=St.arrays()
+
+patch_result=noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2
 savevars(f'{base_sim_dir}/patch_results.asdf','patch_result')
+
+
+# In[ ]:
+
+
+idx1,idx2,R.y.shape
 
 
 # In[ ]:
@@ -571,36 +789,43 @@ sfnames=ray.get(results)
 # In[ ]:
 
 
-
+RR={}
+for params in tqdm(all_params):
+    RR[params.sfname]=Results(params.sfname)
 
 
 # In[ ]:
 
 
 assert func==run_one_continuous_atropine
-S=Storage()
+St=Storage()
 for params in tqdm(all_params):
     sfname=params.sfname
     noise=params.noise[1]
     blur=params.blur
     
-    R=Results(sfname)
+    R=RR[sfname]
 
     
     idx1,idx2=[_[1] for _ in R.sequence_index]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
+
+    ODI_μ2=R.ODI[idx2,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx2,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ2=K*S/np.sqrt(N)
+
+    ODI_μ1=R.ODI[idx1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ1=K*S/np.sqrt(N)
     
-    S+=noise,blur,recovery_rate_μ,recovery_rate_σ    
+    St+=noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 
         
-noise,blur,recovery_rate_μ,recovery_rate_σ=S.arrays()
-
-
-
-# In[ ]:
-
-
-
+noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=St.arrays()
 
 
 # In[ ]:
@@ -623,7 +848,9 @@ noise_N=len(closed_eye_noise_mat)
 blur_N=len(atropine_blur_mat)
 
 noise=noise.reshape(blur_N,noise_N)
-noise,blur,recovery_rate_μ,recovery_rate_σ=[_.reshape(blur_N,noise_N).T for _ in (noise,blur,recovery_rate_μ,recovery_rate_σ)]
+noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=[
+    _.reshape(blur_N,noise_N).T for _ in 
+        (noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2)]
 
 
 
@@ -636,7 +863,7 @@ blur
 # In[ ]:
 
 
-atropine_result=noise,blur,recovery_rate_μ,recovery_rate_σ
+atropine_result=noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2
 
 savevars(f'{base_sim_dir}/atropine_results.asdf','atropine_result')
 
@@ -839,24 +1066,44 @@ sfnames=ray.get(results)
 # In[ ]:
 
 
+RR={}
+for params in tqdm(all_params):
+    RR[params.sfname]=Results(params.sfname)
+
+
+# In[ ]:
+
+
 assert func==run_one_continuous_mask
-S=Storage()
+St=Storage()
 for params in tqdm(all_params):
     sfname=params.sfname
     contrast=params.contrast[1]
     
-    R=Results(sfname)
+    R=RR[sfname]
 
     
     idx1,idx2=[_[1] for _ in R.sequence_index]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
-    S+=contrast,recovery_rate_μ,recovery_rate_σ    
-        
-contrast,recovery_rate_μ,recovery_rate_σ=S.arrays()
 
-contrast_result=contrast,recovery_rate_μ,recovery_rate_σ
+    ODI_μ2=R.ODI[idx2,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx2,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ2=K*S/np.sqrt(N)
+
+    ODI_μ1=R.ODI[idx1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ1=K*S/np.sqrt(N)
+    
+    St+=contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 
+        
+contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=St.arrays()
+
+contrast_result=contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2
 
 savevars(f'{base_sim_dir}/contrast_results.asdf','contrast_result')
 
@@ -919,28 +1166,43 @@ sfnames=ray.get(results)
 # In[ ]:
 
 
-
+RR={}
+for params in tqdm(all_params):
+    RR[params.sfname]=Results(params.sfname)
 
 
 # In[ ]:
 
 
 assert func==run_one_continuous_mask
-S=Storage()
+St=Storage()
 for params in tqdm(all_params):
     sfname=params.sfname
     contrast=params.contrast[1]
     f=params.f
-    R=Results(sfname)
+    
+    R=RR[sfname]
 
     
     idx1,idx2=[_[1] for _ in R.sequence_index]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
+
+    ODI_μ2=R.ODI[idx2,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx2,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ2=K*S/np.sqrt(N)
+
+    ODI_μ1=R.ODI[idx1,:].mean()  # average across neurons, at the end of a seq, for each channel
+    S=R.ODI[idx1,:].std()
+    N=R.ODI.shape[1]
+    K=1+20/N**2
+    ODI_σ1=K*S/np.sqrt(N)
     
-    S+=f,contrast,recovery_rate_μ,recovery_rate_σ    
+    St+=f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 
         
-f,contrast,recovery_rate_μ,recovery_rate_σ=S.arrays()
+f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=St.arrays()
 
 
 # In[ ]:
@@ -948,7 +1210,6 @@ f,contrast,recovery_rate_μ,recovery_rate_σ=S.arrays()
 
 f_N=len(f_mat)
 contrast_N=len(contrast_mat)
-
 contrast.reshape(contrast_N,f_N)
 
 
@@ -959,13 +1220,15 @@ f_N=len(f_mat)
 contrast_N=len(contrast_mat)
 
 
-f,contrast,recovery_rate_μ,recovery_rate_σ=[_.reshape(contrast_N,f_N).T for _ in (f,contrast,recovery_rate_μ,recovery_rate_σ)]
+f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=[
+    _.reshape(contrast_N,f_N).T for _ in 
+        (f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2)]
 
 
 # In[ ]:
 
 
-mask_result=f,contrast,recovery_rate_μ,recovery_rate_σ
+mask_result=f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2
 
 savevars(f'{base_sim_dir}/mask_results.asdf','mask_result')
 

@@ -19,7 +19,7 @@ import filters
 
 
 from skimage import io, color
-from skimage.transform import rescale,resize
+from skimage.transform import rescale,resize,rotate
 import glob
 import os
 from tqdm.notebook import tqdm
@@ -99,6 +99,46 @@ if overwrite or not os.path.exists(asdf_fname):
 # In[ ]:
 
 
+asdf_fname='asdf/bbsk081604_all_scale2_rot8.asdf'
+max_pic=1000
+overwrite=True
+
+if overwrite or not os.path.exists(asdf_fname):
+
+    print(asdf_fname)
+    
+    im=[]
+    for i,fname in (pbar := tqdm(enumerate(files),total=len(files))):
+
+        for ang in [0,45,90,135,180,225,270,315]:        
+            rgb = io.imread(fname)
+            lab = color.rgb2lab(rgb)    
+            lab = rotate(lab, 45,resize=False,mode='symmetric')
+            lab=resize(lab,(600,800), anti_aliasing=True)  # turns out not all of the bbsk images are the same size!
+            L=lab[:,:,0]  # luminance
+            im.append(L.astype(float))
+
+    var_R={'im':im,'im_scale_shift':[1.0,0.0]}
+    filters.set_resolution(var_R,'uint16')
+    pi5.asdf_save_images(var_R,asdf_fname) 
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
 asdf_fname='asdf/bbsk081604_all_scale1.asdf'
 max_pic=1000
 if not os.path.exists(asdf_fname):
@@ -170,7 +210,7 @@ print("Base Image File:",base_image_file)
 
 imfname=pi5.filtered_images(
                             base_image_file,
-                            {'type':'dog','sd1pro1,'sd2':3},
+                            {'type':'dog','sd1',1,'sd2':3},
                             )
 
 image_data=pi5.asdf_load_images(imfname)

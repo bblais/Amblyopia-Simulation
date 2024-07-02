@@ -51,16 +51,26 @@ n = 5
 colormap=cm.viridis
 color = colormap(np.linspace(0, 1,n))
 
+glasses_plot_color=cm.viridis(np.linspace(0, 1,5))[2]
 
-noise,recovery_rate_μ,recovery_rate_σ=glasses_result        
+noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2 =glasses_result        
+
+glasses_μ=-recovery_rate_μ
+glasses_σ=2*recovery_rate_σ
+
+# best case
+idx=argmax(glasses_μ)
+max_glasses=glasses_μ[idx]+glasses_σ[idx]
+min_glasses=glasses_μ[idx]-glasses_σ[idx]
+print(min_glasses,max_glasses)
 
 
 errorbar(noise,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,fmt='o-',color=color[2]) # positive = recovery
 ylabel(r'$\longleftarrow$ Slower recovery     Faster Recovery $\longrightarrow$'+"\n[ODI shift/time]")
 xlabel('Open-Eye Noise Level')
-#title('Patch Treatment')
+#title('Glasses Treatment')
 
-# sfname=f"{savepath}/patch_treatment.pdf"
+# sfname=f"{savepath}/glasses_treatment.pdf"
 # print(sfname)
 # savefig(sfname,bbox_inches="tight")
 
@@ -79,7 +89,16 @@ colormap=cm.viridis
 color = colormap(np.linspace(0, 1,n))
 
 
-noise,recovery_rate_μ,recovery_rate_σ=patch_result        
+noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=patch_result        
+
+patch_μ=-recovery_rate_μ
+patch_σ=2*recovery_rate_σ
+
+# best case
+idx=argmax(patch_μ)
+max_patch=patch_μ[idx]+patch_σ[idx]
+min_patch=patch_μ[idx]-patch_σ[idx]
+print(min_patch,max_patch)
 
 
 errorbar(noise,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,fmt='rs-') # positive = recovery
@@ -104,7 +123,7 @@ color = colormap(np.linspace(0, 1,n))
 
 
 
-noise,blur,recovery_rate_μ,recovery_rate_σ=atropine_result
+noise,blur,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=atropine_result
 blur_N=blur.shape[1]
 for b in range(blur_N):
     
@@ -116,7 +135,7 @@ for b in range(blur_N):
                  color=color[b],fmt='o-') # positive = recovery
         
         
-noise,recovery_rate_μ,recovery_rate_σ=patch_result        
+noise,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=patch_result        
 errorbar(noise,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,color='r',fmt='s-',label='Patch') # positive = recovery
         
         
@@ -139,7 +158,7 @@ blur[0,:]
 # In[ ]:
 
 
-contrast,recovery_rate_μ,recovery_rate_σ=contrast_result
+contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=contrast_result
 errorbar(contrast,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,fmt='o-',color='k',label='No Mask') # positive = recovery
 
     
@@ -157,8 +176,8 @@ mx=max(abs(yl))
 yl=[-mx,mx]
 gca().set_ylim(yl)
     
-text(0.25,0.015,'Recovery',ha='center',va='center',color='green')
-text(0.25,-0.015,'Reverse Amblyopia',ha='center',va='center',color='red')
+text(0.25,0.015,'Recovering',ha='center',va='center',color='green')
+text(0.25,-0.015,'Worsening',ha='center',va='center',color='red')
 arrow(.25,-.03,0,-.03,width=0.004,color='red')
 arrow(.25,.03,0,.03,width=0.004,color='green')
 legend()
@@ -179,7 +198,7 @@ colormap=cm.viridis
 color = colormap(np.linspace(0, 1,int(n)))
 #mpl.rcParams['axes.prop_cycle'] = cycler.cycler('color', color)
 
-f,contrast,recovery_rate_μ,recovery_rate_σ=mask_result
+f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=mask_result
 for fi in range(f_N):
     
     errorbar(contrast[fi,:],-recovery_rate_μ[fi,:],yerr=2*recovery_rate_σ[fi,:],elinewidth=1,
@@ -187,7 +206,7 @@ for fi in range(f_N):
 
     
     
-contrast,recovery_rate_μ,recovery_rate_σ=contrast_result
+contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=contrast_result
 errorbar(contrast,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,fmt='o-',color='k',label='No Mask') # positive = recovery
 
     
@@ -206,11 +225,71 @@ yl=[-mx,mx]
 gca().set_ylim(yl)
 
 
-text(0.25,0.015,'Recovery',ha='center',va='center',color='green')
-text(0.25,-0.02,'Reverse Amblyopia',ha='center',va='center',color='red')
-arrow(.25,-.03,0,-.03,width=0.004,color='red')
-arrow(.25,.03,0,.03,width=0.004,color='green')
+text(0.25,0.015,'Recovering',ha='center',va='center',color='green')
+text(0.25,-0.02,'Worsening',ha='center',va='center',color='red')
+arrow(.25,-.04,0,-.03,width=0.004,color='red')
+arrow(.25,.04,0,.03,width=0.004,color='green')
 legend(fontsize=16)
+
+# sfname=f"{savepath}/contrast_mask_treatment.pdf"
+# print(sfname)
+# savefig(sfname,bbox_inches="tight")
+
+
+# In[ ]:
+
+
+import cycler
+f_mat=array([10,30,50,70,90])
+f_N=len(f_mat)
+
+
+n = len(f_mat)+1
+#colormap=cm.Blues
+#color = colormap(np.linspace(1, 0,int(1.2*n)))
+colormap=cm.viridis
+color = colormap(np.linspace(0, 1,int(n)))
+#mpl.rcParams['axes.prop_cycle'] = cycler.cycler('color', color)
+
+f,contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=mask_result
+for fi in range(f_N):
+    
+    errorbar(contrast[fi,:],-recovery_rate_μ[fi,:],yerr=2*recovery_rate_σ[fi,:],elinewidth=1,
+             label=f'Mask f {f[fi,0]}',color=color[fi],fmt='o-') # positive = recovery
+
+    
+    
+contrast,recovery_rate_μ,recovery_rate_σ,ODI_μ1,ODI_σ1,ODI_μ2,ODI_σ2=contrast_result
+errorbar(contrast,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,fmt='o-',color='k',label='No Mask') # positive = recovery
+
+    
+ylabel(r'$\longleftarrow$ Slower recovery     Faster Recovery $\longrightarrow$'+"\n[ODI shift/time]")
+
+xlabel('Contrast')
+#title('Contrast+Mask Treatment')
+    
+xl=gca().get_xlim()
+plot(xl,[0,0],'k-',lw=1)
+gca().set_xlim(xl)
+    
+yl=array(gca().get_ylim())
+mx=max(abs(yl))
+yl=[-mx,mx]
+gca().set_ylim(yl)
+
+
+text(0.25,0.015,'Recovering',ha='center',va='center',color='green')
+text(0.25,-0.02,'Worsening',ha='center',va='center',color='red')
+arrow(.25,-.04,0,-.03,width=0.004,color='red')
+arrow(.25,.04,0,.03,width=0.004,color='green')
+
+axhspan(min_patch,max_patch, color='red', alpha=0.1,label='Patch/Atropine')
+
+glasses_plot_color=cm.viridis(np.linspace(0, 1,5))[2]
+axhspan(min_glasses,max_glasses, color=glasses_plot_color, alpha=0.1,label='Glasses')
+
+legend(fontsize=13)
+
 
 # sfname=f"{savepath}/contrast_mask_treatment.pdf"
 # print(sfname)

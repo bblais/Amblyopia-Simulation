@@ -70,6 +70,18 @@ def time2str(tm):
     return s
 
 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+import matplotlib as mpl
+def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
+    import matplotlib as mpl
+    new_cmap = mpl.colors.LinearSegmentedColormap.from_list(
+        'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
+        cmap(np.linspace(minval, maxval, n)))
+    return new_cmap
+Blues2 = truncate_colormap(mpl.cm.Blues, 0.3, 1.0)
+Oranges2 = truncate_colormap(mpl.cm.Oranges, 0.3, 1.0)
+Blues2r = truncate_colormap(mpl.cm.Blues, 0.3, 1.0).reversed()
+Oranges2r = truncate_colormap(mpl.cm.Oranges, 0.3, 1.0).reversed()
 
 
 class Storage(object):

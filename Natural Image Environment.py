@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 #| output: false
@@ -16,7 +16,7 @@ from input_environment_defs import *
 # We use natural scene stimuli for the simulated inputs to the visual system. We start with images taken with a digital camera, with dimensions 1200 pixels by 1600 pixels and 40$^o$ by 60$^o$ real-world angular dimensions (Figure @fig-orig). Photoreceptors have a logarithmic response to the stimulus, so we apply the natural logarithm to the pixel values.  Finally, we model the ganglion responses using a 32x32 pixel center-surround difference-of-Gaussians (DOG) filter to process the images, each pixel representing one photoreceptor (Figure @fig-logdog). The center-surround radius ratio used for the ganglion cell is 1:3, with balanced excitatory and inhibitory regions and normalized Gaussian profiles. 
 # 
 
-# In[2]:
+# In[ ]:
 
 
 #| output: false
@@ -25,7 +25,8 @@ from input_environment_defs import *
 make_original_image_files()
 
 
-# In[3]:
+
+# In[ ]:
 
 
 #| label: fig-orig
@@ -45,19 +46,19 @@ plt.savefig('Manuscript/resources/fig-orig.png')
 plt.savefig('Manuscript/resources/fig-orig.svg')
 
 
-# In[4]:
+# In[ ]:
 
 
 im[0].shape
 
 
-# In[4]:
+# In[ ]:
 
 
 plt.hist(im[5].ravel(),300);
 
 
-# In[6]:
+# In[ ]:
 
 
 #| output: false
@@ -82,8 +83,7 @@ if not os.path.exists('asdf/bbsk081604_all_RtoDOG.asdf') or run_anyway:
     del var_norm, var_dog, var_R
 
 
-# In[7]:
-
+# In[ ]:
 
 
 fname='asdf/bbsk081604_all_RtoDOG.asdf'
@@ -111,7 +111,7 @@ plt.savefig('Manuscript/resources/fig-Rdog.svg')
 # 
 # 
 
-# In[21]:
+# In[ ]:
 
 
 #| output: false
@@ -126,7 +126,7 @@ plt.axis('off');
 
 # ![Two-eye Architecture.](resources/arch){#fig-arch}
 
-# In[3]:
+# In[ ]:
 
 
 #| label: fig-normal-inputs

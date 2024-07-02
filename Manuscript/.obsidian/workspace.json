@@ -32,7 +32,19 @@
             }
           },
           {
-            "id": "a880e8740209758b",
+            "id": "9b7ec34d2f204ba5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2. Structure vs Noise.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "846a6e231ae43979",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -49,26 +61,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3. Normal and Deprived Visual Environments.md",
+                "file": "4. Results.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "1d988509d71227d5",
+            "id": "0099100fc2ce2fca",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "daily notes/2022-11-11.md",
+                "file": "4. Results.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -134,7 +146,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "3. Normal and Deprived Visual Environments.md",
+                "file": "4. Results.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -162,7 +174,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "3. Normal and Deprived Visual Environments.md"
+                "file": "4. Results.md"
               }
             }
           },
@@ -192,8 +204,29 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "12782c0a296ca36c",
+  "active": "0099100fc2ce2fca",
   "lastOpenFiles": [
+    "1. Introduction.md",
+    "daily notes/2024-05-29.md",
+    "3. Normal and Deprived Visual Environments.md",
+    "resources/mask_filter_example_fsig_20.png",
+    "resources/mask_filter_examples_fsigs.svg",
+    "resources/mask_filter_example_fsig_20.svg",
+    "resources/fig-mask-response-ODI-contrast-mu0-sigma0.png",
+    "resources/fig-logdog.png",
+    "resources/fig-jitter-inputs.png",
+    "resources/fig-fix-response-ODI-blur.png",
+    "resources/fig-fix-ODI-recovery-rate-mu-sigma.svg",
+    "resources/fig-dichopic_blob.png",
+    "resources/fig-deficit-mu_c-blur.svg",
+    "2. Structure vs Noise.md",
+    "4. Results.md",
+    "daily notes/2024-06-02.md",
+    "main.md",
+    "9. References.md",
+    "unlinked files output.md",
+    "unresolved links output.md",
+    "empty files.md",
     "daily notes/2023-06-08.md",
     "daily notes/2023-06-09.md",
     "daily notes/2023-06-19.md",
@@ -203,37 +236,15 @@
     "daily notes/2023-10-31 - Neuron Author Info.md",
     "daily notes/2023-10-19.md",
     "daily notes/2023-07-03.md",
-    "4. Results.md",
-    "3. Normal and Deprived Visual Environments.md",
-    "2. Structure vs Noise.md",
-    "1. Introduction.md",
-    "main.md",
     "0. Dataview Tables.md",
     "daily notes/2022-11-11.md",
     "daily notes/2022-11-15.md",
     "daily notes/2022-12-05.md",
     "daily notes/2022-12-11.md",
-    "daily notes/2023-02-07.md",
-    "daily notes/2023-02-19.md",
-    "daily notes/2023-05-30.md",
-    "daily notes/2023-06-02.md",
-    "daily notes/2022-11-10.md",
-    "daily notes/2022-11-02.md",
-    "daily notes/2022-11-01.md",
     "docs/BCM-and-Amblyopia.docx",
     "docs/BCM-and-Amblyopia.pdf",
     "docs/BCM-and-Amblyopia.tex",
     "docs",
-    "resources/Pasted image 20240301091600.png",
-    "resources/Pasted image 20240301091538.png",
-    "resources/Pasted image 20240301091523.png",
-    "resources/Pasted image 20240301091503.png",
-    "resources/Pasted image 20240301091305.png",
-    "resources/Pasted image 20240301091247.png",
-    "resources/Pasted image 20240301091231.png",
-    "resources/Pasted image 20240301091213.png",
-    "resources/Pasted image 20240301091111.png",
-    "resources/Pasted image 20240228124932.png",
     "resources/RF and Output dist.drawio",
     "resources/weights and output distribution natural images.drawio",
     "docs/blah.pdf",

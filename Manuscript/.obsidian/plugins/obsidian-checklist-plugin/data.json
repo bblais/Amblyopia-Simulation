@@ -8,7 +8,7 @@
   "sortDirectionItems": "new->old",
   "sortDirectionGroups": "new->old",
   "sortDirectionSubGroups": "new->old",
-  "includeFiles": "daily notes/*",
+  "includeFiles": "{[0-9]*,daily notes/*}",
   "lookAndFeel": "compact",
   "_collapsedSections": [],
   "_hiddenTags": [],
