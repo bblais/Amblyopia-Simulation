@@ -262,10 +262,47 @@ resulting in a pair of images which have no overlap at the peaks of each mask, a
 
 ![mask_filter_example_fsig_20.png](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/mask_filter_example_fsig_20.png){#figref:mask_filter_example_fsig_20.png}
 
-# Results on Modeling Visual Deprivation
+# Results
+
+## Results on Modeling Visual Deprivation
+
+### Normal Rearing (NR)
+
+![ Normal Rearing - Responses](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702201941.png){#fig:Pasted_image_20240702201941.png}
+
+![ Normal Rearing - ODO vs time vs open-eye noise.](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702202409.png){#fig:Pasted_image_20240702202409.png}
 
 
-# Results on Modeling Treatments for Amblyopia
+
+### Monocular Deprivation (MD)
+
+![ Monocular Deprivation - responses](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702205444.png){#fig:Pasted_image_20240702205444.png}
+
+
+![ Monocular Deprivation - ODI](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702203436.png){#fig:Pasted_image_20240702203436.png}
+
+### Binocular Deprivation (BD)
+
+![ Binocular Deprivation - responses](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702203836.png){#fig:Pasted_image_20240702203836.png}
+
+![ Binocular Deprivation - ODI](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702203933.png){#fig:Pasted_image_20240702203933.png}
+
+
+## Results on Modeling Recovery from Visual Deprivation
+### Reverse Suture (RS)
+
+![ Reverse Suture - Responses](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702205625.png){#fig:Pasted_image_20240702205625.png}
+
+![ Reverse Suture - ODI](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702205702.png){#fig:Pasted_image_20240702205702.png}
+
+### Binocular Recovery (BR)
+
+![ Binocular Recovery - responses](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702210848.png){#fig:Pasted_image_20240702210848.png}
+
+![ Binocular Recovery - ODI](/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20240702210907.png){#fig:Pasted_image_20240702210907.png}
+
+
+## Results on Modeling Treatments for Amblyopia
 
 As expected, the recovery from the deficit using the glasses treatment depends on the open-eye noise, with greater recovery occurring for larger noise level (Figure [@fig:glasses_treatment]).  This is due to the fact that larger presynaptic activity drives larger weight changes, and the lack of structure in the noise drives the neuron to find the structure in the now-identical eye inputs.  The patch treatment (Figure [@fig:patch_treatment]) has a larger effect on recovery, again with larger noise resulting in faster recovery.   The reason for the enhanced recovery speed is that patch treatment sets up a direct competition between the structure presented to the amblyopic eye and the noise presented to the fellow eye.  
 
@@ -290,7 +327,7 @@ Using a treatment constructed from a contrast reduction in the fellow eye along 
 
 
 #todo 
-- [ ] do the same sims with the min activity at 0.5
+- [x] do the same sims with the min activity at 0.5
 
 
 

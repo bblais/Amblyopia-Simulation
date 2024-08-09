@@ -202,7 +202,7 @@ cb1 = mpl.colorbar.ColorbarBase(ax_cb, cmap=Blues2,
 ax_cb.tick_params(axis='y', which='major', labelsize=15)
 ax_cb.grid(True)
 plt.gcf().add_axes(ax_cb)
-
+title(r'$\sigma_{\mathrm{noise}}$',fontsize=15)
 
 
 # # MD
@@ -287,7 +287,16 @@ for params in tqdm(all_params):
     
     
 ylabel('Response')
+
+axvline(x=R.sequence_times[0][-1],color='black', ls='-',lw=2)
+text(mean(R.sequence_times[0]),45,'NR',ha='center')
+text(mean(R.sequence_times[1]),45,'MD',ha='center')
+
+plot([0],[0],'-',color=Oranges2(v[5]),label='Left (Deprived)')
+plot([0],[0],'-',color=Blues2(v[5]),label='Right (Non-Deprived)')
+legend(fontsize=15,loc='upper left')
 reformat_time_axis()
+
 
 
 divider = make_axes_locatable(plt.gca())
@@ -316,6 +325,12 @@ plt.gcf().add_axes(ax_cb2)
 
 title(r'$\sigma_{\mathrm{noise}}$',fontsize=15)
 
+
+
+# In[ ]:
+
+
+R.sequence_times
 
 
 # In[ ]:
@@ -452,6 +467,16 @@ for params in tqdm(all_params):
     
     
 ylabel('Response')
+ylim([0,60])
+
+axvline(x=R.sequence_times[0][-1],color='black', ls='-',lw=2)
+text(mean(R.sequence_times[0]),45,'NR',ha='center')
+text(mean(R.sequence_times[1]),45,'BD',ha='center')
+
+plot([0],[0],'-',color=Blues2(v[5]),label='Left (Deprived)')
+plot([0],[0],'-',color=Oranges2(v[5]),label='Right (Deprived)')
+legend(loc='upper left')
+
 reformat_time_axis()
 
 
@@ -524,6 +549,7 @@ ax_cb.tick_params(axis='y', which='major', labelsize=15)
 ax_cb.grid(True)
 plt.gcf().add_axes(ax_cb)
 
+title(r'$\sigma_{\mathrm{noise}}$',fontsize=15)
 
 
 # # RS
@@ -609,6 +635,19 @@ for params in tqdm(all_params):
     
 ylabel('Response')
 reformat_time_axis()
+
+#ylim([0,60])
+
+plot([0],[0],'-',color=Oranges2(v[5]),label='Left (Deprived)')
+plot([0],[0],'-',color=Blues2(v[5]),label='Right (Non-Deprived)')
+legend(fontsize=15,loc='upper left')
+
+axvline(x=R.sequence_times[0][-1],color='black', ls='-',lw=2)
+axvline(x=R.sequence_times[1][-1],color='black', ls='-',lw=2)
+text(mean(R.sequence_times[0]),45,'NR',ha='center')
+text(mean(R.sequence_times[1]),45,'MD',ha='center')
+text(mean(R.sequence_times[2]),45,'RS',ha='center')
+
 
 
 divider = make_axes_locatable(plt.gca())
@@ -767,6 +806,17 @@ ylabel('Response')
 reformat_time_axis()
 
 
+plot([0],[0],'-',color=Oranges2(v[5]),label='Left (Deprived)')
+plot([0],[0],'-',color=Blues2(v[5]),label='Right (Non-Deprived)')
+legend(fontsize=15,loc='upper left')
+
+axvline(x=R.sequence_times[0][-1],color='black', ls='-',lw=2)
+axvline(x=R.sequence_times[1][-1],color='black', ls='-',lw=2)
+text(mean(R.sequence_times[0]),52,'NR',ha='center')
+text(mean(R.sequence_times[1]),52,'MD',ha='center')
+text(mean(R.sequence_times[2]),52,'BR',ha='center')
+
+
 divider = make_axes_locatable(plt.gca())
 ax_cb = divider.new_horizontal(size="5%", pad=0.05)
 ax_cb.grid(False)
@@ -828,6 +878,7 @@ ax_cb.tick_params(axis='y', which='major', labelsize=15)
 ax_cb.grid(True)
 plt.gcf().add_axes(ax_cb)
 
+title(r'$\sigma_{\mathrm{noise}}$',fontsize=15)
 
 
 # In[ ]:
