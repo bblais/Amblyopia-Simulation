@@ -44,7 +44,7 @@ from scipy.io import loadmat
 
 # for whitening
 from scipy.fftpack import fft2, fftshift, ifft2, ifftshift
-from scipy import real,absolute
+from numpy import real,absolute
 
 
 def read_raw_vanhateren100(show=True):

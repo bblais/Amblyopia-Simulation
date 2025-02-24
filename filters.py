@@ -12,7 +12,7 @@ from scipy.io import loadmat
 
 # for whitening
 from scipy.fftpack import fft2, fftshift, ifft2, ifftshift
-from scipy import real,absolute
+from numpy import absolute,real
 
 def image2array(im):
     if im.mode not in ("L", "F"):
@@ -570,8 +570,8 @@ def set_resolution(var,resolution='uint8',verbose=False):
     if verbose:
         print( "Resolution %s -> %s" % (sr,tr))
     
-    mn=numpy.Inf
-    mx=-numpy.Inf
+    mn=numpy.inf
+    mx=-numpy.inf
     for im in var['im']:
         m=im.min()
         if m<mn:

@@ -330,10 +330,55 @@ class Results(object):
         t=hstack(tt)
         ORI=concatenate(LL,axis=1)
         return ORI
+
+    @property
+    def max_SF(self):
+        from numpy import hstack,concatenate,repeat,expand_dims,newaxis,log,argmax
+
+        tt=[]
+        LL=[]
+        for response in self.all_responses:
+            t,y=response    # k, theta, channel, neuron, time
+            y=y.max(axis=1)  # optimize over theta
+            rk=y.transpose([1,2,3,0])
+            L=self.k_mat[argmax(rk,axis=3)]
+            
+            tt.append(t)
+            L=L.transpose([2,1,0])  # want it to be time, neurons, channel
+            LL.append(L)
+        
+        t=hstack(tt)
+        kk=concatenate(LL,axis=0)
+
+        return kk
+
+    @property
+    def SF_Var(self):
+        from numpy import hstack,concatenate,repeat,expand_dims,newaxis,log,argmax
+        tt=[]
+        LL=[]
+        for response in self.all_responses:
+            t,y=response    # k, theta, channel, neuron, time
+            y=y.max(axis=1)  # optimize over theta
+            rk=y.transpose([1,2,3,0])
+            norm_rk=rk.sum(axis=3)
+            norm_rk=expand_dims(norm_rk,3)
+            kopt=repeat(self.k_mat[argmax(rk,axis=3)][:, :, :,newaxis],len(self.k_mat),axis=3)
+            L=(rk*(log(self.k_mat)-log(kopt))**2/norm_rk).sum(axis=3)
+            
+            tt.append(t)
+            L=L.transpose([2,1,0])  # want it to be time, neurons, channel
+            LL.append(L)
+        
+        t=hstack(tt)
+        kk=concatenate(LL,axis=0)        
+        return kk
     
     @property
     def ODI(self):
         return (self.y[:,:,1]-self.y[:,:,0])/(self.y[:,:,1]+self.y[:,:,0]) 
+
+
 
     
     @property
