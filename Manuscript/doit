@@ -1,0 +1,6 @@
+#!/bin/bash -x
+pandoc -standalone --csl config/neuron.csl --filter pandoc-crossref  --resource-path="resources/" --citeproc -o docs/Development-of-Amblyopia.docx Development-of-Amblyopia.md
+pandoc --standalone --csl config/neuron.csl --filter pandoc-crossref  --resource-path="resources/" --citeproc  --template=default_pandoc.tex -o docs/Development-of-Amblyopia.tex Development-of-Amblyopia.md
+pandoc --standalone --csl config/neuron.csl --filter pandoc-crossref  --resource-path="resources/" --citeproc  --template=default_pandoc.tex -o docs/Development-of-Amblyopia.pdf Development-of-Amblyopia.md
+open docs/Development-of-Amblyopia.pdf 
+

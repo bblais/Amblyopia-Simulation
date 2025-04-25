@@ -394,9 +394,13 @@ def filtered_images(fname,*args,resolution='uint16',
                     mask_filenames=sorted(glob(f['name']))
                     if not mask_filenames:
                         raise ValueError('No Masks matching pattern %s' % f['name'])
-                    chosen_mask=randint(0,len(mask_filenames),len(image_data['im']))
 
-                    actual_names=[mask_filenames[_] for _ in chosen_mask]
+                    if len(mask_filenames)==1:
+                        actual_names=mask_filenames[0]
+                    else:
+                        chosen_mask=randint(0,len(mask_filenames),len(image_data['im']))
+    
+                        actual_names=[mask_filenames[_] for _ in chosen_mask]
                     if verbose:
                         print("Actual masks: ",",".join(actual_names))
                 else:

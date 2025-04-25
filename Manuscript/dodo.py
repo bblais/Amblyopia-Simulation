@@ -4,8 +4,8 @@ from myobsidian import *
 
 #files=['1. Introduction.md']+ ['main.md']
 
-files=glob.glob('[0-9]*.md') + ['main.md']
-target_name='BCM-and-Amblyopia'
+files=['Ophthalmology Draft April 16 2025.md']
+target_name='Development of Amblyopia'
 
 
 def dir_exists(task):

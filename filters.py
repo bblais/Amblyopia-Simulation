@@ -57,7 +57,8 @@ def dog(sd1,sd2,size):
             g=g- 1./(2*pi*sd2*sd2)*numpy.exp(-x**2/2/sd2**2 -y**2/2/sd2**2)
     else:
         g=- 1./(2*pi*sd2*sd2)*numpy.exp(-x**2/2/sd2**2 -y**2/2/sd2**2)
-    
+
+    g=g-g.mean()
     return g
 
 def dog_filter(A,sd1=1,sd2=3,size=None,shape='valid',surround_weight=1):

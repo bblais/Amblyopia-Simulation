@@ -6,6 +6,8 @@
     "author": "multitext",
     "keywords": "multitext",
     "classoption": "multitext",
-    "autoSectionLabels": "checkbox"
+    "autoSectionLabels": "checkbox",
+    "geometry": "multitext",
+    "lineno": "text"
   }
 }
