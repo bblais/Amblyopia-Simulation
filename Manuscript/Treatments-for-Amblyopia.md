@@ -56,7 +56,12 @@ Paste your discussion here.
 
 ### Materials and Methods
 
-Paste your materials and methods section here.
+- deficit
+- patch
+- atropine
+- contrast
+- mask
+
 
 
 ### Acknowledgments

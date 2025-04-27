@@ -55,7 +55,11 @@ Paste your discussion here.
 
 ## Materials and Methods
 
-Paste your materials and methods section here.
+- natural images
+- MD vs BD
+- blur and jitter
+- recovery with glasses
+
 
 
 ## Acknowledgments
