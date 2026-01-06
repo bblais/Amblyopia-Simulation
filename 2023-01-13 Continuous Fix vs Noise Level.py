@@ -43,14 +43,14 @@ def to_named_tuple(params_list):
     keys=list(params_list[0].keys())
     keys+=['count']
     params=namedtuple('params',keys)
-    
+
     tuples_list=[]
     for count,p in enumerate(params_list):
         p2=params(count=count,
                   **p)
         tuples_list.append(p2)
-        
-        
+
+
     return tuples_list
 
 
@@ -91,7 +91,7 @@ def run_one_continuous_fix_jitter(params,
     import plasticnet as pn
     count,eta,noise,mu_c,sigma_c,number_of_neurons,sfname=(params.count,params.eta,params.noise,
                         params.mu_c,params.sigma_c,params.number_of_neurons,params.sfname)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
 
@@ -102,7 +102,7 @@ def run_one_continuous_fix_jitter(params,
         t=1*minute
         ts=1*second
 
-    
+
     seq+=fix_jitter(total_time=100*hour,
              save_interval=20*minute,number_of_neurons=params.number_of_neurons,
             mu_c=mu_c,sigma_c=sigma_c,
@@ -111,9 +111,9 @@ def run_one_continuous_fix_jitter(params,
 
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
-    
+
     return sfname
-    
+
 
 
 # In[9]:
@@ -125,11 +125,11 @@ def run_one_continuous_mask_jitter(params,
     import plasticnet as pn
     count,eta,contrast,mask,f,mu_c,sigma_c,number_of_neurons,sfname=(params.count,params.eta,params.contrast,params.mask,params.f,
                                         params.mu_c,params.sigma_c,params.number_of_neurons,params.sfname)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
 
-    
+
     seq=pn.Sequence()
 
     seq+=treatment_jitter(f=f,
@@ -144,10 +144,10 @@ def run_one_continuous_mask_jitter(params,
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
 
-    
+
     return sfname
-    
-    
+
+
 
 
 # In[ ]:
@@ -165,11 +165,11 @@ def run_one_continuous_blur_jitter(params,
     import plasticnet as pn
     count,blur,eta,noise,mu_c,sigma_c,number_of_neurons,sfname=(params.count,params.blur,params.eta,params.noise,
                                         params.mu_c,params.sigma_c,params.number_of_neurons,params.sfname)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
-    
-    
+
+
     seq=pn.Sequence()
     seq+=treatment_jitter(blur=blur,
                    noise=0.1,
@@ -178,14 +178,14 @@ def run_one_continuous_blur_jitter(params,
                     mu_c=mu_c,sigma_c=sigma_c,
                    eta=eta,
                    save_interval=20*minute)
-    
+
     seq_load(seq,deficit_base_sim)    
 
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
-    
+
     return sfname
-    
+
 
 
 # In[11]:
@@ -197,7 +197,7 @@ def run_one_continuous_patch_jitter(params,
     import plasticnet as pn
     count,eta,noise,mu_c,sigma_c,number_of_neurons,sfname=(params.count,params.eta,params.noise,
                         params.mu_c,params.sigma_c,params.number_of_neurons,params.sfname)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
 
@@ -218,10 +218,10 @@ def run_one_continuous_patch_jitter(params,
 
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
-    
+
     return sfname
-            
-    
+
+
 
 
 # In[12]:
@@ -234,16 +234,16 @@ noise_mat=linspace(0,1,11)
 all_params=[]
 for n,noise in enumerate(noise_mat):
     sfname=base+f'/continuous fix {number_of_neurons} neurons noise {noise:.1f}.asdf'
-    
+
     p=Struct()
     p.eta=eta
     p.number_of_neurons=number_of_neurons
     p.sfname=sfname
-    
+
     p.noise=noise
     p.mu_c=7
     p.sigma_c=0
-    
+
     all_params+=[p]
 
 all_params=to_named_tuple(all_params)  
@@ -285,16 +285,16 @@ closed_eye_noise_mat=linspace(0,1,21)
 all_params=[]
 for n,noise in enumerate(closed_eye_noise_mat):
     sfname=base+f'/continuous patch {number_of_neurons} neurons noise {noise:.1f}.asdf'
-    
+
     p=Struct()
     p.eta=eta
     p.number_of_neurons=number_of_neurons
     p.sfname=sfname
-    
+
     p.noise=noise
     p.mu_c=7
     p.sigma_c=0
-    
+
     all_params+=[p]
 
 all_params=to_named_tuple(all_params)  

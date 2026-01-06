@@ -34,6 +34,7 @@ sfname='sims/2023-01-13/continuous fix 25 neurons noise 1.0.asdf'
 R=Results(sfname)
 
 
+
 # In[11]:
 
 
@@ -43,8 +44,8 @@ plot(R.t,R.y[:,0,weak_i],'m',label='Weak Eye')
 for n in range(20):
     plot(R.t,R.y[:,n,0],'m')
     plot(R.t,R.y[:,n,1],'b')
-    
-    
+
+
 ylabel('Response')
 legend()
 print(sfname)
@@ -74,7 +75,7 @@ for n,noise in tqdm(enumerate(noise_mat)):
     idx1,idx2=R.sequence_index[0]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
+
     S+=noise,recovery_rate_μ,recovery_rate_σ
 
 
@@ -109,10 +110,10 @@ for n,noise in tqdm(enumerate(closed_eye_noise_mat)):
     idx1,idx2=R.sequence_index[0]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
+
     S+=noise,recovery_rate_μ,recovery_rate_σ    
-    
-    
+
+
 noise,recovery_rate_μ,recovery_rate_σ=S.arrays()    
 
 
@@ -140,7 +141,7 @@ closed_eye_noise_mat=linspace(0,1,11)
 S=Storage()
 
 count=0
-    
+
 for n,noise in tqdm(enumerate(closed_eye_noise_mat)):
     for b,blur in enumerate(atropine_blur_mat):
         sfname=base+f'/continuous atropine {number_of_neurons} neurons noise {noise:.1f} blur {blur:0.1f}.asdf'
@@ -156,7 +157,7 @@ for n,noise in tqdm(enumerate(closed_eye_noise_mat)):
 
         count+=1
 
-    
+
 noise,blur,recovery_rate_μ,recovery_rate_σ=S.arrays()        
 
 
@@ -186,23 +187,23 @@ color = cm.viridis(np.linspace(0, 1,n))
 noise,blur,recovery_rate_μ,recovery_rate_σ=atropine_result
 
 for b in range(blur_N):
-    
+
     if blur[0,b] in [0,1.5,3,4.5,6]:
         errorbar(noise[:,b],-recovery_rate_μ[:,b],yerr=2*recovery_rate_σ[:,b],elinewidth=1,
                  label=f'Blur {blur[0,b]}',color=color[b]) # positive = recovery
     else:
         errorbar(noise[:,b],-recovery_rate_μ[:,b],yerr=2*recovery_rate_σ[:,b],elinewidth=1,
                  color=color[b]) # positive = recovery
-        
-        
+
+
 noise,recovery_rate_μ,recovery_rate_σ=patch_result        
 errorbar(noise,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,color='r',label='Patch') # positive = recovery
-        
-        
+
+
 ylabel('Recovery Rate [ODI/day]')
 xlabel('Closed-Eye Noise Level')
 title('Atropine Treatment')
-    
+
 legend()
 
 
@@ -223,10 +224,10 @@ for c,contrast in enumerate(contrast_mat):
     idx1,idx2=R.sequence_index[0]
     t=R.t/day
     recovery_rate_μ,recovery_rate_σ=μσ((R.ODI[idx2,:]-R.ODI[idx1,:])/(t[idx2]-t[idx1]))  
-    
+
     S+=contrast,recovery_rate_μ,recovery_rate_σ    
-    
-    
+
+
 contrast,recovery_rate_μ,recovery_rate_σ=S.arrays()
 
 contrast_result=contrast,recovery_rate_μ,recovery_rate_σ
@@ -264,7 +265,7 @@ for fi,f in enumerate(f_mat):
 
         count+=1
 
-    
+
 f,contrast,recovery_rate_μ,recovery_rate_σ=S.arrays()        
 
 
@@ -290,20 +291,20 @@ color = cm.viridis(np.linspace(0, 1,n))
 
 f,contrast,recovery_rate_μ,recovery_rate_σ=mask_result
 for fi in range(f_N):
-    
+
     errorbar(contrast[fi,:],-recovery_rate_μ[fi,:],yerr=2*recovery_rate_σ[fi,:],elinewidth=1,
              label=f'Mask f {f[fi,0]}',color=color[fi]) # positive = recovery
 
-    
-    
+
+
 contrast,recovery_rate_μ,recovery_rate_σ=contrast_result
 errorbar(contrast,-recovery_rate_μ,yerr=2*recovery_rate_σ,elinewidth=1,color='r',label='No Mask') # positive = recovery
 
-    
+
 ylabel('Recovery Rate [ODI/day]')
 xlabel('Contrast')
 title('Contrast+Mask Treatment')
-    
+
 legend()
 
 

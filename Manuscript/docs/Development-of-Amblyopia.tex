@@ -6,7 +6,7 @@
 \usepackage{xcolor}
 \usepackage[height=11in,width=8.5in,top=3cm,bottom=3cm,left=2cm,right=2cm,headsep=10pt,letterpaper]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\setcounter{secnumdepth}{5}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -47,6 +47,21 @@
 % Allow footnotes in longtable head/foot
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -125,10 +140,6 @@
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\usepackage{lineno}
-\linenumbers
-
-
 \title{The Effect of Strabismus and Anisometropia on the Development of
 Amblyopia in Synaptic Plasticity Models}
 \author{}
@@ -155,7 +166,40 @@ Medical School
 
 \textbf{Email}: bblais@bryant.edu
 
-\subsubsection{Abstract}\label{abstract}
+Author Contributions**: Paste the author contributions here.
+
+\textbf{Competing Interest Statement}: No competing interests.
+
+\textbf{Classification}: Biological Sciences - Neuroscience
+
+\textbf{Keywords}: amblyopia, synaptic plasticity, vision
+
+\textbf{This PDF file includes}: - Main Text - Figures 1 to X - Tables 1
+to X
+
+\subsubsection{Abstract}\label{sec:abstract}
+
+\begin{itemize}
+\tightlist
+\item[$\boxtimes$]
+  Purpose: Investigate how strabismus and anisometropia affect amblyopia
+  development via BCM-based synaptic plasticity under naturalistic
+  input.
+\item[$\boxtimes$]
+  Methods: Feedforward model using natural image patches and the BCM
+  rule, implemented in PlasticNet (Python).
+\item[$\boxtimes$]
+  Results: Strabismus leads to monocular dominance; anisometropia causes
+  synaptic weakening; combined leads to more pronounced suppression.
+\item[$\boxtimes$]
+  Comparison: Model predictions aligned with observed patterns in human
+  amblyopia.
+\item[$\boxtimes$]
+  Implications: Insights into cortical development and intervention
+  timing.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 In this work we explore the development of amblyopia from the
 combination of strabismus (eye misalignment) and anisometropia (unequal
@@ -171,35 +215,574 @@ anisometropic deficits as well as treatment with corrective optics. The
 results show a remarkable robustness of ocular dominance to strabismic
 deficits where anisometropia produces strong ocular dominance shifts.
 
-\textbf{Significance Statement} Paste your significance statement here.
-Please note that it should not exceed 120 words, but should be at least
-50 words in length. It should not include any references.
+\textbf{Significance Statement}
 
-\section{Main Text}\label{main-text}
+\begin{quote}
+Paste your significance statement here. Please note that it should not
+exceed 120 words, but should be at least 50 words in length. It should
+not include any references.
+\end{quote}
 
-\subsection{Introduction}\label{introduction}
+\section{Main Text}\label{sec:main-text}
 
-Some review of amblyopia.\textsuperscript{2}
+\subsection{Introduction}\label{sec:introduction}
 
-\subsection{Results}\label{results}
+\begin{itemize}
+\tightlist
+\item[$\boxtimes$]
+  Define amblyopia, its causes, and forms (strabismic, anisometropic,
+  combined).
+\item[$\boxtimes$]
+  Emphasize the role of \textbf{binocular rivalry} and input
+  decorrelation.
+\item[$\boxtimes$]
+  Present synaptic plasticity as a computational tool for understanding
+  cortical development.
+\item[$\boxtimes$]
+  Highlight why BCM is biologically motivated (homeostatic sliding
+  threshold).
+\item[$\boxtimes$]
+  Gap: Few models apply BCM to naturalistic input under these specific
+  deficits.
+\item[$\boxtimes$]
+  Objective: Use a biologically inspired model to replicate amblyopia
+  development patterns and compare with human data.
+\end{itemize}
 
-Paste your results here.
+Amblyopia is the most common cause of vision loss in children, caused by
+refractive errors (anisometropic) or misalignment of the eyes
+(strabismus)\textsuperscript{2}. Since the unequal visual input to the
+brain can cause alterations in the synaptic pathways leading to a
+disparity in ocular dominance\textsuperscript{3}, it is important to
+understand the possible synaptic effects amblyopia can produce. The
+primary driver of synaptic changes occurs to this mismatch of inputs
+leading to the later visual areas of the brain. This mismatch is not due
+to intensity differences but is the result of different correlations in
+the input patterns presented to each eye\textsuperscript{4}.
 
-\subsection{Discussion}\label{discussion}
+In this paper we use a specific model of neural plasticity, the BCM
+model\textsuperscript{1}, to describe the development of amblyopia,
+exploring both the properties of refractive errors and eye misalignment.
+We explore the response of the visual system to various input pattern
+statistics, including natural images, and how these patterns affect the
+synaptic plasticity of the visual cortex. The BCM model is particularly
+well-suited for this task as it incorporates a homeostatic sliding
+threshold that adapts to the postsynaptic activity, allowing for a
+biologically motivated understanding of synaptic changes in response to
+visual input. Our model does not include a direct mechanism for
+binocular rivalry, but has the competition between the eyes driven by
+the temporal competition between patterns as is typical of the BCM
+model\textsuperscript{6}. We compare the results of simulation to human
+clinical data. This work will form the basis for further study allowing
+us to explore the treatments for amblyopia, such as patching or
+corrective optics, and how these treatments can be modeled within the
+BCM framework.
 
-Paste your discussion here.
+\subsection{Results}\label{sec:results}
 
-\subsection{Materials and Methods}\label{materials-and-methods}
+\begin{itemize}
+\tightlist
+\item[$\boxtimes$]
+  Control model: Balanced OD, well-formed receptive fields.
+\item[$\boxtimes$]
+  Strabismic input: Emergence of monocular neurons, OD histogram shift.
+  wrt jitter and blur
+\item[$\boxtimes$]
+  Anisometropic input: Bilateral input retained but eye with blur shows
+  weak synaptic weight.
+\item[$\boxtimes$]
+  Combined: Strong suppression of impaired eye; early onset of dominance
+  patterns.
+\item[$\boxtimes$]
+  Visualizations:
 
-Paste your materials and methods section here.
+  \begin{itemize}
+  \tightlist
+  \item[$\boxtimes$]
+    Weight evolution over time
+  \item[$\boxtimes$]
+    OD histogram shifts
+  \item[$\boxtimes$]
+    Sample receptive fields
+  \item[$\boxtimes$]
+    Quantitative comparisons to known amblyopia severity scores
+  \end{itemize}
+\end{itemize}
 
-\subsection{Acknowledgments}\label{acknowledgments}
+In simulations of normal development using the BCM learning rule within
+a natural image environment both eyes see identical patches from the
+scene differing only in some additive random noise. The neuron develops
+normal, oriented, binocular receptive fields in this balanced
+environment as shown in Figure~\ref{fig:normal_RF}.
+
+\subsubsection{Strabismic and Anisometropic
+Input}\label{sec:strabismic-and-anisometropic-input}
+
+According to the deficit model (Figure~\ref{fig:deficit_model}), ocular
+dominance is affected by the strabismic parameters (i.e.~the mean
+receptive field offset, \(\mu_c\), and the standard deviation of that
+offset, \(\sigma_c\)) and the anisometropic parameter (i.e.~the input
+blur). The BCM model predicts
+
+Figure~\ref{fig:y_vs_t_fix_n0} shows the maximum response to oriented
+stimuli for \(n=20\) neurons versus time. The neurons start in a naive
+state with random synaptic weights, and are presented with natural image
+input, blurred in the amblyopic eye and normal in the fellow eye. The
+ocular dominance index changes over time, shifting toward the fellow
+eye. Shown in Figure~\ref{fig:ODI_blur} that while the input blur from
+the model of anisometry results in significant ocular dominance shifts,
+the inter-eye shift (\(\mu_c\)) has little effect on the ocular
+dominance except at extreme values. Extreme is defined in terms of the
+receptive field size, which is 19 for all simulations in this work. For
+any given blur, even for a long simulation the ODI does not converge to
+a value of 1. The neuron retains binocularity with a bias toward the
+fellow eye.
+
+Note that for large shift compared to the receptive field size, the
+cells become nearly monocular -- responding to either the amblyopic or
+(more often) the fellow eye with little in between. This is a direct
+prediction from the BCM learning rule\textsuperscript{8}. All of these
+results are markedly robust to variation in the inter-eye jitter and
+across wide ranges of the anisometropic blur, as shown in
+Figure~\ref{fig:ODI_jitter_sigma}.
+
+\subsubsection{Recovery using optical
+correction}\label{sec:recovery-using-optical-correction}
+
+The ``fix'' treatment with optical correction reverses the deficit
+(Figure~\ref{fig:optical_correction_responses}) bringing the ODI back to
+zero. The dynamics of the reversal depends on the noise level in the
+open eye. Figure~\ref{fig:dODI_fix_vs_noise} shows the rate of recovery
+as a function of this noise. For low-noise, there is very little
+improvement. For large noise, \(\sigma_n=1\), the rate achieves 0.14
+{[}ODI/day{]}. This measure lets us compare different treatments, and
+determine which are the most effective under the model assumptions. The
+experimental observation is that glasses alone are only able to fully
+restore vision in 27\% of amblyopia cases\textsuperscript{9}, where the
+model would predict that eventually any deficit could be recovered
+eventually. This points to something in the physiology not accounted for
+in the model, but we can assume for practical reasons to use a small
+open-eye noise and compare rates of recovery rather than the magnitude
+of recovery.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Discussion}\label{sec:discussion}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Discussion
+
+  \begin{itemize}
+  \tightlist
+  \item[$\boxtimes$]
+    Interpretation:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Strabismus induces competition through decorrelation;
+      anisometropia affects gain.
+    \item[$\boxtimes$]
+      BCM captures competitive and homeostatic dynamics effectively.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Human data alignment: - {[} {]} Discuss match/mismatch to key
+    findings (e.g., sensitive periods, monocular deprivation effects).
+  \item[$\boxtimes$]
+    Significance:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Model supports hypothesis that distinct deficits have different
+      plasticity signatures.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Limitations:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      No recurrent, lateral, or bottom-up input
+    \item[$\boxtimes$]
+      Fixed V1 architecture
+    \item[$\boxtimes$]
+      Natural images but no eye movements except in the form of random
+      jitter
+    \end{itemize}
+  \item[$\boxtimes$]
+    Future work:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Add feedback, simulate treatment (patching), model recovery,
+      motion
+    \item[$\boxtimes$]
+      Explore different plasticity models in PlasticNet (e.g Hebbian
+      learning)
+    \end{itemize}
+  \item[$\boxtimes$]
+    BCM model with natural images reproduces known amblyopia effects
+    from strabismus and anisometropia.
+  \item[$\boxtimes$]
+    Differences in temporal correlation vs.~signal strength produce
+    distinct OD changes.
+  \item[$\boxtimes$]
+    Supports early intervention strategies based on synaptic dynamics.
+  \end{itemize}
+\end{enumerate}
+
+This work extends previous work on the BCM learning rule in natural
+environments to include anisometropic input combined with a model of eye
+misalignment and jitter to model the development of amblyopic deficits.
+
+While this model can account for many aspects of the development of
+amblyopia, there are some limitations that should motivate future work.
+There is no model of motion or temporal correlations in the input
+environment, thus this model as written can't address motion deficits in
+amblyopic patients. This limit could be addressed with a more elaborate
+model of moving natural image scenes and an additional temporal
+processing in the LGN or cortex. This model could also be extended to
+networks, looking at the structure of ocular dominance columns and their
+organization in deprived environments. Finally, a more fine-grained
+temporal model of plasticity such as STDP\textsuperscript{10} or calcium
+dynamics\textsuperscript{11,12} and its connection to BCM may lead to
+insights about the role of temporal effects in the development of
+amblyopia.
+
+Despite the limitations, this model reproduces many aspects of the
+development of amblyopia and optical correction treatments. One can see
+the different contributions of strabismus and anisometropia using the
+BCM model, as well as the parameter dependence of these contributions.
+Future work explores other common treatments, such as eye-patching,
+where the model can be used to compare the effectiveness of different
+treatments.
+
+\subsection{Materials and Methods}\label{sec:materials-and-methods}
+
+\subsubsection{Natural Image Input
+Environment}\label{sec:natural-image-input-environment}
+
+In order to approximate the visual system, we start with the following
+basic properties of the retina, LGN and cortex. There are approximately
+1000 photoreceptors feeding into 1 ganglion cell\textsuperscript{13,14}.
+The retina/LGN responses show a center-surround organization, but with a
+center diameter less than 1\(^o\)\textsuperscript{15}
+
+We use natural scene stimuli for the simulated inputs to the visual
+system (Figure~\ref{fig:orig}). We start with images taken with a
+digital camera, with dimensions 1200 pixels by 1600 pixels and 40\(^o\)
+by 60\(^o\) real-world angular dimensions (Figure~\ref{fig:orig}). These
+have intensities, \(I\), with mean value \(I_m\) and standard deviation
+\(I_\sigma\). To account for the light adaptation of the photoreceptors
+where the responses reflect the contrast, or difference from the mean,
+we get the photoreceptor responses from the image intensities
+as\textsuperscript{16} \[
+R=(I-I_m)/I_\sigma
+\] These responses are further processes with the ganglion responses
+modeled using a 32x32 pixel center-surround difference-of-Gaussians
+(DOG) filter to process the images, each pixel representing one
+photoreceptor (Figure~\ref{fig:Rdog}). The center-surround radius ratio
+used for the ganglion cell is 1:3, with balanced excitatory and
+inhibitory regions and normalized Gaussian profiles.
+
+\subsubsection{Two-eye architecture}\label{sec:two-eye-architecture}
+
+Shown in Figure~\ref{fig:arch} is the visual field, approximated here as
+a two-dimensional projection, to left and right retinal cells. These
+left and right retinal cells project to the left and right LGN cells,
+respectively, and finally to a single cortical cell. The LGN is assumed
+to be a simple relay, and does not modify the incoming retinal activity.
+It is important to understand that the model we are pursuing here is a
+\emph{single cortical cell} which receives input from both eyes.
+
+In the model, normal development is simulated with identical image
+patches presented to both eyes combined with small independent noise in
+each eye (Figure~\ref{fig:deficit_model}). The random noise is generated
+from a zero-mean normal distribution of a particular variance,
+representing the natural variation in responses of LGN neurons.
+Practically, the independent random noise added to each of the two-eye
+channels avoids the artificial situation of having mathematically
+identical inputs in the channels. The development of the deficit and the
+subsequent optical correction treatment are modeled with added filters
+and jitter to these image patches, as described below in Section
+sec.~\ref{sec:model-of-the-development-of-amblyopia}.
+
+For all of the simulations we use a 19x19 receptive field, which is a
+compromise between speed of simulation and the limits of spatial
+discretization. To help gather statistics on the responses, we simulate
+20 neurons at a time with an orthogonalization process applied to the
+weights\textsuperscript{17}. This ensures that we don't converge to the
+same receptive fields multiple times, biasing the counting.
+
+\subsubsection{Synaptic Modification}\label{sec:synaptic-modification}
+
+We use a single neuron and the parabolic form of the
+BCM\textsuperscript{1,18} learning rule for all of the simulations,
+where the synaptic modification depends on the postsynaptic activity,
+\(y\), in the following way for a single neuron
+
+\[
+y=\sigma\left(\sum_i x_i w_i \right)
+\] \[
+\frac{dw_i}{dt} = \eta y(y-\theta_M) x_i
+\] \[
+\frac{d\theta_M}{dt} = (y^2-\theta_M)/\tau
+\]
+
+where is \(x_i\) is the \(i\)th presynaptic input, \(w_i\) is the
+\(i\)th synaptic weight, and \(y\) is the postsynaptic output activity.
+The constant, \(\eta\), refers to the learning rate and the constant,
+\(\tau\), is what we call the memory-constant and is related to the
+speed of the sliding threshold. The transfer function,
+\(\sigma(\cdot)\), places minimum and maximum responses given a set of
+inputs and weights.
+
+The results are extremely robust to values of \(\eta\) and \(\tau\) ,
+which are generally chosen for practical, rather than theoretical,
+considerations. Each of these constants is related to the time-step for
+the simulations, but given the phenomenological nature of the BCM theory
+it is beyond the scope of this paper to make detailed comparisons
+between simulation time and real-time. Further, the fact that \(\tau\)
+can be changed within a factor of 100 with no noticeable effect, the
+experiments presented here cannot be used address the time-scales of the
+molecular mechanisms underlying synaptic modification. Whenever we refer
+to real-time units for a simulation, we approximate a single simulation
+iteration as 1 iteration = 0.2 seconds\textsuperscript{19}.
+
+In the BCM learning rule, weights decrease if \(y\) is less than the
+modification threshold,\(\theta_M\) , and increase if \(y\) is greater
+than the modification threshold. To stabilize learning, the modification
+threshold ``slides'' as a super-linear function of the output. The
+output, \(y\) , is related to the product of the inputs and the weights
+via a sigmoidal function, \(\sigma(\cdot)\), which places constraints on
+the values of the output, keeping it in the range -1 and 50. The
+interpretation of negative values is consistent with previous
+work\textsuperscript{20}, where the activity values are measured
+relative to spontaneous activity. Thus, negative values are interpreted
+as activity below spontaneous. We continue this usage, in order to more
+easily compare with previous simulations. The role of the spontaneous
+level for the simulations in the natural image environment is discussed
+elsewhere\textsuperscript{20}.
+
+The synaptic weights, and the modification threshold, are set to small
+random initial values at the beginning of a simulation. At each
+iteration, an input patch is generated as described above depending on
+the procedure being simulated and then presented to the neuron. After
+each input patch is presented, the weights are modified using the output
+of the neuron, the input values and the current value of the
+modification threshold. In an input environment composed of patches
+taken from natural images, with equal patches presented to the left- and
+right-eyes, this process orientation selective and fully binocular
+cells\textsuperscript{20}. We then present test stimulus made from
+sine-gratings with 24 orientations, 20 spatial frequencies, and
+optimized over phase. Applying any of the blur filters to the sine
+gratings does not quantitatively change the result.
+
+\subsubsection{Ocular Dominance Index and
+Recovery}\label{sec:ocular-dominance-index-and-recovery}
+
+Simulations are ended when selectivity has been achieved and the
+responses are stable. From the maximal responses of each eye,
+\(R_{\text{left}}\) and \(R_{\text{right}}\), individually, we can
+calculate the ocular dominance index as \[
+\text{ODI} \equiv \frac{R_{\text{right}}-R_{\text{left}}}{R_{\text{right}}+R_{\text{left}}}
+\] The ocular dominance index (ODI) has a value of
+\(\text{ODI} \approx 1\) when stimulus to the right-eye (typically the
+strong eye in the simulations, by convention) yields a maximum neuronal
+response with little or no contribution from the left-eye. Likewise, an
+ocular dominance index (ODI) has a value of \(\text{ODI} \approx -1\)
+when stimulus to the left-eye (typically the weak eye, by convention)
+yields a maximum neuronal response with little or no contribution from
+the right-eye. A value of \(\text{ODI} \approx 0\) represents a purely
+binocular cell, responding equally to stimulus in either eye.
+
+A simple measure of the effectiveness of the treatment is the
+\emph{rate} of the recovery of the ODI:
+
+\[
+\text{recovery rate}=\frac{ODI_{\text{deficit}}-ODI_{\text{treatment}}}{\text{duration of treatment}}
+\]
+
+\subsubsection{Model of the Development of
+Amblyopia}\label{sec:model-of-the-development-of-amblyopia}
+
+The model of the vision deficit is shown in
+Figure~\ref{fig:deficit_model}. Amblyopia is achieved by an imbalance in
+right and left inputs, and treated with a re-balance or a
+counter-balance of those inputs (e.g.~optical correction). In this work,
+we model the initial deficit as resulting from an asymmetric
+\emph{blurring} of the visual inputs, as would be produced by a
+refractive difference between the eyes. The amblyopic eye is presented
+with image patches that have been \emph{blurred} with a normalized
+Gaussian filter applied to the images with a specified width. The larger
+the width the blurrier the resulting filtered image
+(Figure~\ref{fig:blur_filter}) which results in a larger ODI shift
+(Figure~\ref{fig:ODI_blur}). Using a blur filter size of 2.5 pixels
+produces a robust deficit in the simulations, and thus we use this
+deficit as the starting point for all of the treatment simulations.
+
+We explore the effect of eye misalignment and jitter by randomly
+shifting the overlap between the eyes each input patch, specified with a
+mean shift \(\mu\) and standard deviation \(\sigma\).
+
+To model the fix to the refractive imbalance we follow the deficit
+simulation with an input environment that is rebalanced, both eyes
+receiving nearly identical input patches. This process is a model of the
+application of the optical correction using glasses. Although both eyes
+receive nearly identical input patches, we add independent Gaussian
+noise to each input channel to represent the natural variation in the
+activity in each eye.
+
+\#todo
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Figures
+
+  \begin{itemize}
+  \item[$\boxtimes$]
+    fig:deficit
+  \item[$\boxtimes$]
+    fig:y\_vs\_t\_fix\_n0
+  \item[$\boxtimes$]
+    ODI\_blur
+  \item[$\boxtimes$]
+    ODI\_jitter\_sigma
+  \item[$\boxtimes$]
+    fig:optical\_correction\_responses
+  \item[$\boxtimes$]
+    fig:dODI\_fix\_vs\_noise
+  \item[$\boxtimes$]
+    blur filter applied to images
+  \item[$\boxtimes$]
+    BCM Theory:
+  \item[$\boxtimes$]
+    Postsynaptic activity-dependent learning.
+  \item[$\boxtimes$]
+    Threshold \(\theta_M\) adapts over time, supporting selectivity and
+    stability.
+  \item[$\boxtimes$]
+    Strabismus Effects:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Temporal decorrelation between eyes --\textgreater{} reduced
+      correlated activity --\textgreater{} interocular competition.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Anisometropia Effects:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Image degradation (blur, contrast) --\textgreater{} lower activity
+      --\textgreater{} synaptic weakening.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Natural Image Inputs:
+  \item[$\boxtimes$]
+    Better approximates realistic developmental stimuli than synthetic
+    gratings.
+  \end{itemize}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Methods
+
+  \begin{itemize}
+  \tightlist
+  \item[$\boxtimes$]
+    PlasticNet architecture:
+  \item[$\boxtimes$]
+    Feedforward input from two ``eyes'' (image patches from stereo pairs
+    or simulated disparity).
+  \item[$\boxtimes$]
+    BCM learning rule applied to V1-like units.
+  \item[$\boxtimes$]
+    Input manipulations:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Strabismus: Introduce temporal desynchronization or uncorrelated
+      patches across eyes.
+    \item[$\boxtimes$]
+      Anisometropia: Blur or reduce contrast in one eye.
+    \item[$\boxtimes$]
+      Combined: Both manipulations simultaneously.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Training protocol:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Exposure to sequences of natural images with/without deficits.
+    \item[$\boxtimes$]
+      Sliding threshold dynamics calibrated to developmental timescales.
+    \end{itemize}
+  \item[$\boxtimes$]
+    Evaluation metrics:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\boxtimes$]
+      Ocular dominance index (ODI)
+    \item[$\square$]
+      Output activity levels and selectivity?
+    \end{itemize}
+  \item[$\square$]
+    Comparison:
+
+    \begin{itemize}
+    \tightlist
+    \item[$\square$]
+      Human data on monocular dominance histograms, acuity loss, and
+      contrast sensitivity?
+    \end{itemize}
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Acknowledgments}\label{sec:acknowledgments}
 
 Paste your acknowledgments here.
 
-\subsection{References}\label{references}
+\subsection{References}\label{sec:references}
 
-\phantomsection\label{refs}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\item
+  References
+
+  \begin{itemize}
+  \tightlist
+  \item[$\boxtimes$]
+    Classic amblyopia clinical papers
+  \item[$\boxtimes$]
+    BCM theory literature
+  \item[$\boxtimes$]
+    Computational models of V1
+  \item[$\boxtimes$]
+    Human developmental vision studies
+  \end{itemize}
+\end{enumerate}
+
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
 \bibitem[\citeproctext]{ref-BCM82}
 \CSLLeftMargin{1. }%
@@ -208,25 +791,240 @@ Theory for the development of neuron selectivity: Orientation
 specificity and binocular interaction in visual cortex. Journal of
 Neuroscience \emph{2}, 32--48.}
 
-\bibitem[\citeproctext]{ref-thompsonNeuralPlasticityAmblyopia2021}
+\bibitem[\citeproctext]{ref-de2007current}
 \CSLLeftMargin{2. }%
-\CSLRightInline{Thompson, B. (2021). Neural {Plasticity} in {Amblyopia}.
-In Oxford {Research Encyclopedia} of {Psychology} (Oxford University
-Press). \url{https://doi.org/10.1093/acrefore/9780190236557.013.702}.}
+\CSLRightInline{de Zárate, B.R., and Tejedor, J. (2007). Current
+concepts in the management of amblyopia. Clinical ophthalmology
+(Auckland, NZ) \emph{1}, 403.}
+
+\bibitem[\citeproctext]{ref-birch2013amblyopia}
+\CSLLeftMargin{3. }%
+\CSLRightInline{Birch, E.E. (2013). Amblyopia and binocular vision.
+Progress in retinal and eye research \emph{33}, 67--84.}
+
+\bibitem[\citeproctext]{ref-blakemoreConditionsRequiredMaintenance1976}
+\CSLLeftMargin{4. }%
+\CSLRightInline{Blakemore, C. (1976). The conditions required for the
+maintenance of binocularity in the kitten's visual cortex. The Journal
+of Physiology \emph{261}, 423--444.
+\url{https://doi.org/10.1113/jphysiol.1976.sp011566}.}
+
+\bibitem[\citeproctext]{ref-blaisRolePresynapticActivity1999}
+\CSLLeftMargin{5. }%
+\CSLRightInline{Blais, B., Shouval, H., and Cooper, L.N. (1999). The
+role of presynaptic activity in monocular deprivation: {Comparison} of
+homosynaptic and heterosynaptic mechanisms. Proceedings of the National
+Academy of Sciences \emph{96}, 1083--1087.}
+
+\bibitem[\citeproctext]{ref-cooperTheoryCorticalPlasticity2004}
+\CSLLeftMargin{6. }%
+\CSLRightInline{Cooper, L.N., Intrator, N., Shouval, H.Z., and Blais,
+B.S. (2004).
+\href{https://books.google.com/books?hl=en&lr=&id=xQvJCgAAQBAJ&oi=fnd&pg=PR3&dq=theory+of+cortical+plasticity&ots=xBvN2tCKav&sig=XNL6fAMSzJ0rYN5QBkEOUmcohVo}{Theory
+of cortical plasticity (with software package "plasticity")} (World
+Scientific).}
+
+\bibitem[\citeproctext]{ref-clothiaux1991synaptic}
+\CSLLeftMargin{7. }%
+\CSLRightInline{Clothiaux, E.E., Bear, M.F., and Cooper, L.N. (1991).
+Synaptic plasticity in visual cortex: Comparison of theory with
+experiment. Journal of Neurophysiology \emph{66}, 1785--1804.}
+
+\bibitem[\citeproctext]{ref-IntratorCooper92}
+\CSLLeftMargin{8. }%
+\CSLRightInline{Intrator, N., and Cooper, L.N. (1992).
+\href{ftp://cns.brown.edu/nin/papers/cooper.ps.Z}{Objective function
+formulation of the {BCM} theory of visual cortical plasticity:
+{Statistical} connections, stability conditions}. Neural Networks
+\emph{5}, 3--17.}
+
+\bibitem[\citeproctext]{ref-wallace2006treatment}
+\CSLLeftMargin{9. }%
+\CSLRightInline{Wallace, D., Cotter, S., Edwards, A., Beck, R., Group,
+P.E.D.I., et al. (2006). Treatment of amblyopia with refractive
+correction alone. Investigative Ophthalmology \& Visual Science
+\emph{47}, 4310--4310.}
+
+\bibitem[\citeproctext]{ref-bushReconcilingSTDPBCM2010}
+\CSLLeftMargin{10. }%
+\CSLRightInline{Bush, D., Philippides, A., Husbands, P., and O'Shea, M.
+(2010). Reconciling the {STDP} and {BCM Models} of {Synaptic Plasticity}
+in a {Spiking Recurrent Neural Network}. Neural Computation \emph{22},
+2059--2085. \url{https://doi.org/10.1162/NECO_a_00003-Bush}.}
+
+\bibitem[\citeproctext]{ref-Yeung:2004uq}
+\CSLLeftMargin{11. }%
+\CSLRightInline{Yeung, L.C., Shouval, H.Z., Blais, B.S., and Cooper,
+L.N. (2004). Synaptic homeostasis and input selectivity follow from a
+calcium-dependent plasticity model. Proceedings of the National Academy
+of Sciences of the United States of America \emph{101}, 14943--14948.
+\url{https://doi.org/10.1073/pnas.0405555101}.}
+
+\bibitem[\citeproctext]{ref-Yeung2003437}
+\CSLLeftMargin{12. }%
+\CSLRightInline{Yeung, L.C., Blais, B.S., Cooper, L.N., and Shouval,
+H.Z. (2003). Calcium as the associative signal for a model of {Hebbian}
+plasticity: Application to multi-input environments. Neurocomputing
+\emph{52--54}, 437--440.
+\href{https://doi.org/DOI:\%2010.1016/S0925-2312(02)00866-4}{https://doi.org/DOI:
+10.1016/S0925-2312(02)00866-4}.}
+
+\bibitem[\citeproctext]{ref-JeonEtAl1998}
+\CSLLeftMargin{13. }%
+\CSLRightInline{Jeon, C.J., Strettoi, E., and Masland, R.H. (1998). The
+major cell populations of the mouse retina. The Journal of neuroscience
+: the official journal of the Society for Neuroscience \emph{18},
+8936--8946.}
+
+\bibitem[\citeproctext]{ref-SterlingEtAl1988}
+\CSLLeftMargin{14. }%
+\CSLRightInline{Sterling, P., Freed, M.A., and Smith, R.G. (1988).
+Architecture of rod and cone circuits to the on-beta ganglion cell. The
+Journal of neuroscience : the official journal of the Society for
+Neuroscience \emph{8}, 623--642.}
+
+\bibitem[\citeproctext]{ref-hubel1995eye}
+\CSLLeftMargin{15. }%
+\CSLRightInline{Hubel, D.H. (1995). Eye, brain, and vision. (Scientific
+American Library/Scientific American Books).}
+
+\bibitem[\citeproctext]{ref-carandini2012normalization}
+\CSLLeftMargin{16. }%
+\CSLRightInline{Carandini, M., and Heeger, D.J. (2012). Normalization as
+a canonical neural computation. Nature Reviews Neuroscience \emph{13},
+51--62.}
+
+\bibitem[\citeproctext]{ref-hyvarinenFastRobustFixedpoint1999}
+\CSLLeftMargin{17. }%
+\CSLRightInline{Hyvarinen, A. (1999). Fast and robust fixed-point
+algorithms for independent component analysis. IEEE Transactions on
+Neural Networks \emph{10}, 626--634.
+\url{https://doi.org/10.1109/72.761722}.}
+
+\bibitem[\citeproctext]{ref-blaisRecoveryMonocularDeprivation2008}
+\CSLLeftMargin{18. }%
+\CSLRightInline{Blais, B.S., Frenkel, M.Y., Kuindersma, S.R., Muhammad,
+R., Shouval, H.Z., Cooper, L.N., and Bear, M.F. (2008). Recovery from
+monocular deprivation using binocular deprivation. Journal of
+neurophysiology \emph{100}, 2217--2224.
+\url{https://doi.org/10.1152/jn.90411.2008}.}
+
+\bibitem[\citeproctext]{ref-blaisRoleEnvironmentSynaptic1998}
+\CSLLeftMargin{19. }%
+\CSLRightInline{Blais, B.S. (1998). The role of the environment in
+synaptic plasticity: {Towards} an understanding of learning and memory.}
+
+\bibitem[\citeproctext]{ref-blaisReceptiveFieldFormation1998}
+\CSLLeftMargin{20. }%
+\CSLRightInline{Blais, B.S., Intrator, N., Shouval, H., and Cooper, L.N.
+(1998). Receptive field formation in natural scene environments:
+Comparison of single cell learning rules. Neural Computation \emph{10},
+1797--1813.}
 
 \end{CSLReferences}
 
-\subsection{Figures and Tables}\label{figures-and-tables}
+\subsection{Figures and Tables}\label{sec:figures-and-tables}
 
-\textbf{Figure 1.}
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Receptive fields formed in a normal, balanced, natural image environment. Every simulation produces oriented, binocular receptive fields. Shown are the synaptic weights where white denotes strong weights and black denotes weak weights.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250609133701.png}}
+\caption{Receptive fields formed in a normal, balanced, natural image
+environment. Every simulation produces oriented, binocular receptive
+fields. Shown are the synaptic weights where white denotes strong
+weights and black denotes weak weights.}\label{fig:normal_RF}
+\end{figure}
 
-\textbf{Figure 2.} Type or paste legend here. Paste figure above the
-legend.
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Binocular vision model. In the case of developing amblyopia, one channel (the amblyopic eye) has a blur filter before the retinal processing and the two channels have a relative offset and jitter, specified by a mean offset \textbackslash mu\_c and a standard deviation of the offset \textbackslash sigma\_c. The model for optical correction (i.e.~with glasses) the model is modified by removing the blur filter but the relative offset and jitter remains unchanged.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250530110214.png}}
+\caption{Binocular vision model. In the case of developing amblyopia,
+one channel (the amblyopic eye) has a blur filter before the retinal
+processing and the two channels have a relative offset and jitter,
+specified by a mean offset \(\mu_c\) and a standard deviation of the
+offset \(\sigma_c\). The model for optical correction (i.e.~with
+glasses) the model is modified by removing the blur filter but the
+relative offset and jitter remains unchanged.}\label{fig:deficit_model}
+\end{figure}
 
-\textbf{Table 1.} Type or paste table title here. Paste table below the
-title.
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Response to oriented stimuli in a an environment where the amblyopic eye is given blurred natural image inputs and the fellow eye is presented with normal visual input. The response of the two eye is comparable for some time and then diverge, with a growing disparity between the two eyes.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250624114812.png}}
+\caption{Response to oriented stimuli in a an environment where the
+amblyopic eye is given blurred natural image inputs and the fellow eye
+is presented with normal visual input. The response of the two eye is
+comparable for some time and then diverge, with a growing disparity
+between the two eyes.}\label{fig:y_vs_t_fix_n0}
+\end{figure}
 
-\textbf{Table 2.} Type or paste table title here. Paste table below the
-title.
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Effect of eye-jitter and blur on ocular dominance. While the input blur from the model of anisometry results in significant ocular dominance shifts, the eye-jitter has little effect on the ocular dominance except at extreme values. Note that \textbackslash sigma\_c=2 for these simulations.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250624115352.png}}
+\caption{Effect of eye-jitter and blur on ocular dominance. While the
+input blur from the model of anisometry results in significant ocular
+dominance shifts, the eye-jitter has little effect on the ocular
+dominance except at extreme values. Note that \(\sigma_c=2\) for these
+simulations.}\label{fig:ODI_blur}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Effect of eye-jitter and blur on ocular dominance. While the input blur from the model of anisometry results in significant ocular dominance shifts, the eye-jitter has little effect on the ocular dominance except at extreme values. Note: \textbackslash mu\_c=7.5}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250530114201.png}}
+\caption{Effect of eye-jitter and blur on ocular dominance. While the
+input blur from the model of anisometry results in significant ocular
+dominance shifts, the eye-jitter has little effect on the ocular
+dominance except at extreme values. Note:
+\(\mu_c=7.5\)}\label{fig:ODI_jitter_sigma}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Response to oriented stimuli in a an environment where the amblyopic eye is given the deficit (blurred natural image inputs and the fellow eye is presented with normal visual input) followed by normal visual input to both eyes representing optical correction. The response of the two eye is comparable for some time and then diverge, with a growing disparity between the two eyes then the optical correction brings the responses to both eyes closer together.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250625084345.png}}
+\caption{Response to oriented stimuli in a an environment where the
+amblyopic eye is given the deficit (blurred natural image inputs and the
+fellow eye is presented with normal visual input) followed by normal
+visual input to both eyes representing optical correction. The response
+of the two eye is comparable for some time and then diverge, with a
+growing disparity between the two eyes then the optical correction
+brings the responses to both eyes closer
+together.}\label{fig:optical_correction_responses}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Rate of recovery from the optical correction depending in the open-eye noise. The BCM rule predicts an increase in the rate of recovery with larger channel noise because the synaptic modification is driven partly by presynaptic activity.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250625090120.png}}
+\caption{Rate of recovery from the optical correction depending in the
+open-eye noise. The BCM rule predicts an increase in the rate of
+recovery with larger channel noise because the synaptic modification is
+driven partly by presynaptic activity.}\label{fig:dODI_fix_vs_noise}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Original images}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/original_images.png}}
+\caption{Original images}\label{fig:orig}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Retinal responses represented in greyscale, with white and black representing high and low responses, respectively. The retinal responses are the result of a 1:3 center-surround filter to model the ganglion response properties.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/fig-Rdog.png}}
+\caption{Retinal responses represented in greyscale, with white and
+black representing high and low responses, respectively. The retinal
+responses are the result of a 1:3 center-surround filter to model the
+ganglion response properties.}\label{fig:Rdog}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Two-eye architecture}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250530110113.png}}
+\caption{Two-eye architecture}\label{fig:arch}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The effect of blurring on the natural images. Shown are the original (upper left) and progressively larger blur filters of 3, 6, and 9-pixel filters.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250624150519.png}}
+\caption{The effect of blurring on the natural images. Shown are the
+original (upper left) and progressively larger blur filters of 3, 6, and
+9-pixel filters.}\label{fig:blur_filter}
+\end{figure}
 
 \end{document}

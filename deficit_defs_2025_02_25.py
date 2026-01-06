@@ -10,6 +10,7 @@ import process_images_hdf5 as pi5
 import os
 from savevars import savevars,loadvars
 from tqdm.notebook import tqdm
+import ray
 
 import platform
 _debug = 'Darwin' in platform.platform()
@@ -22,8 +23,6 @@ if _debug:
 print(platform.platform())
 
 from numpy import linspace,array,meshgrid
-import ray
-
 
 from collections import namedtuple
 
@@ -204,6 +203,68 @@ class ResultsExtension(Extension):
 
 asdf.get_config().add_extension(ResultsExtension())
 
+import numpy as np
+from scipy.optimize import curve_fit
+from scipy.integrate import simpson
+
+# Step 1: Define 7-parameter Difference of Gaussians model
+def dog_7param(SF, R0, Ke, mu_e, sigma_e, Ki, mu_i, sigma_i):
+    return (R0 +
+            Ke * np.exp(-((SF - mu_e)**2) / (2 * sigma_e**2)) -
+            Ki * np.exp(-((SF - mu_i)**2) / (2 * sigma_i**2)))
+
+# Step 2: Fit the model to data
+def fit_dog_model(SF_data, R_data):
+    # Reasonable initial guesses
+    R0_init = np.min(R_data)
+    Ke_init = np.max(R_data)
+    mu_e_init = SF_data[np.argmax(R_data)]
+    sigma_e_init = 1.0
+    Ki_init = Ke_init / 2
+    mu_i_init = mu_e_init * 1.5
+    sigma_i_init = 2.0
+
+    p0 = [R0_init, Ke_init, mu_e_init, sigma_e_init, Ki_init, mu_i_init, sigma_i_init]
+
+    # Fit with bounds to keep parameters in reasonable range
+    bounds = (
+        [-np.inf, 0, 0, 1e-3, 0, 0, 1e-3],  # lower bounds
+        [np.inf, np.inf, np.inf, np.inf, np.inf, np.inf, np.inf]  # upper bounds
+    )
+
+    popt, _ = curve_fit(dog_7param, SF_data, R_data, p0=p0, bounds=bounds)
+    return popt
+
+# Step 3: Compute LSFV
+def compute_lsfv(popt, n_points=1000):
+    R0, Ke, mu_e, sigma_e, Ki, mu_i, sigma_i = popt
+
+    # Define function R(SF)
+    def R(SF):
+        return dog_7param(SF, *popt)
+
+    # Find optimal SF numerically (dense grid)
+    SF_grid = np.logspace(np.log10(0.01), np.log10(100), 1000)
+    R_vals = R(SF_grid)
+    SF_opt = SF_grid[np.argmax(R_vals)]
+
+    # Define integration range (opt/16 to opt)
+    SF_low = SF_opt / 16
+    SF_range = np.logspace(np.log10(SF_low), np.log10(SF_opt), n_points)
+    log_SF = np.log(SF_range)
+    R_vals = R(SF_range)
+
+    # Numerator and denominator
+    numerator = R_vals * (log_SF - np.log(SF_opt))**2
+    denom = R_vals
+
+    # Integrate in d(log SF)
+    lsfv = simpson(numerator, log_SF) / simpson(denom, log_SF)
+    return lsfv, SF_opt
+
+
+
+
 
 class Results(object):
 
@@ -353,6 +414,10 @@ class Results(object):
 
         return kk
 
+
+
+
+
     @property
     def SF_Var(self):
         from numpy import hstack,concatenate,repeat,expand_dims,newaxis,log,argmax
@@ -493,6 +558,59 @@ class Results(object):
             σ_mat.append(σ)
 
         return μ_mat,σ_mat
+
+
+    def W_image(self,num_rows=3,num_cols=4,buffer=2):
+        import numpy as np
+
+        weight_images=[]
+        inputs_per_channel=self.W.shape[-1] // self.num_channels
+        for c in range(self.num_channels):
+
+            weights=self.W[-1,:,inputs_per_channel*c:inputs_per_channel*(c+1)]
+
+            num_neurons=len(weights)
+
+            num_cols=int(np.ceil(np.sqrt(num_neurons)))
+            num_rows=int(np.ceil(num_neurons/num_cols))
+
+            rf_size=self.rf_size
+
+            W=weights.reshape((num_neurons,
+                                1,
+                                rf_size,rf_size))
+
+            vmin,vmax=W.min(),W.max()
+
+            count=0
+            blocks=[]
+            for row in range(num_rows):
+                block_row=[]
+                for col in range(num_cols):
+                    rf=W[count,0,:,:]
+                    block_row.append(rf)
+                    if col<num_cols-1:
+                        block_row.append(vmax*np.ones((rf_size,1)))
+
+                    count+=1
+
+                blocks.append(block_row)
+
+                if row<num_rows-1:
+                    block_row=[]
+                    for col in range(num_cols):
+                        block_row.append(vmax*np.ones((buffer,rf_size)))
+                        if col<num_cols-1:
+                            block_row.append(vmax*np.ones((buffer,1)))
+                    blocks.append(block_row)
+
+            weight_images.append(np.block(blocks))
+
+        if len(weight_images)==1:
+            return weight_images[0]
+        else:
+            return weight_images
+
 
     def weight_image(self,W):
         return W.reshape((self.num_neurons,self.num_channels,self.rf_size,self.rf_size))
@@ -1015,24 +1133,26 @@ def make_do_params(all_params,verbose=False):
     return do_params
 
 
+# In[ ]:
+
 
 def to_named_tuple(params_list):
     from collections import namedtuple
     keys=list(params_list[0].keys())
     keys+=['count']
     params=namedtuple('params',keys)
-    
+
     tuples_list=[]
     for count,p in enumerate(params_list):
         p2=params(count=count,
                   **p)
         tuples_list.append(p2)
-        
-        
+
+
     return tuples_list
 
 
-    
+
 # In[ ]:
 
 
@@ -1771,9 +1891,4 @@ def seq_load(seq,fname):
         c[0].reset_to_initial=True
         c[0].initial_theta=theta[-1]        
         c[0]._reset()
-
-
-
-# In[ ]:
-
 

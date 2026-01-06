@@ -362,6 +362,9 @@ def filtered_images(fname,*args,resolution='uint16',
             if T=='blur':
                 image_data=make_blur(image_data,f['size'],
                                     verbose=verbose)
+            elif T=="zoom":
+                image_data=make_zoom(image_data,f['scale'],
+                                    verbose=verbose)                
             elif T=="norm":
                 image_data=make_norm(image_data,
                                     verbose=verbose)                

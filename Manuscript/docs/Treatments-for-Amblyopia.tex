@@ -1,0 +1,609 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[height=11in,width=8.5in,top=3cm,bottom=3cm,left=2cm,right=2cm,headsep=10pt,letterpaper]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\makeatletter
+\@ifpackageloaded{subfig}{}{\usepackage{subfig}}
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\captionsetup[subfloat]{margin=0.5em}
+\AtBeginDocument{%
+\renewcommand*\figurename{Figure}
+\renewcommand*\tablename{Table}
+}
+\AtBeginDocument{%
+\renewcommand*\listfigurename{List of Figures}
+\renewcommand*\listtablename{List of Tables}
+}
+\newcounter{pandoccrossref@subfigures@footnote@counter}
+\newenvironment{pandoccrossrefsubfigures}{%
+\setcounter{pandoccrossref@subfigures@footnote@counter}{0}
+\begin{figure}\centering%
+\gdef\global@pandoccrossref@subfigures@footnotes{}%
+\DeclareRobustCommand{\footnote}[1]{\footnotemark%
+\stepcounter{pandoccrossref@subfigures@footnote@counter}%
+\ifx\global@pandoccrossref@subfigures@footnotes\empty%
+\gdef\global@pandoccrossref@subfigures@footnotes{{##1}}%
+\else%
+\g@addto@macro\global@pandoccrossref@subfigures@footnotes{, {##1}}%
+\fi}}%
+{\end{figure}%
+\addtocounter{footnote}{-\value{pandoccrossref@subfigures@footnote@counter}}
+\@for\f:=\global@pandoccrossref@subfigures@footnotes\do{\stepcounter{footnote}\footnotetext{\f}}%
+\gdef\global@pandoccrossref@subfigures@footnotes{}}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Synaptic Plasticity Model Predicts Optimum Treatment Parameters for Amblyopia},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Synaptic Plasticity Model Predicts Optimum Treatment Parameters
+for Amblyopia}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Main Manuscript for}\label{sec:main-manuscript-for}
+
+\textbf{Synaptic Plasticity Model Predicts Optimum Treatment Parameters
+for Amblyopia}
+
+Brian S. Blais\(^{1*}\) and Eric Gaier\(^{2,3}\)
+
+\(^{1}\)Department of Biological and Biomedical Sciences, Bryant
+University
+
+\(^{2}\)Picower Institute for Learning and Memory, Massachusetts
+Institute of Technology
+
+\(^{3}\)Department of Ophthalmology, Boston Children's Hospital, Harvard
+Medical School
+
+\(^{*}\)Brian Blais corresponding author
+
+\textbf{Email}: bblais@bryant.edu
+
+\textbf{Author Contributions}: Paste the author contributions here.
+
+\textbf{Competing Interest Statement}: No competing interests.
+
+\textbf{Classification}: Biological Sciences - Neuroscience
+
+\textbf{Keywords}: amblyopia, synaptic plasticity, vision
+
+\textbf{This PDF file includes}: - Main Text - Figures 1 to X - Tables 1
+to X
+
+\subsection{Abstract}\label{sec:abstract}
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Purpose: Extend a biologically motivated synaptic plasticity model
+  (BCM with natural image input) to simulate common amblyopia
+  treatments.
+\item[$\square$]
+  Methods: Use feedforward-only architecture in PlasticNet to implement
+  patching, atropine penalization, dichoptic training, and contrast
+  balancing protocols.
+\item[$\square$]
+  Findings: Predicts treatment-specific recovery trajectories and
+  identifies optimal stimulus parameters (e.g., contrast levels, patch
+  durations).
+\item[$\square$]
+  Implications: Offers quantitative insight into the timing and dosing
+  of interventions, with predictions aligning with clinical results.
+\end{itemize}
+
+Amblyopia is a common cause of visual impairment that results from
+unequal visual inputs during development, known to manifest through
+synaptic alterations in the visual cortex. What is not known is the
+detailed mechanisms of these synaptic changes and how these mechanisms
+impact the dynamics of recovery. Here we use a computational model of
+neural plasticity, the Bienenstock, Cooper, and Munro (BCM) model
+(Bienenstock et al 1982), to compare the dynamics of amblyopia recovery
+at the neuronal level under several treatment protocols, including
+optical correction, patching, atropine penalization, and binocular
+therapies. We use this model to determine optimal parameters for the
+treatment of amblyopia, showing that recovery achieved with dichoptic
+masks combined with an interocular contrast disparity exceeded that of
+patch and atropine treatments. Further, patch and atropine treatment
+models produced faster recovery compared to a contrast disparity alone,
+highlighting the importance of the dichoptic masks. The rate of recovery
+depended on treatment features such as the size of the dichoptic masks
+and the magnitude of the contrast disparity, both experimentally
+accessible. In this way, the model suggests optimal values for these
+modifications.
+
+\textbf{Significance Statement}
+
+\begin{quote}
+Paste your significance statement here. Please note that it should not
+exceed 120 words, but should be at least 50 words in length. It should
+not include any references.
+\end{quote}
+
+\section{Main Text}\label{sec:main-text}
+
+\subsection{Introduction}\label{sec:introduction}
+
+\begin{itemize}
+\item[$\square$]
+  Brief review of amblyopia development and your prior findings (cite
+  previous paper).
+\item[$\square$]
+  Rationale: Most treatments aim to rebalance interocular competition,
+  but empirical optimization is challenging.
+\item[$\square$]
+  Common treatments:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Patching: Occlusion of dominant eye.
+  \item[$\square$]
+    Atropine: Blurring the dominant eye pharmacologically.
+  \item[$\square$]
+    Dichoptic training: Presenting stimuli separately to each eye to
+    promote binocular integration.
+  \item[$\square$]
+    Contrast balancing (e.g., Luminopia): Reduce contrast to dominant
+    eye in a movie/game format.
+  \end{itemize}
+\item[$\square$]
+  Goal: Use a synaptic plasticity model to simulate these treatments and
+  explore parameter sensitivities.
+\item[$\square$]
+  Hypothesis: Optimal treatments balance synaptic competition without
+  destabilizing cortical representations.
+\item[$\square$]
+  BCM learning and recovery:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Homeostatic and competitive nature is ideal for simulating
+    rebalancing.
+  \item[$\square$]
+    Prior modeling of amblyopia treatment: Summary of efforts in
+    literature.
+  \end{itemize}
+\item[$\square$]
+  PlasticNet advantages:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Realistic inputs (natural images)
+  \item[$\square$]
+    Parameter flexibility for fine-grained treatment modeling
+  \end{itemize}
+\item[$\square$]
+  Clinical motivation: Need for tailored treatments by severity, age,
+  and amblyopia type. \#\# Results
+\item[$\square$]
+  Baseline (no treatment): Persistent suppression of amblyopic eye.
+\item[$\square$]
+  Patching:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Effective in early periods; risk of reverse amblyopia with excessive
+    patching.
+  \end{itemize}
+\item[$\square$]
+  Atropine:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Mimics patching effect with softer recovery dynamics.
+  \end{itemize}
+\item[$\square$]
+  Dichoptic training:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Strongest recovery in binocular metrics when balanced properly.
+  \item[$\square$]
+    Sensitive to contrast parameters.
+  \item[$\square$]
+    Contrast reduction (Luminopia-like):
+  \item[$\square$]
+    Continuous contrast adaptation of dominant eye yields gradual OD
+    recovery.
+  \end{itemize}
+\item[$\square$]
+  Optimal parameters:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Identified sweet spots for contrast ratio and patching time per
+    treatment type.
+  \item[$\square$]
+    Early intervention window (plasticity-dependent) strongly shapes
+    outcome.
+  \end{itemize}
+\item[$\square$]
+  Include:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    OD histogram evolution over training.
+  \item[$\square$]
+    Time-course plots of synaptic weight recovery.
+  \item[$\square$]
+    Heatmaps of treatment efficacy by parameter.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Discussion}\label{sec:discussion}
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Key insight: Model confirms and refines clinical understanding of
+  treatment dynamics.
+\item[$\square$]
+  Reaffirms sensitive period effects.
+\item[$\square$]
+  Shows contrast balancing is more forgiving than patching in timing.
+\item[$\square$]
+  Comparison with human data:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Atropine vs.~patching trials (e.g., PEDIG).
+  \item[$\square$]
+    Recent dichoptic training and Luminopia results.
+  \end{itemize}
+\item[$\square$]
+  Treatment optimization:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Parameter tuning can guide personalized treatment plans.
+  \end{itemize}
+\item[$\square$]
+  Limitations:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Feedforward only: no attentional or reward mechanisms modeled.
+  \item[$\square$]
+    No behavioral feedback loop.
+  \end{itemize}
+\item[$\square$]
+  Future work:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Combine with reinforcement learning agent to model perceptual
+    learning tasks.
+  \item[$\square$]
+    Add spatial structure (e.g., orientation maps) for richer V1
+    modeling.
+  \item[$\square$]
+    Apply to adult treatment paradigms (model reduced plasticity).
+  \end{itemize}
+\item[$\square$]
+  BCM-based model predicts differing recovery dynamics under common
+  amblyopia treatments.
+\item[$\square$]
+  Early, contrast-based interventions may provide high efficacy with low
+  risk.
+\item[$\square$]
+  Synaptic plasticity modeling offers a promising tool for treatment
+  planning and hypothesis generation.
+\end{itemize}
+
+\subsection{Materials and Methods}\label{sec:materials-and-methods}
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Model framework:
+\item[$\square$]
+  Same BCM-based PlasticNet model as prior paper.
+\item[$\square$]
+  Same strabismus and/or anisometropia manipulations used to induce
+  amblyopia.
+\item[$\square$]
+  Treatment protocols modeled:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Patching: One eye's input occluded (removed) for a percentage of
+    training epochs.
+  \item[$\square$]
+    Atropine: One eye blurred (e.g., Gaussian filter) simulating
+    low-acuity vision.
+  \item[$\square$]
+    Dichoptic: Present spatially distinct images to each eye with
+    different contrast scaling.
+  \item[$\square$]
+    Contrast balancing: Gradually or abruptly reduce contrast to the
+    dominant eye during image input.
+  \end{itemize}
+\item[$\square$]
+  Evaluation metrics:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Recovery time to balanced ocular dominance.
+  \item[$\square$]
+    Receptive field restoration (sharpness, binocular selectivity).
+  \end{itemize}
+\item[$\square$]
+  Dependence on treatment onset timing and duration.
+\item[$\square$]
+  Explored parameters:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    \% patching time
+  \item[$\square$]
+    Contrast ratios
+  \item[$\square$]
+    Timing of treatment onset (early vs.~late)
+  \end{itemize}
+\end{itemize}
+
+\subsection{Acknowledgments}\label{sec:acknowledgments}
+
+Paste your acknowledgments here.
+
+\subsection{References}\label{sec:references}
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Include:
+
+  \begin{itemize}
+  \tightlist
+  \item[$\square$]
+    Clinical trials (PEDIG studies, Luminopia trials).
+  \item[$\square$]
+    Models of binocular recovery.
+  \item[$\square$]
+    Synaptic plasticity and BCM literature.
+  \end{itemize}
+\end{itemize}
+
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{0}{1}
+\bibitem[\citeproctext]{ref-glaser2002randomized}
+\CSLLeftMargin{1. }%
+\CSLRightInline{Glaser, S.R., Matazinski, A.M., Sclar, D.M., Sala, N.A.,
+Vroman, C.M., Tanner, C.E., Stager, D.R., Berry, P.M., Felius, J.,
+Wilkerson, J.A., et al. (2002). A randomized trial of atropine vs
+patching for treatment of moderate amblyopia in children. Archives of
+ophthalmology \emph{120}, 268--278.}
+
+\end{CSLReferences}
+
+\subsection{Figures and Tables}\label{sec:figures-and-tables}
+
+\begin{quote}
+This section actually seems a bit superfluous right now, I wonder if we
+don't need to try and link the ocular dominance measures with visual
+acuity
+
+Instead, we could focus the conclusion on linking the directional
+conclusions with ODI/day to the existing experimental literature, and
+making recommendations for future amblyopia treatment studies. Thoughts?
+\end{quote}
+
+Now that we have a system of simulation environments to explore, we can
+compare to experimentally observed rates of recovery.
+From\textsuperscript{1} we have results from several visual protocols.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Only those patients are included if they had their \emph{refractive
+  error corrected for at least 4 weeks}
+\item
+  In the patching group most patients received \emph{no more than 6-8
+  hours of patching per day}
+\item
+  The resulting improvement in the visual acuity (measured in lines) is
+  given here:
+\end{enumerate}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Time & Patch {[}lines{]} & Atropine {[}lines{]} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+5 weeks & \(+2.22 \pm 0.2\) & \(+1.37 \pm 0.2\) \\
+16 weeks & \(+2.94 \pm 0.2\) & \(+2.42 \pm 0.2\) \\
+24 weeks & \(+3.16 \pm 0.2\) & \(+2.84 \pm 0.2\) \\
+\end{longtable}
+
+This small amount of data lets us estimate the relative rates of
+improvement from the treatments. Since the patch treatment is only about
+1/3 day, the total time for treatment would be
+\(19 \text{weeks}\times \frac{7 \text{day}}{1 \text{week}}\times 1/3=44 \text{day}\)
+For patch treatment with the above data we have a rate of about
+\(0.94 \text{lines} / 44 \text{day}=0.021 \text{lines}/\text{day}\).
+Likewise, for atropine, we have a rate of about
+\(1.47\text{lines} / 133 \text{day}=0.011 \text{lines}/\text{day}\). So
+the patch treatment is approximately twice as fast as the atropine.
+Looking at Figure Figure~\ref{fig:dODI_atropine_vs_blur} we see that
+this can put a rough constraint on the parameters. For a closed-eye
+noise for the patch treatment of \(\sigma_n=0.8\) (recovery rate ODI/day
+\(\sim 0.2\)), the atropine treatment must have a lower noise level --
+we can look at the atropine parameters which yield recover rates ODI/day
+\(\sim 0.1\)). For little blur, we need a noise level of around
+\(\sigma_n=0.6\), but if the atropine produces a significant blur, then
+the noise level of those inputs must be much lower -- well below
+\(\sigma_n=0.3\) for blur filter size 6.0, for example.
+
+This noise level for atropine is entirely consistent with the same
+open-eye noise level with the glasses ``fix'' discussed earlier. Here we
+have an independent line of argument to suggest that atropine may blur
+the natural input, but doesn't change the overall spontaneous activity
+of neurons. Further, it suggest that there is a significant
+physiological different in the activity distributions between
+unstructure input (e.g.~patch) and degraded input (e.g.~atropine).
+
+In this way we may hope to constrain other parameters of the model by
+comparing to experimental rates of recovery.
+
+\subsubsection{Figures and Tables}\label{sec:figures-and-tables-1}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Recovery rate (ocular dominance shift per time) for simulated treatments of amblyopia. The simulations show that for a wide range of contrasts (10\%-50\%) and mask sizes, the binocular treatment is comparable to the patch and glasses treatment. For a narrow range of contrasts (around 30-40\%) and small overlap with the masks, the binocular treatment is superior to the patch and glasses treatments.}]{/Users/bblais/Documents/Git/Amblyopia-Simulation/Manuscript/resources/Pasted image 20250416110214.png}}
+\caption{Recovery rate (ocular dominance shift per time) for simulated
+treatments of amblyopia. The simulations show that for a wide range of
+contrasts (10\%-50\%) and mask sizes, the binocular treatment is
+comparable to the patch and glasses treatment. For a narrow range of
+contrasts (around 30-40\%) and small overlap with the masks, the
+binocular treatment is superior to the patch and glasses
+treatments.}\label{fig:dODI_contrast}
+\end{figure}
+
+\#todo
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  ORCID number attached to the PNAS profile for each author
+\item[$\square$]
+  Classifications at
+  \url{https://www.pnas.org/author-center/submitting-your-manuscript}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Biological Sciences -- Neuroscience
+  \item
+    Biological Sciences - Biophysics and Computational Biology
+  \end{itemize}
+\item
+  {[} {]}
+\end{itemize}
+
+\end{document}

@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "362466d87c3eb674",
+        "id": "ebc7f45a20c985f3",
         "type": "tabs",
         "children": [
           {
-            "id": "a6ec77e90ee485b0",
+            "id": "7e9cca5263548fe1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "daily notes/2026-01-05.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-01-05"
             }
           }
         ]
@@ -49,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "motivation",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 231
+    "width": 382.5
   },
   "right": {
     "id": "03658e0cdfaa502c",
@@ -122,10 +126,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "3. Normal and Deprived Visual Environments.md"
+                "file": "Development-of-Amblyopia.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 3. Normal and Deprived Visual Environments"
+              "title": "Outline of Development-of-Amblyopia"
             }
           },
           {
@@ -143,10 +150,12 @@
       }
     ],
     "direction": "horizontal",
-    "width": 371.5
+    "width": 371.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -156,52 +165,53 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "a6ec77e90ee485b0",
+  "active": "7e9cca5263548fe1",
   "lastOpenFiles": [
+    "daily notes/resources/Pasted image 20260105065456.png",
     "Development-of-Amblyopia.md",
+    "daily notes/2026-01-05.md",
+    "BCM Tutorial/3. Normal and Deprived Visual Environments.md",
+    "Amblyopia Manuscripts/Treatments for Amblyopia -- still filling in -- not ready to read/Backup of Treatments for Amblyopia -- still filling in -- not ready to read.docx",
+    "Amblyopia Manuscripts/Treatments for Amblyopia -- still filling in -- not ready to read",
+    "Amblyopia Manuscripts/~$velopment of Amblyopia.docx",
+    "BCM Tutorial/4. Results.md",
     "Treatments-for-Amblyopia.md",
-    "docs/Development-of-Amblyopia.synctex(busy)",
-    "docs/Development-of-Amblyopia.synctex.gz",
-    "~$ASTemplateforMainManuscript.docx",
-    "config/pnas.csl",
-    "docs/Development-of-Amblyopia.pdf",
-    "doit",
-    "docs/~$velopment-of-Amblyopia.docx",
-    "docs/Development-of-Amblyopia.docx",
-    "docs/Development-of-Amblyopia.aux",
-    "docs/Development-of-Amblyopia.log",
+    "Amblyopia Manuscripts/Treatments for Amblyopia -- still filling in -- not ready to read.docx",
+    "Amblyopia Manuscripts/Treatments for Amblyopia.docx",
+    "docs/~$eatments-for-Amblyopia.docx",
+    "daily notes/2024-05-01.md",
+    "daily notes/2023-06-19.md",
+    "Amblyopia Manuscripts/Icon\r",
+    "Amblyopia Manuscripts/Development of Amblyopia.docx",
+    "Amblyopia Manuscripts",
+    "Development of Amblyopia/Backup of Development of Amblyopia.docx",
+    "docs/_Treatments-for-Amblyopia.md",
+    "resources/Pasted image 20250625090120.png",
+    "resources/Pasted image 20250625084345.png",
+    "resources/sims-2025-06-24 mu_c 9 sigma_c 9 mu_r 0 sigma_r 9 blur 3-glasses_treatment.svg",
+    "resources/sims-2025-06-24 mu_c 9 sigma_c 9 mu_r 0 sigma_r 9 blur 3-glasses_treatment.png",
+    "resources/Pasted image 20250624150519.png",
+    "resources/Pasted image 20250624150422.png",
+    "resources/Pasted image 20250624115352.png",
+    "resources/Pasted image 20250624114812.png",
     "daily notes/ARVO Planning 2025-04-25.md",
     "daily notes/2025-04-23.md",
-    "daily notes/resources/Pasted image 20250423082023.png",
-    "daily notes/2025-04-18.md",
-    "resources/sims-2025-04-23 mu 9 sigma 9-contrast_mask_treatment SFVar.svg",
-    "resources/sims-2025-04-23 mu 9 sigma 9-contrast_mask_treatment SFVar.png",
-    "resources/sims-2025-04-23 mu 9 sigma 9-atropine_treatment_SFVar.svg",
-    "resources/sims-2025-04-23 mu 9 sigma 9-atropine_treatment_SFVar.png",
-    "resources/sims-2025-04-23 mu 9 sigma 9-atropine_treatment.svg",
-    "resources/sims-2025-04-23 mu 9 sigma 9-atropine_treatment.png",
-    "resources/sims-2025-04-23 mu 9 sigma 9-patch_treatment_SFVar.svg",
-    "resources/sims-2025-04-23 mu 9 sigma 9-patch_treatment_SFVar.png",
-    "resources/sims-2025-04-23 mu 9 sigma 9-patch_treatment.svg",
-    "daily notes/2025-04-17.md",
-    "daily notes/2024-09-02 -- AAPOS Abstrac.md",
-    "daily notes/2024-06-02.md",
-    "daily notes/2024-01-12.md",
-    "daily notes/2024-05-29.md",
-    "daily notes/2024-05-01.md",
-    "daily notes/2024-01-02 - Low D.md",
-    "daily notes/2023-10-31 - Neuron Author Info.md",
-    "BCM Tutorial/main.md",
-    "BCM Tutorial/0. Dataview Tables.md",
-    "unlinked files output.md",
-    "test.md",
-    "BCM Tutorial/1. Introduction.md",
-    "BCM Tutorial/3. Normal and Deprived Visual Environments.md",
-    "BCM Tutorial/4. Results.md",
-    "daily notes/2025-04-04.md",
-    "daily notes/2023-02-07.md",
-    "daily notes/2022-12-11.md",
+    "daily notes/2025-05-05 - Spatial Frequency.md",
     "daily notes/2022-12-05.md",
-    "daily notes/2022-11-15.md"
+    "daily notes/2022-11-15.md",
+    "daily notes/2022-11-11.md",
+    "daily notes/2022-11-10.md",
+    "daily notes/2022-11-02.md",
+    "daily notes/2022-11-01.md",
+    "daily notes/2022-10-31.md",
+    "daily notes/2022-10-20.md",
+    "docs/_Development-of-Amblyopia.md",
+    "debug/test.md",
+    "resources/Pasted image 20250609133701.png",
+    "resources/Pasted image 20250530114201.png",
+    "daily notes/2025-04-17.md",
+    "daily notes/2025-04-04 - Spatial Frequency.md",
+    "daily notes/2025-04-18.md",
+    "daily notes/2025-04-30.md"
   ]
 }

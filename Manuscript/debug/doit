@@ -1,0 +1,3 @@
+pandoc --standalone --csl ../config/neuron.csl --number-sections  -M figPrefix="Figure" --filter pandoc-crossref  --resource-path="../resources/" --citeproc -o test.pdf test.md
+pandoc --standalone --csl ../config/neuron.csl --number-sections  -M figPrefix="Figure" --filter pandoc-crossref  --resource-path="../resources/" --citeproc -o test.tex test.md
+

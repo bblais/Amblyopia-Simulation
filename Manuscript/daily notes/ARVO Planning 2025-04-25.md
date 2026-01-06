@@ -70,11 +70,11 @@ on behalf of the Annual Meeting Program Committee
 
 #todo 
 
-- [ ] print poster
-- [ ] print handouts
-- [ ] finish poster
-	- [ ] make QR code
-	- [ ] fix  the DOG images
+- [x] print poster
+- [x] print handouts
+- [x] finish poster
+	- [x] make QR code
+	- [x] fix  the DOG images
 
 
 

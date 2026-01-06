@@ -22,7 +22,7 @@ from plasticnet import day,ms,minute,hour,second
 from matplotlib.pyplot import figure,xlabel,ylabel,legend,gca,plot,subplot,imshow,axis,title
 
 
-# In[ ]:
+# In[1]:
 
 
 #| output: false
@@ -31,19 +31,19 @@ def inputs_to_images(X,buffer=5,scale_each_patch=False):
     ims=[]
     vmin=X.min()
     vmax=X.max()
-    
+
     rf_size=int(np.sqrt(X.shape[1]/2))
-    
+
     for xx in X:
         xx1=xx[:rf_size*rf_size].reshape(rf_size,rf_size)
         xx2=xx[rf_size*rf_size:].reshape(rf_size,rf_size)
         if scale_each_patch:
             vmax=max([xx1.max(),xx2.max()])
             vmin=max([xx1.min(),xx2.min()])
-        
+
         im=np.concatenate((xx1,np.ones((rf_size,buffer))*vmax,xx2),axis=1)   
         ims.append(im)
-        
+
     return ims
 
 def get_input_examples(im1,im2,
@@ -53,7 +53,7 @@ def get_input_examples(im1,im2,
                      mu_r=0,sigma_r=0,    
                      base_image_file='asdf/bbsk081604_all_scale2.asdf'
                 ):
-    
+
     rf_size=19
     eta=2e-6
     pre1=pn.neurons.natural_images_with_jitter(im1,
@@ -85,27 +85,27 @@ def get_input_examples(im1,im2,
     pn.run_sim(sim,[pre],[],display_hash=False,print_time=False)
 
     m=sim.monitors['output']
-    
+
     t,X=m.arrays()
-    
-    
+
+
     X=X[1:,:]
 
-    
-    
+
+
     return sim,X
-    
+
 
 def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
                                          mu_c=10,sigma_c=2,    
                                            mu_r=0,sigma_r=1,
                                          base_image_file='asdf/bbsk081604_all_log2dog.asdf'
                                         ):
-    
+
     rf_size=19
     eta=2e-6
 
-    
+
 
     number_of_neurons=1,
 
@@ -151,29 +151,29 @@ def get_input_patch_examples_with_jitter(blur=2.5,noise=0.1,
     pn.run_sim(sim,[pre],[],display_hash=False,print_time=False)
 
     m=sim.monitors['output']
-    
+
     t,X=m.arrays()
-    
-    
+
+
     X=X[1:,:]
 
-    
-    
+
+
     return sim,X
-    
+
 
 
 def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
                             base_image_file='asdf/bbsk081604_all_log2dog.asdf'):
-    
+
     rf_size=19
     eta=2e-6
 
-    
+
 
     number_of_neurons=1,
 
-    
+
     if blur<0:
         Lnorm_fname=pi5.filtered_images(base_image_file,
                                     {'type':'norm'},
@@ -200,8 +200,8 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
 
     else:
         raise ValurError("You can't get there from here.")
-        
-        
+
+
 
     pre1=pn.neurons.natural_images(Lnorm_fname,
                                    rf_size=rf_size,verbose=False)
@@ -210,7 +210,7 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
                                 other_channel=pre1,
                                 verbose=False)
 
-    
+
     sigma=noise
     pre1+=pn.neurons.process.add_noise_normal(0,sigma)
 
@@ -226,15 +226,15 @@ def get_input_patch_examples(blur=2.5,noise=0.1,contrast=1,blurred_eye='left',
 
     m=sim.monitors['output']
     t,X=m.arrays()
-    
+
     X=X[1:,:]
-    
-    
+
+
     return sim,X
 
 
 
-# In[ ]:
+# In[2]:
 
 
 def get_input_patch_examples_treatment():
@@ -255,24 +255,24 @@ def get_input_patch_examples_treatment():
     return seq,X
 
 
-# In[ ]:
+# In[3]:
 
 
 def savefig(origfname):
     base,ext=os.path.splitext(origfname)
     import matplotlib.pyplot as plt
-    
+
     print_fnames=[f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']
     if ext:
         if ext!='.png' and ext!='.svg':
             print_fnames+=[f'Manuscript/resources/{origfname}']
-    
+
     for fname in print_fnames:
         print(fname)
         plt.savefig(fname, bbox_inches='tight')
 
 
-# In[ ]:
+# In[4]:
 
 
 def make_original_image_files():
@@ -335,5 +335,17 @@ def make_original_image_files():
         var={'im':im_list,'im_scale_shift':[1.0,0.0]}
 
         pi5.asdf_save_images(var,'asdf/bbsk081604_all.asdf')
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
 
 

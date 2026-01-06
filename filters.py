@@ -505,6 +505,38 @@ def add_noise(var,sd=1.0,verbose=False):
     var2={'im':im2_list,'im_scale_shift':[1.0,0.0]}
     return var2
 
+def make_zoom(var,scale=1.0,verbose=False):
+    from scipy.ndimage import zoom
+
+    im2_list=[]
+    
+    im_scale_shift=var['im_scale_shift']
+    
+    im_count=len(var['im'])
+    
+    if verbose:
+        w = Waitbar(True)
+        w.message="Blur"
+    for count,im in enumerate(var['im']):
+        orig_size=im.shape
+        im2=resized = zoom(im.astype(float), zoom=scale, order=3)
+        new_size=im2.shape
+        
+        if verbose and count==0:
+            print( "Zoom %g: %dx%d --> %dx%d" % (scale,
+                                                        orig_size[0],orig_size[1],
+                                                        new_size[0],new_size[1]))
+        im2_list.append(im2)
+    
+        if verbose:
+            w.updated((count+1)/float(im_count))
+
+    if verbose:
+        print()
+    
+    var2={'im':im2_list,'im_scale_shift':[1.0,0.0]}
+    return var2
+    
 
 def make_blur(var,sd=1.0,radius=None,verbose=False):
     

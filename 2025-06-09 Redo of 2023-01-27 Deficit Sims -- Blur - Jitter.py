@@ -4,27 +4,16 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('matplotlib', 'inline')
 from pylab import *
 
 
 # In[2]:
 
 
-from deficit_defs import *
+from deficit_defs_2025_02_25 import *
 
 
 # In[3]:
-
-
-def savefig(base):
-    import matplotlib.pyplot as plt
-    for fname in [f'Manuscript/resources/{base}.png',f'Manuscript/resources/{base}.svg']:
-        print(fname)
-        plt.savefig(fname, bbox_inches='tight')
-
-
-# In[4]:
 
 
 _debug = False
@@ -32,13 +21,34 @@ if _debug:
     print("Debugging")
 
 
+# In[4]:
+
+
+base_sim_dir=f"sims-2025-06-09 mu_c sigma_c blur"
+if not os.path.exists(base_sim_dir):
+    print("new")
+    os.mkdir(base_sim_dir)
+print(base_sim_dir)
+
+
 # In[5]:
 
 
-base='sims/2023-01-27'
-if not os.path.exists(base):
-    print(f"mkdir {base}")
-    os.mkdir(base)
+def default_post(number_of_neurons):
+    post=pn.neurons.linear_neuron(number_of_neurons)
+    post+=pn.neurons.process.sigmoid(0,50)
+    return post
+
+def default_bcm(pre,post,orthogonalization=True):
+    c=pn.connections.BCM(pre,post,[-.01,.01],[.1,.2])
+
+    if orthogonalization:
+        c+=pn.connections.process.orthogonalization(10*minute)
+
+    c.eta=2e-6
+    c.tau=15*pn.minute   
+
+    return c
 
 
 # In[6]:
@@ -54,7 +64,9 @@ sigma_c=1
 print(blur_mat)
 print(mu_c_mat)
 number_of_neurons=20
-number_of_processes=4
+
+number_of_processes=8
+ray.init(num_cpus=number_of_processes)
 
 
 # ## Premake the image files
@@ -88,7 +100,8 @@ for blur in blur_mat:
 
 
 
-# In[9]:
+
+# In[22]:
 
 
 def blur_jitter_deficit(blur=[2.5,-1],
@@ -100,14 +113,16 @@ def blur_jitter_deficit(blur=[2.5,-1],
                         total_time=8*day,
                         save_interval=1*hour):
 
-    
+    base_image_file="asdf/bbsk081604_all_scale2.asdf"
+    print("Override Base Image File:",base_image_file)
+
     if _debug:
         total_time=1*minute
         save_interval=1*second
-        
+
     images=[]
     dt=200*ms
-    
+
     for bv in blur:
         if bv<=0:
             im=pi5.filtered_images(
@@ -123,16 +138,14 @@ def blur_jitter_deficit(blur=[2.5,-1],
                                     {'type':'norm'},
                                     )
         images.append(im)
-        
-        
+
+
     dt=200*ms        
     pre1=pn.neurons.natural_images_with_jitter(images[0],
                                                 rf_size=rf_size,
                                                 time_between_patterns=dt,
                                                 sigma_r=0,
                                                 sigma_c=0,
-                                                buffer_c=mu_c+2*sigma_c,
-                                                buffer_r=mu_r+2*sigma_r,
                                                 verbose=False)
 
     pre2=pn.neurons.natural_images_with_jitter(images[1],
@@ -163,22 +176,24 @@ def blur_jitter_deficit(blur=[2.5,-1],
     sim.monitor(post,['output'],save_interval)
     sim.monitor(c,['weights','theta'],save_interval)
 
-    sim+=pn.grating_response(print_time=False)
+    sim+=pn.grating_response(print_time=False,
+                             k_mat=linspace(1,20,40)/19.0*pi,)
 
     return sim,[pre,post],[c]
 
 
-# In[10]:
+# In[23]:
 
 
+@ray.remote
 def run_one(params,overwrite=False):
     import plasticnet as pn
     count,eta,noise,blur,number_of_neurons,sfname,mu_c,sigma_c=(params.count,params.eta,params.noise,params.blur,
                                         params.number_of_neurons,params.sfname,params.mu_c,params.sigma_c)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
-    
+
     seq=pn.Sequence()
 
     t=16*day*2
@@ -188,28 +203,28 @@ def run_one(params,overwrite=False):
     if _debug:
         t=1*minute
         ts=1*second
-    
+
     seq+=blur_jitter_deficit(blur=[blur,-1],
                                 total_time=t,
                                 noise=noise,eta=eta,number_of_neurons=number_of_neurons,
                                 mu_c=mu_c,sigma_c=sigma_c,
                                 save_interval=ts)
 
-    
+
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
-    
+
     return sfname
-    
 
 
-# In[11]:
+
+# In[24]:
 
 
-real_time=11*60+ 39
+real_time=5*60+ 47
 
 
-# In[12]:
+# In[26]:
 
 
 from collections import namedtuple
@@ -227,14 +242,14 @@ for mu_count,mu_c in enumerate(mu_c_mat):
                              blur=blur,
                          noise=open_eye_noise,
                          number_of_neurons=number_of_neurons,
-                        sfname=f'{base}/deficit %d neurons dog %d eta %d noise %d blur %d mu_c %d sigma_c.asdf' % 
+                        sfname=f'{base_sim_dir}/deficit %d neurons dog %d eta %d noise %d blur %d mu_c %d sigma_c.asdf' % 
                                  (number_of_neurons,eta_count,noise_count,blur_count,mu_c,sigma_c),
                         mu_c=mu_c,
                             sigma_c=sigma_c,
                                 ))
-        
+
         count+=1
-        
+
 for a in all_params[:5]:
     print(a)
 print("[....]")
@@ -246,37 +261,80 @@ print(len(all_params))
 print(time2str(real_time*len(all_params)/number_of_processes))
 
 
-# In[13]:
+# In[27]:
 
 
 do_params=make_do_params(all_params)
 len(do_params)
 
 
+# In[28]:
+
+
+params=[params for params in all_params if params.blur==0.5 and params.mu_c==10][0]
+params
+
+
+# In[29]:
+
+
+get_ipython().run_cell_magic('time', '', 'result=run_one.remote(params,overwrite=True)\nsfname=ray.get(result)\nR=Results(sfname)\n\nμ1,μ2=R.μσ[0][0]\nσ1,σ2=R.μσ[1][0]\nprint(μ1,μ2,σ1,σ2)\n')
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
 # In[14]:
 
 
-do_params
+# %%time
+# run_one(all_params[0],overwrite=True)
 
 
-# In[21]:
+# In[19]:
 
 
-get_ipython().run_cell_magic('time', '', 'run_one(all_params[0],overwrite=True)')
-
-
-# In[15]:
-
-
-if do_params:
-    pool = Pool(processes=number_of_processes)
-    result = pool.map_async(run_one, do_params)
-    print(result.get())
+func=run_one
+results = [func.remote(p) for p in do_params]
+sfnames=ray.get(results)
 
 
 # ## View the sims
 
-# In[21]:
+# In[20]:
 
 
 sfname=all_params[0].sfname
@@ -288,31 +346,31 @@ sfname=[params for params in all_params if
 sfname
 
 
-# In[22]:
+# In[21]:
 
 
 R=Results(sfname)
 
 
-# In[23]:
+# In[22]:
 
 
 R.μσ
 
 
-# In[24]:
+# In[23]:
 
 
 R.t[-1]/day
 
 
-# In[25]:
+# In[24]:
 
 
 t,y,θ,W=R[16*day]
 
 
-# In[26]:
+# In[25]:
 
 
 t,y,θ,W=R[16*day]
@@ -332,30 +390,30 @@ for n in range(4):
         ax2.set_yticklabels([])
         ax2.xaxis.set_ticks_position('none') 
         ax2.yaxis.set_ticks_position('none') 
-        
+
         count+=1
 
 
-# In[31]:
+# In[26]:
 
 
 pwd
 
 
-# In[17]:
+# In[27]:
 
 
 from glob import glob
 
 
-# In[18]:
+# In[28]:
 
 
 # sims/2023-01-27/deficit 20 neurons dog 0 eta 0 noise 0 blur 0 mu_c 1 sigma_c.asdf'
-glob("sims/2023-01-27/deficit 20 neurons dog 0 eta 0 noise 0*")
+glob(f"{base_sim_dir}/deficit 20 neurons dog 0 eta 0 noise 0*")
 
 
-# In[19]:
+# In[29]:
 
 
 RR={}
@@ -367,8 +425,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
         RR[params.sfname]=Results(params.sfname)
 
 
-# In[20]:
-
+# In[30]:
 
 
 count=0
@@ -383,10 +440,10 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
         σ1,σ2=R.μσ[1][0]
 
         s+=blur,μ1,μ2,σ1,σ2
-    
-    
+
+
     blur,μ1,μ2,σ1,σ2=s.arrays()
-    
+
     figure()
     errorbar(blur,μ1,yerr=2*σ1,marker='o',elinewidth=1,label='Deprived')
     errorbar(blur,μ2,yerr=2*σ2,marker='s',elinewidth=1,label='Normal')
@@ -397,7 +454,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
     legend()    
 
 
-# In[21]:
+# In[31]:
 
 
 count=0
@@ -412,10 +469,10 @@ for mu_count,mu_c in enumerate(mu_c_mat):
         σ1,σ2=R.μσ[1][0]
 
         s+=blur,μ1,μ2,σ1,σ2
-    
-    
+
+
     blur,μ1,μ2,σ1,σ2=s.arrays()
-    
+
     errorbar(blur,μ1,yerr=2*σ1,marker='o',elinewidth=1,label=f'Deprived μc={mu_c}')
     errorbar(blur,μ2,yerr=2*σ2,marker='s',elinewidth=1,label=f'Normal μc={mu_c}')
     xlabel('Blur Size [pixels]')
@@ -424,7 +481,7 @@ for mu_count,mu_c in enumerate(mu_c_mat):
 legend()    
 
 
-# In[22]:
+# In[32]:
 
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -452,10 +509,10 @@ for mu_count,mu_c in enumerate(mu_c_mat):
         σ1,σ2=R.μσ[1][0]
 
         s+=blur,μ1,μ2,σ1,σ2
-    
-    
+
+
     blur,μ1,μ2,σ1,σ2=s.arrays()
-    
+
     if mu_count==0:
         errorbar(blur,μ1,yerr=2*σ1,marker='o',elinewidth=1,label=f'Deprived',color=cm.Oranges(v[mu_count]))
         errorbar(blur,μ2,yerr=2*σ2,marker='s',elinewidth=1,label=f'Normal',color=cm.Blues(v[mu_count]))
@@ -486,7 +543,8 @@ title(r'$\mu_c$')
 savefig('fig-deficit-mu_c-blur')
 
 
-# In[24]:
+
+# In[33]:
 
 
 R=RR[params.sfname]
@@ -500,7 +558,7 @@ R=RR[params.sfname]
 
 
 
-# In[25]:
+# In[34]:
 
 
 count=0
@@ -516,8 +574,8 @@ for mu_count,mu_c in enumerate(mu_c_mat):
         μ,σ=μσ(R.ODI[-1])
 
         s+=blur,μ,σ
-    
-    
+
+
     blur,μ,σ=s.arrays()
     errorbar(blur,μ,yerr=2*σ,marker='o',elinewidth=1,color=cm.Oranges(v[mu_count]))    
     xlabel('Blur Size [pixels]')
@@ -533,6 +591,7 @@ plt.gcf().add_axes(ax_cb2)
 title(r'$\mu_c$')
 
 savefig('fig-deficit-ODI-mu_c-blur')
+
 
 
 # In[ ]:

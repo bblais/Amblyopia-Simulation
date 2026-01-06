@@ -4,9 +4,8 @@ from myobsidian import *
 
 #files=['1. Introduction.md']+ ['main.md']
 
-files=['Ophthalmology Draft April 16 2025.md']
-target_name='Development of Amblyopia'
-
+files=['Development-of-Amblyopia.md','Treatments-for-Amblyopia.md',]
+texconfig='config/sn-article-template.tex'
 
 def dir_exists(task):
     directory=task.targets[0]
@@ -22,56 +21,74 @@ def task_prelim():
     }    
 
 
-def md_md(path_from,path_to):
+def md_md(path_from):
     S=parse_include_links(path_from)
-    with open(path_to,'w') as fid:
+    with open(f"docs/_{path_from}",'w') as fid:
         fid.write(S)
 
 
 def task_md_md():
-    return {
-        'file_dep': files,
-        'targets': ['docs/_main.md'],
-        'actions': [(md_md, ['main.md','docs/_main.md'])],
-        'verbosity':2,
-        'clean':True,
-    }
 
+    for fname in files:
+        yield {
+            'name': f'Convert {fname} to Markdown with Obsidian links',
+            'file_dep': [fname,"myobsidian.py"],
+            'targets': [f'docs/_{fname}'],
+            'actions': [(md_md, [fname])],
+            'verbosity': 2,
+            'clean': True,
+        }
+
+
+pandoc= 'pandoc --standalone --csl config/neuron.csl --number-sections -M figPrefix="Figure" --filter pandoc-crossref  --resource-path="resources/" --citeproc'
 
 def task_tex():
     import os
+    for fname in files:
+        rest,ext=os.path.splitext(fname)
 
-    return {
-        'file_dep': ['docs/_main.md','config/sn-article-template.tex'],
-        'targets': ['docs/%s.tex' % target_name],
-        'actions': [
-            f'pandoc --standalone --csl config/neuron.csl --number-sections --filter pandoc-crossref  --resource-path="resources/" --citeproc   docs/_main.md -o docs/{target_name}.tex',
+        yield {
+            'name': f'Convert {fname} to LaTeX',
+            'file_dep': [f'docs/_{fname}',texconfig],
+            'targets': [f'docs/{rest}.tex'],
+            'actions': [
+                f'{pandoc}  docs/_{fname} -o docs/{rest}.tex',
             ],
-        'clean':True,
-    }
+            'verbosity': 2,
+            'clean': True,
+        }
+
 
 
 def task_pdf():
     import os
+    for fname in files:
+        rest,ext=os.path.splitext(fname)
 
-    return {
-        'file_dep': ['docs/_main.md','config/sn-article-template.tex'],
-        'targets': ['docs/%s.pdf' % target_name,'docs/%s.log' % target_name],
-        'actions': [
-            f'pandoc --csl config/neuron.csl --number-sections --filter pandoc-crossref  --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.pdf',
+        yield {
+            'name': f'Convert {fname} to PDF',
+            'file_dep': [f'docs/_{fname}',texconfig],
+            'targets': [f'docs/{rest}.pdf'],
+            'actions': [
+                f'{pandoc}  docs/_{fname} -o docs/{rest}.pdf',
             ],
-        'clean':True,
-    }
+            'verbosity': 2,
+            'clean': True,
+        }
+
 
 def task_docx():
     import os
+    for fname in files:
+        rest,ext=os.path.splitext(fname)
 
-    return {
-        'file_dep': ['docs/_main.md','config/sn-article-template.tex'],
-        'targets': ['docs/%s.docx' % target_name],
-        'actions': [
-            f'pandoc --csl config/neuron.csl --number-sections --filter pandoc-crossref  --resource-path="resources/" --citeproc  docs/_main.md -o docs/{target_name}.docx',
+        yield {
+            'name': f'Convert {fname} to DOCX',
+            'file_dep': [f'docs/_{fname}',texconfig],
+            'targets': [f'docs/{rest}.docx'],
+            'actions': [
+                f'{pandoc}  docs/_{fname} -o docs/{rest}.docx',
             ],
-        'clean':True,
-    }
-
+            'verbosity': 2,
+            'clean': True,
+        }

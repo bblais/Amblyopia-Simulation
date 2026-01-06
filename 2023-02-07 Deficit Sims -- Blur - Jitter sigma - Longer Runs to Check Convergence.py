@@ -95,6 +95,7 @@ for blur in blur_mat:
 
 
 
+
 # In[10]:
 
 
@@ -107,14 +108,14 @@ def blur_jitter_deficit(blur=[2.5,-1],
                         total_time=8*day,
                         save_interval=1*hour):
 
-    
+
     if _debug:
         total_time=1*minute
         save_interval=1*second
-        
+
     images=[]
     dt=200*ms
-    
+
     for bv in blur:
         if bv<=0:
             im=pi5.filtered_images(
@@ -130,8 +131,8 @@ def blur_jitter_deficit(blur=[2.5,-1],
                                     {'type':'norm'},
                                     )
         images.append(im)
-        
-        
+
+
     dt=200*ms        
     pre1=pn.neurons.natural_images_with_jitter(images[0],
                                                 rf_size=rf_size,
@@ -180,10 +181,10 @@ def run_one(params,overwrite=False):
     import plasticnet as pn
     count,eta,noise,blur,number_of_neurons,sfname,mu_c,sigma_c=(params.count,params.eta,params.noise,params.blur,
                                         params.number_of_neurons,params.sfname,params.mu_c,params.sigma_c)
-    
+
     if not overwrite and os.path.exists(sfname):
         return sfname
-    
+
     seq=pn.Sequence()
 
     t=16*day*2
@@ -193,19 +194,19 @@ def run_one(params,overwrite=False):
     if _debug:
         t=1*minute
         ts=1*second
-    
+
     seq+=blur_jitter_deficit(blur=[blur,-1],
                                 total_time=t,
                                 noise=noise,eta=eta,number_of_neurons=number_of_neurons,
                                 mu_c=mu_c,sigma_c=sigma_c,
                                 save_interval=ts)
 
-    
+
     seq.run(display_hash=False)
     pn.save(sfname,seq) 
-    
+
     return sfname
-    
+
 
 
 # In[12]:
@@ -240,7 +241,7 @@ for mu_count,mu_c in enumerate(mu_c_mat):
                                     ))
 
             count+=1
-        
+
 for a in all_params[:5]:
     print(a)
 print("[....]")
@@ -335,7 +336,7 @@ for n in range(4):
         ax2.set_yticklabels([])
         ax2.xaxis.set_ticks_position('none') 
         ax2.yaxis.set_ticks_position('none') 
-        
+
         count+=1
 
 
@@ -459,6 +460,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
     savefig(f'fig-deficit-sigma_c-blur-mu_c-{mu_c:.0f}')
 
 
+
 # In[37]:
 
 
@@ -508,7 +510,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
         ylim([-1,1])
 
     title(r'$\mu_c=%.1f$' % mu_c)
-        
+
     divider = make_axes_locatable(plt.gca())
     ax_cb2 = divider.new_horizontal(size="5%", pad=0.05)    
     ax_cb2.grid(False)
@@ -518,6 +520,7 @@ for mu_count,mu_c in tqdm(enumerate(mu_c_mat)):
     title(r'$\sigma_c$')
 
     savefig(f'fig-deficit-ODI-sigma_c-blur-mu_c-{mu_c:.1f}')
+
 
 
 # In[ ]:
